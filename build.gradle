@@ -1,5 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'maven'
 apply plugin: 'application'
 
 group = 'cic.unb.ca'
@@ -15,21 +14,20 @@ repositories {
     maven { url "https://clojars.org/repo" }
 }
 dependencies {
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
-    compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.25'
-    compile group: 'org.jnetpcap', name: 'jnetpcap', version:'1.4.1'
-    compile group: 'junit', name: 'junit', version:'4.12'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.6'
-    compile group: 'org.apache.commons', name: 'commons-math3', version:'3.5'
-    compile group: 'commons-io', name: 'commons-io', version:'2.5'
-    compile group: 'nz.ac.waikato.cms.weka', name: 'weka-stable', version:'3.6.14'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
+    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.25'
+    implementation group: 'org.jnetpcap', name: 'jnetpcap', version: '1.4.1'
+    implementation group: 'junit', name: 'junit', version:'4.12'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version:'3.6'
+    implementation group: 'org.apache.commons', name: 'commons-math3', version:'3.5'
+    implementation group: 'commons-io', name: 'commons-io', version:'2.5'
+    implementation group: 'nz.ac.waikato.cms.weka', name: 'weka-stable', version:'3.6.14'
     // https://mvnrepository.com/artifact/org.jfree/jfreechart
-    compile group: 'org.jfree', name: 'jfreechart', version: '1.5.0'
+    implementation group: 'org.jfree', name: 'jfreechart', version: '1.5.0'
     // https://mvnrepository.com/artifact/com.google.guava/guava
-    compile group: 'com.google.guava', name: 'guava', version: '23.6-jre'
+    implementation group: 'com.google.guava', name: 'guava', version: '23.6-jre'
     // https://mvnrepository.com/artifact/org.apache.tika/tika-core
-    compile group: 'org.apache.tika', name: 'tika-core', version: '1.17'
-
+    implementation group: 'org.apache.tika', name: 'tika-core', version: '1.17'
 }
 sourceSets {
     main {
@@ -41,12 +39,12 @@ sourceSets {
 }
 
 task zipSrc(type: Zip){
-    baseName "${applicationName}-Source"
-    destinationDir = file('build/')
+    archiveBaseName = "${applicationName}-Source"
+    destinationDirectory = file('build/')
     from('.'){
         include '**/'
         exclude '.gradle/','build/','bin/','logs/','*.iml','*.ipr','*.iws','.idea/','out/','data/'
-        into "${applicationName}V${version}-Src"
+        into "${applicationName}V${archiveVersion}-Src"
     }
 }
 
@@ -62,13 +60,13 @@ task zipPro(type: Zip){
         DirectoryScanner.resetDefaultExcludes()
     }
 
-    baseName "${applicationName}-Full"
-    destinationDir = file('build/')
+    archiveBaseName = "${applicationName}-Full"
+    destinationDirectory = file('build/')
 
     from('.'){
         include '**/'
         exclude '.gradle/','build/','bin/','logs/','*.iml','*.ipr','*.iws','.idea/','out/','data/',".git/"
-        into "${applicationName}V${version}"
+        into "${applicationName}V${archiveVersion}"
     }
 }
 
@@ -81,7 +79,7 @@ task fatJar(type: Jar) {
         attributes 'Premain-Class': 'swing.common.ObjectSizeFetcher'
         attributes 'Can-Retransform-Classes': true
         attributes 'Implementation-Title': 'Gradle Jar File Example',
-                'Implementation-Version': version,
+                'Implementation-Version': archiveVersion,
                 'Main-Class': 'cic.cs.unb.ca.ifm.App'
 
     }
@@ -95,8 +93,7 @@ task fatJar(type: Jar) {
 task execute(type: JavaExec) {
     println 'type JavaExec'
 
-
-    main = "cic.cs.unb.ca.ifm.App" //main class
+    mainClass = 'cic.cs.unb.ca.ifm.App'
     classpath = sourceSets.main.runtimeClasspath
     String osName = System.getProperty('os.name').toLowerCase()
     if(osName.contains('windows')){
@@ -106,9 +103,8 @@ task execute(type: JavaExec) {
     }
 }
 
-
 task exeCMD(type: JavaExec){
-    main = "cic.cs.unb.ca.ifm.Cmd" //main class
+    mainClass = 'cic.cs.unb.ca.ifm.Cmd'
     classpath = sourceSets.main.runtimeClasspath
     String osName = System.getProperty('os.name').toLowerCase()
     if(osName.contains('windows')){
@@ -121,10 +117,10 @@ task exeCMD(type: JavaExec){
 
 
 task cmdScript(type: CreateStartScripts) {
-    mainClassName = "cic.cs.unb.ca.ifm.Cmd"
+    mainClass = "cic.cs.unb.ca.ifm.Cmd"
     applicationName = "cfm"
     outputDir = new File(project.buildDir, 'scripts')
-    classpath = jar.outputs.files + project.configurations.runtime
+    classpath = jar.outputs.files + project.configurations.runtimeOnly
     defaultJvmOpts = ["-Djava.library.path=../lib/native"]
 }
 
