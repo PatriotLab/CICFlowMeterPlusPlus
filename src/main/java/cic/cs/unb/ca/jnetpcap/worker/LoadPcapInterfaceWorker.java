@@ -1,14 +1,13 @@
 package cic.cs.unb.ca.jnetpcap.worker;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.SwingWorker;
-
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class LoadPcapInterfaceWorker extends SwingWorker<List<PcapIf>,String>{

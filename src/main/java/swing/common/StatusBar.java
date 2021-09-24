@@ -1,12 +1,7 @@
 package swing.common;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
-import javax.swing.JLabel;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 
 public class StatusBar extends JPanel{
 

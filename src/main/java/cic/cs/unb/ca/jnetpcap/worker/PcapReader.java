@@ -9,9 +9,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cic.cs.unb.ca.jnetpcap.Utils.FILE_SEP;
-import static cic.cs.unb.ca.jnetpcap.Utils.FLOW_SUFFIX;
-import static cic.cs.unb.ca.jnetpcap.Utils.countLines;
+import static cic.cs.unb.ca.jnetpcap.Utils.*;
 
 public class PcapReader {
 

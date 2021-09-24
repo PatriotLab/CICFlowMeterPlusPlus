@@ -5,6 +5,7 @@ import cic.cs.unb.ca.guava.GuavaMgr;
 import cic.cs.unb.ca.ifm.ui.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 
 public class App {

@@ -80,7 +80,7 @@ public class FlowGenerator {
 	
 	if(this.currentFlows.containsKey(packet.fwdFlowId())) 
 		{id = packet.fwdFlowId();}
-    		else {
+    else {
 		id = packet.bwdFlowId();}
 
     		flow = currentFlows.get(id);
@@ -92,11 +92,11 @@ public class FlowGenerator {
     			if(flow.packetCount()>1){
 					if (mListener != null) {
 						mListener.onFlowGenerated(flow);
-					    }
+                    }
 					else{
-                                                finishedFlows.put(getFlowCount(), flow);
-                                            }
-                    //flow.endActiveIdleTime(currentTimestamp,this.flowActivityTimeOut, this.flowTimeOut, false);
+                        finishedFlows.put(getFlowCount(), flow);
+                    }
+                    flow.endActiveIdleTime(currentTimestamp,this.flowActivityTimeOut, this.flowTimeOut, false);
     			}
     			currentFlows.remove(id);    			
 				currentFlows.put(id, new BasicFlow(bidirectional,packet,flow.getSrc(),flow.getDst(),flow.getSrcPort(),flow.getDstPort(), this.flowActivityTimeOut));
@@ -130,7 +130,7 @@ public class FlowGenerator {
     	}
     }
 
-    /*public void dumpFlowBasedFeatures(String path, String filename,String header){
+    public void dumpFlowBasedFeatures(String path, String filename,String header){
     	BasicFlow   flow;
     	try {
     		System.out.println("TOTAL Flows: "+(finishedFlows.size()+currentFlows.size()));
@@ -156,7 +156,7 @@ public class FlowGenerator {
 			e.printStackTrace();
 		}
 
-    }*/
+    }
 
     public int dumpLabeledFlowBasedFeatures(String path, String filename,String header){
     	BasicFlow   flow;
@@ -164,7 +164,7 @@ public class FlowGenerator {
     	int   zeroPkt = 0;
 
     	try {
-    		//total = finishedFlows.size()+currentFlows.size(); becasue there are 0 packet BasicFlow in the currentFlows
+    		total = finishedFlows.size()+currentFlows.size(); //becasue there are 0 packet BasicFlow in the currentFlows
 
     		FileOutputStream output = new FileOutputStream(new File(path+filename));
 			logger.debug("dumpLabeledFlow: ", path + filename);

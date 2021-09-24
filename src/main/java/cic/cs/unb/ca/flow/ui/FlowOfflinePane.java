@@ -3,10 +3,10 @@ package cic.cs.unb.ca.flow.ui;
 import cic.cs.unb.ca.flow.FlowMgr;
 import cic.cs.unb.ca.jnetpcap.BasicFlow;
 import cic.cs.unb.ca.jnetpcap.FlowFeature;
+import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import cic.cs.unb.ca.jnetpcap.worker.ReadPcapFileWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import swing.common.PcapFileFilter;
 
 import javax.swing.*;

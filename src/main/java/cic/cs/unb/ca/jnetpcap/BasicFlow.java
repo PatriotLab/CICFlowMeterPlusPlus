@@ -1,11 +1,12 @@
 package cic.cs.unb.ca.jnetpcap;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.jnetpcap.packet.format.FormatUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class BasicFlow {
 
@@ -112,8 +113,7 @@ public class BasicFlow {
 		this.bHeaderBytes=0L;
 
 	}
-	
-	
+
 	public void firstPacket(BasicPacketInfo packet){
 		updateFlowBulk(packet);
 		detectUpdateSubflows(packet);

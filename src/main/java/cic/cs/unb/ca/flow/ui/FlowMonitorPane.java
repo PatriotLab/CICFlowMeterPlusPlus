@@ -7,6 +7,7 @@ import cic.cs.unb.ca.guava.GuavaMgr;
 import cic.cs.unb.ca.jnetpcap.BasicFlow;
 import cic.cs.unb.ca.jnetpcap.FlowFeature;
 import cic.cs.unb.ca.jnetpcap.PcapIfWrapper;
+import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import cic.cs.unb.ca.jnetpcap.worker.LoadPcapInterfaceWorker;
 import cic.cs.unb.ca.jnetpcap.worker.TrafficFlowWorker;
 import org.apache.commons.io.FilenameUtils;
@@ -14,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jnetpcap.PcapIf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import swing.common.InsertTableRow;
 import swing.common.JTable2CSVWorker;
 import swing.common.TextFileFilter;
@@ -71,7 +71,7 @@ public class FlowMonitorPane extends JPanel {
         csvWriterThread = Executors.newSingleThreadExecutor();
     }
 
-    public void destory() {
+    public void destroy() {
         csvWriterThread.shutdown();
     }
 
@@ -94,7 +94,7 @@ public class FlowMonitorPane extends JPanel {
         pane.setLayout(new BorderLayout(0, 5));
         pane.setBorder(BorderFactory.createLineBorder(new Color(0x555555)));
 
-        //pane.add(initTableBtnPane(), BorderLayout.NORTH);
+        pane.add(initTableBtnPane(), BorderLayout.NORTH);
         pane.add(initTablePane(), BorderLayout.CENTER);
         pane.add(initStatusPane(), BorderLayout.SOUTH);
 

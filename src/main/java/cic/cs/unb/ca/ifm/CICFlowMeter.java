@@ -1,16 +1,15 @@
 package cic.cs.unb.ca.ifm;
 
-import java.io.File;
-import java.io.FilenameFilter;
-
+import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 import cic.cs.unb.ca.jnetpcap.FlowFeature;
+import cic.cs.unb.ca.jnetpcap.FlowGenerator;
+import cic.cs.unb.ca.jnetpcap.PacketReader;
 import org.jnetpcap.PcapClosedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
-import cic.cs.unb.ca.jnetpcap.FlowGenerator;
-import cic.cs.unb.ca.jnetpcap.PacketReader;
+import java.io.File;
+import java.io.FilenameFilter;
 
 
 public class CICFlowMeter {
@@ -45,7 +44,7 @@ public class CICFlowMeter {
 			outpath = args[1];
 		}
 		
-		//String[] files = new File(pcapPath).list();
+		String[] files = new File(pcapPath).list();
 		
 		
 		String[] pcapfiles = new File(pcapPath).list(new FilenameFilter() {

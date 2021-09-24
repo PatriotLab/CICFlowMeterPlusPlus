@@ -1,7 +1,6 @@
 package cic.cs.unb.ca.jnetpcap;
 
 import org.apache.tika.Tika;
-import org.jnetpcap.PcapClosedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

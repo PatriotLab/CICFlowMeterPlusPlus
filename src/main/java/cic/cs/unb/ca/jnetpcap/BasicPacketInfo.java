@@ -1,8 +1,8 @@
 package cic.cs.unb.ca.jnetpcap;
 
-import java.util.Arrays;
-
 import org.jnetpcap.packet.format.FormatUtils;
+
+import java.util.Arrays;
 
 public class BasicPacketInfo {
 	
@@ -47,10 +47,8 @@ public class BasicPacketInfo {
 		this.id = generator.nextId();
 	}
     
-    
-
 	public String generateFlowId(){
-    	boolean forward = true;
+		boolean forward = true;
     	
     	for(int i=0; i<this.src.length;i++){           
     		if(((Byte)(this.src[i])).intValue() != ((Byte)(this.dst[i])).intValue()){
@@ -79,16 +77,13 @@ public class BasicPacketInfo {
 		return this.flowId;
 	}
 
-
-    
 	public String dumpInfo() {
 		return null;
 	}
 	public int getPayloadPacket() {
 		return payloadPacket+=1;
 	}
-          
-    
+
     public String getSourceIP(){
     	return FormatUtils.ip(this.src);
     }
@@ -96,8 +91,7 @@ public class BasicPacketInfo {
     public String getDestinationIP(){
     	return FormatUtils.ip(this.dst);
     }
-    
-    
+
 	public long getId() {
 		return id;
 	}
