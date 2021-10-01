@@ -9,8 +9,4 @@ public class FlowVisualEvent {
     public FlowVisualEvent(File csv_file) {
         this.csv_file = csv_file;
     }
-
-    public File getCsv_file() {
-        return csv_file;
-    }
 }

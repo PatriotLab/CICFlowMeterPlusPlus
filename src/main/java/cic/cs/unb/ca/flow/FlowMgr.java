@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 
-
 public class FlowMgr {
 
     protected static final Logger logger = LoggerFactory.getLogger(FlowMgr.class);

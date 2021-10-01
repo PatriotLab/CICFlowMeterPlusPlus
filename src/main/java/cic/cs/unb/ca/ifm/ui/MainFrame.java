@@ -3,10 +3,7 @@ package cic.cs.unb.ca.ifm.ui;
 import cic.cs.unb.ca.flow.FlowMgr;
 import cic.cs.unb.ca.flow.ui.FlowMonitorPane;
 import cic.cs.unb.ca.flow.ui.FlowOfflinePane;
-import cic.cs.unb.ca.flow.ui.FlowVisualPane;
-import cic.cs.unb.ca.guava.Event.FlowVisualEvent;
 import cic.cs.unb.ca.guava.GuavaMgr;
-import com.google.common.eventbus.Subscribe;
 import swing.common.SwingUtils;
 
 import javax.swing.*;
@@ -18,10 +15,8 @@ public class MainFrame extends JFrame{
 
 	private static final long serialVersionUID = 7419600803861028585L;
 
-	private FlowOfflinePane offLinePane;
-	private FlowMonitorPane monitorPane;
-	private FlowVisualPane visualPane;
-	
+	private final FlowOfflinePane offLinePane;
+	private final FlowMonitorPane monitorPane;
 	
 	public MainFrame() throws HeadlessException {
 		super("CICFlowMeter");
@@ -33,7 +28,6 @@ public class MainFrame extends JFrame{
 		setMinimumSize(new Dimension(700,500));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -48,7 +42,6 @@ public class MainFrame extends JFrame{
 		
 		offLinePane = new FlowOfflinePane();
         monitorPane = new FlowMonitorPane();
-        visualPane = new FlowVisualPane();
         getContentPane().add(monitorPane,BorderLayout.CENTER);
 
         GuavaMgr.getInstance().getEventBus().register(this);
@@ -81,13 +74,6 @@ public class MainFrame extends JFrame{
 		itemRealtime.addActionListener(e -> SwingUtils.setBorderLayoutPane(getContentPane(),monitorPane,BorderLayout.CENTER));
 		mnNetwork.add(itemRealtime);
 
-        /*JMenu mnAction = new JMenu("Action");
-        menuBar.add(mnAction);
-
-        JMenuItem itemVisual = new JMenuItem("Visual");
-        itemVisual.addActionListener(actionEvent -> SwingUtils.setBorderLayoutPane(getContentPane(),visualPane,BorderLayout.CENTER));
-        mnAction.add(itemVisual);*/
-
         JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 		
@@ -95,19 +81,6 @@ public class MainFrame extends JFrame{
 		itemAbout.addActionListener(e -> AboutDialog.show(MainFrame.this));
 		mnHelp.add(itemAbout);
 	}
-
-    @Subscribe
-    public void listenGuava(FlowVisualEvent evt) {
-        System.out.println("file: " + evt.getCsv_file().getPath());
-
-        if (visualPane == null) {
-            visualPane = new FlowVisualPane(evt.getCsv_file());
-        } else {
-            visualPane.visualFile(evt.getCsv_file());
-        }
-
-        SwingUtils.setBorderLayoutPane(getContentPane(), visualPane, BorderLayout.CENTER);
-    }
 
     @Override
     protected void finalize() throws Throwable {

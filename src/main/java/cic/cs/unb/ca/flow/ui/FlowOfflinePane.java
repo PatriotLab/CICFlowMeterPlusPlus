@@ -188,7 +188,6 @@ public class FlowOfflinePane extends JPanel{
         gc.weighty = 0.1;
         gc.fill = GridBagConstraints.NONE;
         gc.anchor = GridBagConstraints.LINE_END;
-        //gc.insets = new Insets(10, 5, 10, 5);
         jPanel.add(lblInputDir, gc);
 
         gc.gridx = 1;
@@ -197,7 +196,6 @@ public class FlowOfflinePane extends JPanel{
         gc.weighty = 0.1;
         gc.fill = GridBagConstraints.HORIZONTAL;
         gc.anchor = GridBagConstraints.LINE_START;
-        //gc.insets = new Insets(0, 10, 0, 0);
         gc.insets.left = gc.insets.right = 10;
         jPanel.add(cmbInput, gc);
 
@@ -216,7 +214,6 @@ public class FlowOfflinePane extends JPanel{
         gc.weighty = 0.1;
         gc.fill = GridBagConstraints.NONE;
         gc.anchor = GridBagConstraints.LINE_END;
-        //gc.insets = new Insets(10, 5, 10, 5);
         jPanel.add(lblOutputDir, gc);
 
         gc.gridx = 1;
@@ -233,9 +230,7 @@ public class FlowOfflinePane extends JPanel{
         gc.weightx = 0;
         gc.fill = GridBagConstraints.NONE;
         gc.anchor = GridBagConstraints.LINE_END;
-        //gc.insets = new Insets(10, 5, 10, 0);
         jPanel.add(btnOutputBrowse, gc);
-
 
         return jPanel;
     }
@@ -355,7 +350,6 @@ public class FlowOfflinePane extends JPanel{
             worker.addPropertyChangeListener(evt -> {
                 ReadPcapFileWorker task = (ReadPcapFileWorker) evt.getSource();
                 if ("progress".equals(evt.getPropertyName())) {
-                    //logger.info("progress -> {}", evt.getNewValue());
                     List<String> chunks = (List<String>) evt.getNewValue();
                     if (chunks != null) {
                         SwingUtilities.invokeLater(() -> {
