@@ -63,10 +63,6 @@ public class FlowOfflinePane extends JPanel{
 
     }
 
-    public void destroy() {
-        csvWriterThread.shutdown();
-    }
-
     private JPanel initOutPane(){
         JPanel jPanel = new JPanel(new BorderLayout(5, 5));
 
@@ -307,7 +303,7 @@ public class FlowOfflinePane extends JPanel{
                 ret = (long) o;
             } else {
                 input = (String) param.getEditor().getItem();
-                ret = Long.valueOf(input);
+                ret = Long.parseLong(input);
             }
             paramEle.add(ret);
 

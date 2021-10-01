@@ -3,7 +3,6 @@ package cic.cs.unb.ca.ifm.ui;
 import cic.cs.unb.ca.flow.FlowMgr;
 import cic.cs.unb.ca.flow.ui.FlowMonitorPane;
 import cic.cs.unb.ca.flow.ui.FlowOfflinePane;
-import cic.cs.unb.ca.guava.GuavaMgr;
 import swing.common.SwingUtils;
 
 import javax.swing.*;
@@ -44,8 +43,6 @@ public class MainFrame extends JFrame{
         monitorPane = new FlowMonitorPane();
         getContentPane().add(monitorPane,BorderLayout.CENTER);
 
-        GuavaMgr.getInstance().getEventBus().register(this);
-
 		setVisible(true);
 	}
 	
@@ -81,10 +78,4 @@ public class MainFrame extends JFrame{
 		itemAbout.addActionListener(e -> AboutDialog.show(MainFrame.this));
 		mnHelp.add(itemAbout);
 	}
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        GuavaMgr.getInstance().getEventBus().unregister(this);
-    }
 }

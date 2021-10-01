@@ -2,8 +2,8 @@ package cic.cs.unb.ca.flow.ui;
 
 import cic.cs.unb.ca.Sys;
 import cic.cs.unb.ca.flow.FlowMgr;
-import cic.cs.unb.ca.guava.Event.FlowVisualEvent;
-import cic.cs.unb.ca.guava.GuavaMgr;
+//import cic.cs.unb.ca.guava.Event.FlowVisualEvent;
+//import cic.cs.unb.ca.guava.GuavaMgr;
 import cic.cs.unb.ca.jnetpcap.BasicFlow;
 import cic.cs.unb.ca.jnetpcap.FlowFeature;
 import cic.cs.unb.ca.jnetpcap.PcapIfWrapper;
@@ -168,7 +168,7 @@ public class FlowMonitorPane extends JPanel {
 
         });
 
-        btnGraph.addActionListener(actionEvent -> GuavaMgr.getInstance().getEventBus().post(new FlowVisualEvent(lastSave)));
+        //btnGraph.addActionListener(actionEvent -> GuavaMgr.getInstance().getEventBus().post(new FlowVisualEvent(lastSave)));
 
         btnPane.add(Box.createHorizontalGlue());
         btnPane.add(btnSave);
@@ -348,7 +348,6 @@ public class FlowMonitorPane extends JPanel {
         //FlowMgr.getInstance().stopFetchFlow();
 
         btnLoad.setEnabled(true);
-
 
         String path = FlowMgr.getInstance().getAutoSaveFile();
         logger.info("path:{}", path);

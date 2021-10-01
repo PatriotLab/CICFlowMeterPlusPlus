@@ -1,7 +1,6 @@
 package cic.cs.unb.ca.ifm;
 
 import cic.cs.unb.ca.flow.FlowMgr;
-import cic.cs.unb.ca.guava.GuavaMgr;
 import cic.cs.unb.ca.ifm.ui.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,6 @@ public class App {
 	public static final Logger logger = LoggerFactory.getLogger(App.class);
 	public static void init() {
 		FlowMgr.getInstance().init();
-		GuavaMgr.getInstance().init();
 	}
 	
 	/**
