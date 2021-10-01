@@ -13,7 +13,6 @@ import java.util.Set;
 
 import static cic.cs.unb.ca.jnetpcap.Utils.LINE_SEP;
 
-
 public class FlowGenerator {
     public static final Logger logger = LoggerFactory.getLogger(FlowGenerator.class);
 
