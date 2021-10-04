@@ -59,26 +59,31 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
 
     @Override
     protected List<String> doInBackground() {
-
-        if (pcapPath.isDirectory()) {
-            readPcapDir(pcapPath,outPutDirectory);
-        } else {
-
-            if (!isPcapFile(pcapPath)) {
-                publish("Please select pcap file!");
-                publish("");
+        try {
+            if (pcapPath.isDirectory()) {
+                readPcapDir(pcapPath, outPutDirectory);
             } else {
-                publish("CICFlowMeter received 1 pcap file");
-                publish("");
-                publish("");
 
-                firePropertyChange(PROPERTY_CUR_FILE,"",pcapPath.getName());
-                firePropertyChange(PROPERTY_FILE_CNT,1,1);//begin with 1
-                readPcapFile(pcapPath.getPath(), outPutDirectory);
+                if (!isPcapFile(pcapPath)) {
+                    publish("Please select pcap file!");
+                    publish("");
+                } else {
+                    publish("CICFlowMeter received 1 pcap file");
+                    publish("");
+                    publish("");
+
+                    firePropertyChange(PROPERTY_CUR_FILE, "", pcapPath.getName());
+                    firePropertyChange(PROPERTY_FILE_CNT, 1, 1);//begin with 1
+                    readPcapFile(pcapPath.getPath(), outPutDirectory);
+                }
             }
+        } catch(Throwable e){
+            publish("Encountered exception ", e.toString());
+            logger.error("encountered exception", e);
         }
+
         /*chunks.clear();
-        chunks.add("");
+        chunks.add("");o
         chunks.add(DividingLine);
         chunks.add(String.format("TOTAL FLOWS GENERATED :%s", totalFlows));
         chunks.add(DividingLine);
