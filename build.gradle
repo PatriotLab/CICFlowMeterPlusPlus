@@ -84,7 +84,6 @@ task fatJar(type: Jar) {
     with jar*/
 }
 
-
 task execute(type: JavaExec) {
     println 'type JavaExec'
 
@@ -107,9 +106,7 @@ task exeCMD(type: JavaExec){
     }else{
         jvmArgs '-Djava.library.path=jnetpcap/linux/jnetpcap-1.4.r1425'
     }
-    //args = ["/home/yzhang29/0a/Capture/", "/home/yzhang29/0a/Capture/out/"]
 }
-
 
 task cmdScript(type: CreateStartScripts) {
     mainClass = "cic.cs.unb.ca.ifm.Cmd"

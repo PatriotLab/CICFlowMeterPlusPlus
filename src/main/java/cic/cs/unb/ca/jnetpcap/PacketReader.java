@@ -118,7 +118,6 @@ public class PacketReader {
 				packetInfo = new BasicPacketInfo(this.generator);
 				packetInfo.setSrc(this.ipv4.source());
 				packetInfo.setDst(this.ipv4.destination());
-				//packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMillis());
 				packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMicros());
 				
 				if(this.firstPacket == 0L)
@@ -147,13 +146,6 @@ public class PacketReader {
 					packetInfo.setHeaderBytes(udp.getHeaderLength());
 					packetInfo.setProtocol(17);			
 				}else {
-					/*logger.debug("other packet Ethernet -> {}"+  packet.hasHeader(new Ethernet()));
-					logger.debug("other packet Html     -> {}"+  packet.hasHeader(new Html()));
-					logger.debug("other packet Http     -> {}"+  packet.hasHeader(new Http()));
-					logger.debug("other packet SLL      -> {}"+  packet.hasHeader(new SLL()));
-					logger.debug("other packet L2TP     -> {}"+  packet.hasHeader(new L2TP()));
-					logger.debug("other packet Sctp     -> {}"+  packet.hasHeader(new Sctp()));
-					logger.debug("other packet PPP      -> {}"+  packet.hasHeader(new PPP()));*/
 
 					int headerCount = packet.getHeaderCount();
 					for(int i=0;i<headerCount;i++) {

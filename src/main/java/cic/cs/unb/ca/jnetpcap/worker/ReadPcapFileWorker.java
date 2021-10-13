@@ -82,13 +82,6 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
             logger.error("encountered exception", e);
         }
 
-        /*chunks.clear();
-        chunks.add("");o
-        chunks.add(DividingLine);
-        chunks.add(String.format("TOTAL FLOWS GENERATED :%s", totalFlows));
-        chunks.add(DividingLine);
-        publish(chunks.toArray( new String[chunks.size()]));*/
-
         return chunks;
     }
 
@@ -151,7 +144,6 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
             }
         }
 
-
         FlowGenerator flowGen = new FlowGenerator(true, flowTimeout, activityTimeout);
         flowGen.addFlowListener(new FlowListener(fileName));
         boolean readIP6 = false;
@@ -190,18 +182,6 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         chunks.add(DividingLine);
         publish(chunks.toArray( new String[chunks.size()]));
 
-        /*chunks.add(String.format("\t Total packets: %d",nTotal));
-        chunks.add(String.format("\t Valid packets: %d",nValid));
-        chunks.add(String.format("\t Ignored packets:%d %d ", nDiscarded,(nTotal-nValid)));
-        chunks.add(String.format("PCAP duration %d seconds",((packetReader.getLastPacket()- packetReader.getFirstPacket())/1000)));
-        chunks.add(DividingLine);
-        int singleTotal = flowGen.dumpLabeledFlowBasedFeatures(outPath, fullname+ FlowMgr.FLOW_SUFFIX, FlowFeature.getHeader());
-        chunks.add(String.format("Number of Flows: %d",singleTotal));
-        chunks.add("");
-        publish(chunks.toArray( new String[chunks.size()]));
-        totalFlows += singleTotal;
-
-        logger.debug("{} is done,Total {}",inputFile,singleTotal);*/
     }
 
 

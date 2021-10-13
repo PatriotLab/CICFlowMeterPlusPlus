@@ -1,6 +1,5 @@
 package cic.cs.unb.ca.jnetpcap.features;
 
-import cic.cs.unb.ca.jnetpcap.BasicFlow;
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
 public class FlowFeatures extends FeatureCollection {

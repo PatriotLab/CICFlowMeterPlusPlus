@@ -72,7 +72,6 @@ public class PcapReader {
 
     }
 
-
     static class FlowListener implements FlowGenListener {
 
         private String fileName;
