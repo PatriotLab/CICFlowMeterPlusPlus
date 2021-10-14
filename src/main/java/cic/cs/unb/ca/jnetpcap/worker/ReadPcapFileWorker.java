@@ -1,6 +1,7 @@
 package cic.cs.unb.ca.jnetpcap.worker;
 
 import cic.cs.unb.ca.jnetpcap.*;
+import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import org.jnetpcap.PcapClosedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,7 +171,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
                 break;
             }
         }
-        flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath(), FlowFeature.getHeader());
+        flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath());
 
         long lines = countLines(saveFileFullPath.getPath());
 
@@ -194,7 +195,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         }
 
         @Override
-        public void onFlowGenerated(BasicFlow flow) {
+        public void onFlowGenerated(FlowFeatures flow) {
             firePropertyChange(PROPERTY_FLOW,fileName,flow);
         }
     }

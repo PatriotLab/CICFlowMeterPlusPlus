@@ -1,6 +1,6 @@
 package swing.common;
 
-import cic.cs.unb.ca.Sys;
+import cic.cs.unb.ca.jnetpcap.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +52,7 @@ public class JTable2CSVWorker extends SwingWorker<String,String> {
             tableHeader.deleteCharAt(tableHeader.length() - 1);
             //logger.info("header: {}", tableHeader.toString());
 
-            csv.write(tableHeader.toString() + Sys.LINE_SEP);
+            csv.write(tableHeader.toString() + Utils.LINE_SEP);
 
             StringBuilder tableRow;
             for (int i = 0; i < model.getRowCount(); i++) {
@@ -62,7 +62,7 @@ public class JTable2CSVWorker extends SwingWorker<String,String> {
                 }
                 tableRow.deleteCharAt(tableRow.length() - 1);
                 //logger.info("row: {}", tableRow.toString());
-                csv.write(tableRow.toString() + Sys.LINE_SEP);
+                csv.write(tableRow.toString() + Utils.LINE_SEP);
             }
 
         }catch (IOException e) {

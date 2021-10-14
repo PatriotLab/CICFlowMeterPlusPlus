@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 public class PacketReader {
 
 	private static final Logger logger = LoggerFactory.getLogger(PacketReader.class);
-	private IdGenerator  generator = new IdGenerator();
 	private Pcap pcapReader;
 	
 	private long firstPacket;
@@ -115,7 +114,7 @@ public class PacketReader {
 		try {
 						
 			if (packet.hasHeader(ipv4)){
-				packetInfo = new BasicPacketInfo(this.generator);
+				packetInfo = new BasicPacketInfo();
 				packetInfo.setSrc(this.ipv4.source());
 				packetInfo.setDst(this.ipv4.destination());
 				packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMicros());
@@ -177,7 +176,7 @@ public class PacketReader {
 		BasicPacketInfo packetInfo = null;
 		try{
 			if(packet.hasHeader(ipv6)){
-				packetInfo = new BasicPacketInfo(this.generator);
+				packetInfo = new BasicPacketInfo();
 				packetInfo.setSrc(this.ipv6.source());
 				packetInfo.setDst(this.ipv6.destination());
 				packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMillis());			
@@ -271,11 +270,6 @@ public class PacketReader {
 		this.lastPacket = lastPacket;
 	}	
 
-	/*
-	 * So far,The value of the field BasicPacketInfo.id is not used
-	 * It doesn't matter just using a static IdGenerator for realtime PcapPacket reading
-	 */
-	private static IdGenerator idGen = new IdGenerator();
 	public static BasicPacketInfo getBasicPacketInfo(PcapPacket packet,boolean readIP4, boolean readIP6) {
 		BasicPacketInfo packetInfo = null;
 		
@@ -347,7 +341,7 @@ public class PacketReader {
 		BasicPacketInfo packetInfo = null;
 		try{
 			if(packet.hasHeader(protocol.getIpv6())){
-				packetInfo = new BasicPacketInfo(idGen);
+				packetInfo = new BasicPacketInfo();
 				packetInfo.setSrc(protocol.getIpv6().source());
 				packetInfo.setDst(protocol.getIpv6().destination());
 				packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMillis());			
@@ -358,13 +352,13 @@ public class PacketReader {
 					packetInfo.setPayloadBytes(protocol.getTcp().getPayloadLength());
 					packetInfo.setHeaderBytes(protocol.getTcp().getHeaderLength());
 					packetInfo.setProtocol(6);
-				}else if(packet.hasHeader(protocol.getUdp())){
+				}else if(packet.hasHeader(protocol.getUdp())) {
 					packetInfo.setSrcPort(protocol.getUdp().source());
 					packetInfo.setDstPort(protocol.getUdp().destination());
 					packetInfo.setPayloadBytes(protocol.getUdp().getPayloadLength());
 					packetInfo.setHeaderBytes(protocol.getUdp().getHeaderLength());
-					packetInfo.setProtocol(17);								
-				}		
+					packetInfo.setProtocol(17);
+				}
 			}
 		}catch(Exception e){
 			/*
@@ -391,7 +385,7 @@ public class PacketReader {
 		try {
 						
 			if (packet.hasHeader(protocol.getIpv4())){
-				packetInfo = new BasicPacketInfo(idGen);
+				packetInfo = new BasicPacketInfo();
 				packetInfo.setSrc(protocol.getIpv4().source());
 				packetInfo.setDst(protocol.getIpv4().destination());
 				//packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMillis());

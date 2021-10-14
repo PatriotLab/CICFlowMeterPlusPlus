@@ -1,6 +1,6 @@
 package cic.cs.unb.ca.flow;
 
-import cic.cs.unb.ca.Sys;
+import cic.cs.unb.ca.jnetpcap.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,11 +29,11 @@ public class FlowMgr {
 
         String rootPath = System.getProperty("user.dir");
 		StringBuilder sb = new StringBuilder(rootPath);
-		sb.append(Sys.FILE_SEP).append("data").append(Sys.FILE_SEP);
+		sb.append(Utils.FILE_SEP).append("data").append(Utils.FILE_SEP);
 
 		mDataPath = sb.toString();
 
-        sb.append("daily").append(Sys.FILE_SEP);
+        sb.append("daily").append(Utils.FILE_SEP);
         mFlowSavePath = sb.toString();
 
         return Instance;

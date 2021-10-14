@@ -1,7 +1,7 @@
 package cic.cs.unb.ca.jnetpcap.worker;
 
-import cic.cs.unb.ca.jnetpcap.BasicFlow;
+import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 
 public interface FlowGenListener {
-    void onFlowGenerated(BasicFlow flow);
+    void onFlowGenerated(FlowFeatures flow);
 }

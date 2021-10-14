@@ -1,8 +1,8 @@
 package cic.cs.unb.ca.jnetpcap.worker;
 
-import cic.cs.unb.ca.jnetpcap.BasicFlow;
 import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
+import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.nio.JMemory.Type;
 import org.jnetpcap.packet.PcapPacket;
@@ -58,8 +58,8 @@ public class TrafficFlowWorker extends SwingWorker<String,String> implements Flo
             PcapPacket permanent = new PcapPacket(Type.POINTER);
             packet.transferStateAndDataTo(permanent);
 
-            flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false));
-            if(isCancelled()) {
+			flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false));
+			if(isCancelled()) {
                 pcap.breakloop();
                 logger.debug("break Packet loop");
             }
@@ -99,7 +99,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> implements Flo
 	}
 
 	@Override
-	public void onFlowGenerated(BasicFlow flow) {
+	public void onFlowGenerated(FlowFeatures flow) {
         firePropertyChange(PROPERTY_FLOW,null,flow);
 	}
 }

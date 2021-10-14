@@ -7,7 +7,6 @@ import java.util.Arrays;
 public class BasicPacketInfo {
 	
 /*  Basic Info to generate flows from packets  	*/
-    private    long id;
     private    byte[] src;
     private    byte[] dst;
     private    int srcPort;
@@ -29,22 +28,21 @@ public class BasicPacketInfo {
 	private	   long headerBytes;
 	private int payloadPacket=0;
 
-	public BasicPacketInfo(byte[] src, byte[] dst, int srcPort, int dstPort,
-			int protocol, long timeStamp, IdGenerator generator) {
-		super();
-		this.id = generator.nextId();
-		this.src = src;
-		this.dst = dst;
-		this.srcPort = srcPort;
-		this.dstPort = dstPort;
-		this.protocol = protocol;
-		this.timeStamp = timeStamp;
-		generateFlowId();
-	}
+//	public BasicPacketInfo(byte[] src, byte[] dst, int srcPort, int dstPort,
+//			int protocol, long timeStamp, IdGenerator generator) {
+//		super();
+//		this.id = generator.nextId();
+//		this.src = src;
+//		this.dst = dst;
+//		this.srcPort = srcPort;
+//		this.dstPort = dstPort;
+//		this.protocol = protocol;
+//		this.timeStamp = timeStamp;
+//		generateFlowId();
+//	}
 	
-    public BasicPacketInfo(IdGenerator generator) {
+    public BasicPacketInfo() {
 		super();
-		this.id = generator.nextId();
 	}
     
 	public String generateFlowId(){
@@ -91,14 +89,6 @@ public class BasicPacketInfo {
     public String getDestinationIP(){
     	return FormatUtils.ip(this.dst);
     }
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public byte[] getSrc() {
 		return Arrays.copyOf(src,src.length);

@@ -2,6 +2,7 @@ package cic.cs.unb.ca.ifm;
 
 import cic.cs.unb.ca.flow.FlowMgr;
 import cic.cs.unb.ca.jnetpcap.*;
+import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
 import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import org.apache.commons.io.FilenameUtils;
@@ -14,7 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cic.cs.unb.ca.Sys.FILE_SEP;
+import static cic.cs.unb.ca.jnetpcap.Utils.FILE_SEP;
 
 public class Cmd {
 
@@ -152,7 +153,7 @@ public class Cmd {
             i++;
         }
 
-        flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath(), FlowFeature.getHeader());
+        flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath());
 
         long lines = SwingUtils.countLines(saveFileFullPath.getPath());
 
@@ -186,12 +187,12 @@ public class Cmd {
         }
 
         @Override
-        public void onFlowGenerated(BasicFlow flow) {
+        public void onFlowGenerated(FlowFeatures flow) {
 
             String flowDump = flow.dumpFlowBasedFeaturesEx();
             List<String> flowStringList = new ArrayList<>();
             flowStringList.add(flowDump);
-            InsertCsvRow.insert(FlowFeature.getHeader(),flowStringList,outPath,fileName+ FlowMgr.FLOW_SUFFIX);
+            InsertCsvRow.insert(flow.dumpHeader(),flowStringList,outPath,fileName+ FlowMgr.FLOW_SUFFIX);
 
             cnt++;
 

@@ -1,8 +1,7 @@
 package cic.cs.unb.ca.flow.ui;
 
 import cic.cs.unb.ca.flow.FlowMgr;
-import cic.cs.unb.ca.jnetpcap.BasicFlow;
-import cic.cs.unb.ca.jnetpcap.FlowFeature;
+import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import cic.cs.unb.ca.jnetpcap.worker.ReadPcapFileWorker;
 import org.slf4j.Logger;
@@ -381,7 +380,7 @@ public class FlowOfflinePane extends JPanel{
                 } else if (ReadPcapFileWorker.PROPERTY_FLOW.equalsIgnoreCase(evt.getPropertyName())) {
 
                     String fileName = (String) evt.getOldValue();
-                    BasicFlow flow = (BasicFlow) evt.getNewValue();
+                    FlowFeatures flow = (FlowFeatures) evt.getNewValue();
 
                     flowCnt.put(fileName, flowCnt.get(fileName) + 1);
 
@@ -389,7 +388,7 @@ public class FlowOfflinePane extends JPanel{
                     fileProgress.setString(msg);
 
                     //write flows to csv file
-                    String header  = FlowFeature.getHeader();
+                    String header = flow.dumpHeader();
                     csvWriterThread.execute(new InsertCsvRow(header, flow.dumpFlowBasedFeaturesEx(), out.getPath(), fileName+FlowMgr.FLOW_SUFFIX));
                 }
             });

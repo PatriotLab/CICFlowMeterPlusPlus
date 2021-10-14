@@ -1,6 +1,6 @@
 package swing.common;
 
-import cic.cs.unb.ca.Sys;
+import cic.cs.unb.ca.jnetpcap.Utils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -106,7 +106,7 @@ public class CsvFileWrapper {
 
         if(csvPath==null) {
             String rootPath = System.getProperty("user.dir");
-            csvPath = rootPath+ Sys.FILE_SEP+"data"+Sys.FILE_SEP+"out"+Sys.FILE_SEP;
+            csvPath = rootPath+ Utils.FILE_SEP+"data"+Utils.FILE_SEP+"out"+Utils.FILE_SEP;
         }
 
         return loadCSVFile(new File(csvPath));

@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 
 /**
  * Collection of features used to analyze packet captures and provide identifying information.
+ *
+ * @author Graham Scheaffer
  */
 public abstract class FeatureCollection {
     protected Field[] fields;
@@ -38,6 +40,14 @@ public abstract class FeatureCollection {
         return Arrays.stream(fields)
                 .map(f -> f.supplier.get())
                 .toArray(String[]::new);
+    }
+
+    public final String dumpFlowBasedFeaturesEx(){
+        return String.join(",", getData());
+    }
+
+    public final String dumpHeader() {
+        return String.join(",", getHeader());
     }
 
     /**

@@ -1,10 +1,9 @@
 package cic.cs.unb.ca.flow.ui;
 
-import cic.cs.unb.ca.Sys;
+import cic.cs.unb.ca.jnetpcap.Utils;
 import cic.cs.unb.ca.flow.FlowMgr;
-import cic.cs.unb.ca.jnetpcap.BasicFlow;
-import cic.cs.unb.ca.jnetpcap.FlowFeature;
 import cic.cs.unb.ca.jnetpcap.PcapIfWrapper;
+import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import cic.cs.unb.ca.jnetpcap.worker.LoadPcapInterfaceWorker;
 import cic.cs.unb.ca.jnetpcap.worker.TrafficFlowWorker;
@@ -105,7 +104,9 @@ public class FlowMonitorPane extends JPanel {
         pane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 
 
-        String[] arrayHeader = StringUtils.split(FlowFeature.getHeader(), ",");
+        String header = null;
+        header = new FlowFeatures().dumpHeader();
+        String[] arrayHeader = StringUtils.split(header, ",");
         defaultTableModel = new DefaultTableModel(arrayHeader,0);
         flowTable = new JTable(defaultTableModel);
         flowTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -308,7 +309,7 @@ public class FlowMonitorPane extends JPanel {
                 lblStatus.setText((String) event.getNewValue());
                 lblStatus.validate();
             }else if (TrafficFlowWorker.PROPERTY_FLOW.equalsIgnoreCase(event.getPropertyName())) {
-                insertFlow((BasicFlow) event.getNewValue());
+                insertFlow((FlowFeatures) event.getNewValue());
             }else if ("state".equals(event.getPropertyName())) {
                 switch (task.getState()) {
                     case STARTED:
@@ -352,7 +353,7 @@ public class FlowMonitorPane extends JPanel {
 
         if(defaultTableModel.getRowCount()>0 && new File(path).exists()) {
             StringBuilder msg = new StringBuilder("The flow has been saved to :");
-            msg.append(Sys.LINE_SEP);
+            msg.append(Utils.LINE_SEP);
             msg.append(path);
 
             UIManager.put("OptionPane.minimumSize",new Dimension(0, 0));
@@ -360,7 +361,7 @@ public class FlowMonitorPane extends JPanel {
         }
     }
 
-    private void insertFlow(BasicFlow flow) {
+    private void insertFlow(FlowFeatures flow) {
         List<String> flowStringList = new ArrayList<>();
         List<String[]> flowDataList = new ArrayList<>();
         String flowDump = flow.dumpFlowBasedFeaturesEx();
@@ -368,7 +369,7 @@ public class FlowMonitorPane extends JPanel {
         flowDataList.add(StringUtils.split(flowDump, ","));
 
         //write flows to csv file
-        String header  = FlowFeature.getHeader();
+        String header  = flow.dumpHeader();
         String path = FlowMgr.getInstance().getSavePath();
         String filename = LocalDate.now().toString() + FlowMgr.FLOW_SUFFIX;
         csvWriterThread.execute(new InsertCsvRow(header, flowStringList, path, filename));

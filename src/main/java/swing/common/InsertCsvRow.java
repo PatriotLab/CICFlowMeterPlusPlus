@@ -7,8 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import static cic.cs.unb.ca.Sys.FILE_SEP;
-import static cic.cs.unb.ca.Sys.LINE_SEP;
+import static cic.cs.unb.ca.jnetpcap.Utils.FILE_SEP;
+import static cic.cs.unb.ca.jnetpcap.Utils.LINE_SEP;
 
 public class InsertCsvRow implements Runnable {
 

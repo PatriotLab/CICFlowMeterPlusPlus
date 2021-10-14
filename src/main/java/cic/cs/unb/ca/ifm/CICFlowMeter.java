@@ -1,7 +1,6 @@
 package cic.cs.unb.ca.ifm;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
-import cic.cs.unb.ca.jnetpcap.FlowFeature;
 import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
 import org.jnetpcap.PcapClosedException;
@@ -97,7 +96,7 @@ public class CICFlowMeter {
 			logger.info("\t Ignored packets:{} {} ", nDiscarded,(nTotal-nValid) );
 			logger.info("PCAP duration {} seconds",((packetReader.getLastPacket()-packetReader.getFirstPacket())/1000));
 			logger.info("----------------------------------------------------------------------------");
-			totalFlows+=flowGen.dumpLabeledFlowBasedFeatures(outpath, file+"_ISCX.csv", FlowFeature.getHeader());
+			totalFlows+=flowGen.dumpLabeledFlowBasedFeatures(outpath, file+"_ISCX.csv");
 			//flowGen.dumpIPAddresses(outpath, file+"_IP-Addresses.csv");
 			//flowGen.dumpTimeBasedFeatures(outpath, file+".csv");
 			
