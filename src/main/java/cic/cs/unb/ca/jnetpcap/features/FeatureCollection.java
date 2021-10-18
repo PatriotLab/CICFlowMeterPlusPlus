@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 /**
  * Collection of features used to analyze packet captures and provide identifying information.
  *
- * @author Graham Scheaffer
+ * @author Julia Scheaffer
  */
 public abstract class FeatureCollection {
     protected Field[] fields;
