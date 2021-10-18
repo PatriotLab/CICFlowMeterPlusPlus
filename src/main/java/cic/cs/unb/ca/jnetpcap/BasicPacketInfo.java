@@ -28,6 +28,8 @@ public class BasicPacketInfo {
 	private	   long headerBytes;
 	private int payloadPacket=0;
 
+	public boolean isBwdPacket = false;
+
 //	public BasicPacketInfo(byte[] src, byte[] dst, int srcPort, int dstPort,
 //			int protocol, long timeStamp, IdGenerator generator) {
 //		super();
@@ -43,26 +45,6 @@ public class BasicPacketInfo {
 	
     public BasicPacketInfo() {
 		super();
-	}
-    
-	public String generateFlowId(){
-		boolean forward = true;
-    	
-    	for(int i=0; i<this.src.length;i++){           
-    		if(((Byte)(this.src[i])).intValue() != ((Byte)(this.dst[i])).intValue()){
-    			if(((Byte)(this.src[i])).intValue() >((Byte)(this.dst[i])).intValue()){
-    				forward = false;
-    			}
-    			i=this.src.length;
-    		}
-    	}     	
-    	
-        if(forward){
-            this.flowId = this.getSourceIP() + "-" + this.getDestinationIP() + "-" + this.srcPort  + "-" + this.dstPort  + "-" + this.protocol;
-        }else{
-            this.flowId = this.getDestinationIP() + "-" + this.getSourceIP() + "-" + this.dstPort  + "-" + this.srcPort  + "-" + this.protocol;
-        }
-        return this.flowId;
 	}
 
  	public String fwdFlowId() {  
@@ -138,16 +120,16 @@ public class BasicPacketInfo {
 		this.timeStamp = timeStamp;
 	}
 
-	public String getFlowId() {
-		return this.flowId!=null?this.flowId:generateFlowId();
-	}
-
 	public void setFlowId(String flowId) {		
 		this.flowId = flowId;
 	}
 
 	public boolean isForwardPacket(byte[] sourceIP) {
 		return Arrays.equals(sourceIP, this.src);
+	}
+
+	public boolean isForwardPacket() {
+		return !isBwdPacket;
 	}
 
 	public long getPayloadBytes() {

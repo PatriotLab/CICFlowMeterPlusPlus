@@ -7,6 +7,8 @@ public class FlowFeatures extends FeatureCollection {
     public FwdBwdSplit<PayloadSize> payload_size;
     public Time times = new Time();
 
+    public String origin;
+
     private void init() {
         // Initialize any of the members that need special code
         try {
@@ -34,11 +36,15 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(times)
                 .build();
 
+        origin = packet.fwdFlowId();
+
         onPacket(packet);
     }
 
     @Override
     public void onPacket(BasicPacketInfo packet) {
+        packet.isBwdPacket = !origin.equals(packet.fwdFlowId());
+
         packet_count.onPacket(packet);
         payload_size.onPacket(packet);
         times.onPacket(packet);

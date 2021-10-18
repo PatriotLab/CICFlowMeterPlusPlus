@@ -17,11 +17,20 @@ public class StatsFeature extends FeatureCollection {
 
     public StatsFeature() {
         this.fields = new FeatureCollection.FieldBuilder()
-                .addField(() -> summary.getMax(), "Max")
-                .addField(() -> summary.getMin(), "Min")
-                .addField(() -> summary.getMean(), "Mean")
-                .addField(() -> summary.getStandardDeviation(), "Std")
+                .addField(() -> nanCheck(summary.getMax()), "Max")
+                .addField(() -> nanCheck(summary.getMin()), "Min")
+                .addField(() -> nanCheck(summary.getMean()), "Mean")
+                .addField(() -> nanCheck(summary.getStandardDeviation()), "Std")
                 .build();
+    }
+
+    // This is a hack to make sure that if there is no data, it will instead return zero
+    private static double nanCheck(double val) {
+        if(Double.isNaN(val)){
+            return 0.0;
+        } else {
+            return val;
+        }
     }
 
     /**
