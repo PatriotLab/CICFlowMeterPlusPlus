@@ -1,6 +1,9 @@
 package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
+import cic.cs.unb.ca.jnetpcap.PacketReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -13,6 +16,8 @@ import java.util.function.Supplier;
  * @author Julia Scheaffer
  */
 public abstract class FeatureCollection {
+    protected static final Logger logger = LoggerFactory.getLogger(FeatureCollection.class);
+
     protected Field[] fields;
 
     /**

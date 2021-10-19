@@ -14,7 +14,7 @@ public class FlowFeatures extends FeatureCollection {
         try {
             payload_size = new FwdBwdSplit<>(PayloadSize.class);
         } catch (InstantiationException | IllegalAccessException e) {
-            // This will never happen, idk how best to write that
+            logger.error("FlowFeatures could not be initialized");
         }
     }
 
