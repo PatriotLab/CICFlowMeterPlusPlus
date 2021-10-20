@@ -8,9 +8,9 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
  * @param <T> {@link FeatureCollection} to wrap and split traffic between
  */
 public class FwdBwdSplit<T extends FeatureCollection> extends FeatureCollection {
-    private final T total;
-    private final T forward;
-    private final T backward;
+    public final T total;
+    public final T forward;
+    public final T backward;
 
     /**
      * @param containedClass FeatureCollection class to split traffic between

@@ -9,8 +9,8 @@ public class Time extends  FeatureCollection {
 
     Time(){
         fields = new FeatureCollection.FieldBuilder()
-                .addField(() -> first_time, "Start Time")
-                .addField(() -> last_time, "End Time")
+                .addField(() -> first_time, "Timestamp")
+                .addField(() -> last_time - first_time, "Duration")
                 .build();
     }
 

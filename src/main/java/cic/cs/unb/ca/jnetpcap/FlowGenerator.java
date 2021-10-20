@@ -89,7 +89,7 @@ public class FlowGenerator {
     		// 2.- we eliminate the flow from the current flow list
     		// 3.- we create a new flow with the packet-in-process
     		if((currentTimestamp -flow.times.getStartTime())>flowTimeOut){
-    			if(flow.packet_count.count >1){
+    			if(flow.packet_count.total.count >1){
 					if (mListener != null) {
 						mListener.onFlowGenerated(flow);
                     }
@@ -143,13 +143,13 @@ public class FlowGenerator {
     		Set<Integer> fkeys = finishedFlows.keySet();
 			for(Integer key:fkeys){
 	    		flow = finishedFlows.get(key);
-	    		if(flow.packet_count.count >1)
+	    		if(flow.packet_count.total.count >1)
 	    			output.write((flow.dumpFlowBasedFeaturesEx()+"\n").getBytes());
 			}
 			Set<String> ckeys = currentFlows.keySet();
 			for(String key:ckeys){
 	    		flow = currentFlows.get(key);
-	    		if(flow.packet_count.count >1)
+	    		if(flow.packet_count.total.count >1)
 	    			output.write((flow.dumpFlowBasedFeaturesEx()+"\n").getBytes());
 			}
 
@@ -175,7 +175,7 @@ public class FlowGenerator {
     		Set<Integer> fkeys = finishedFlows.keySet();    		
 			for(Integer key:fkeys){
 	    		flow = finishedFlows.get(key);
-                         if (flow.packet_count.count > 1) {
+                         if (flow.packet_count.total.count > 1) {
                            output.write((flow.dumpFlowBasedFeaturesEx() + "\n").getBytes());
                            total++;
                            } 
@@ -189,7 +189,7 @@ public class FlowGenerator {
 		output.write((someFlow.dumpHeader() + "\n").getBytes());
 			for(String key:ckeys){
 	    		flow = currentFlows.get(key);
-	    		if(flow.packet_count.count>1) {
+	    		if(flow.packet_count.total.count>1) {
                     output.write((flow.dumpFlowBasedFeaturesEx() + "\n").getBytes());
                     total++;
                 }else{
@@ -228,7 +228,7 @@ public class FlowGenerator {
             }
 
             for (FlowFeatures flow : currentFlows.values()) {
-                if(flow.packet_count.count>1) {
+                if(flow.packet_count.total.count>1) {
                     output.write((flow.dumpFlowBasedFeaturesEx() + LINE_SEP).getBytes());
                     total++;
                 }else{
