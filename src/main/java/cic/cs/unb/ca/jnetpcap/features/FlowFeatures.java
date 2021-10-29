@@ -11,6 +11,7 @@ public class FlowFeatures extends FeatureCollection {
     public TCPFlags tcp_flags = new TCPFlags();
     public FwdBwdSplit<FlowIAT> flow_iat;
     public ActivityIdle activeIdle;
+    public WinBytes initWinBytes = new WinBytes();
 
     private void init(long activityTimeout) {
         // Initialize any of the members that need special code
@@ -32,6 +33,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(tcp_flags)
                 .addField(flow_iat)
                 .addField(activeIdle)
+                .addField(initWinBytes)
                 .build();
     }
 
@@ -58,5 +60,6 @@ public class FlowFeatures extends FeatureCollection {
         tcp_flags.onPacket(packet);
         flow_iat.onPacket(packet);
         activeIdle.onPacket(packet);
+        initWinBytes.onPacket(packet);
     }
 }
