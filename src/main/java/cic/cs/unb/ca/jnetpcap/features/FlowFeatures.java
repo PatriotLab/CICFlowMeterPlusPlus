@@ -11,9 +11,8 @@ public class FlowFeatures extends FeatureCollection {
     public TCPFlags tcp_flags = new TCPFlags();
     public FwdBwdSplit<FlowIAT> flow_iat;
     public ActivityIdle activeIdle;
-    public long activityTimeout = 0L;
 
-    private void init() {
+    private void init(long activityTimeout) {
         // Initialize any of the members that need special code
         try {
             packet_count = new FwdBwdSplit<>(PacketCount.class);
@@ -37,12 +36,11 @@ public class FlowFeatures extends FeatureCollection {
     }
 
     public FlowFeatures() {
-        init();
+        init(0);
     }
 
     public FlowFeatures(BasicPacketInfo packet, long activityTimeout) {
-        this.activityTimeout = activityTimeout;
-        init();
+        init(activityTimeout);
 
         origin = packet.fwdFlowId();
 

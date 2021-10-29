@@ -8,16 +8,16 @@ public class ActivityIdle extends FeatureCollection{
     private long lastPacketTS = -1L;
     private long startActiveTS;
     private long endActiveTS;
-    private StatsFeature active_summary = new StatsFeature();
-    private StatsFeature idle_summary = new StatsFeature();
+    private StatsFeature activeSummary = new StatsFeature();
+    private StatsFeature idleSummary = new StatsFeature();
 
 
     public ActivityIdle(long activityTimeout) {
         timeout = activityTimeout;
 
         fields = new FeatureCollection.FieldBuilder()
-                .addField(active_summary, "Active {0}")
-                .addField(idle_summary, "Idle {0}")
+                .addField(activeSummary, "Active {0}")
+                .addField(idleSummary, "Idle {0}")
                 .build();
     }
 
@@ -26,9 +26,9 @@ public class ActivityIdle extends FeatureCollection{
         if((currentTime - lastPacketTS) > timeout){
             // packet was idling
             if(endActiveTS - startActiveTS > 0){
-                active_summary.addValue((double)(endActiveTS - startActiveTS));
+                activeSummary.addValue((double)(endActiveTS - startActiveTS));
             }
-            idle_summary.addValue((double)(currentTime - endActiveTS));
+            idleSummary.addValue((double)(currentTime - endActiveTS));
             endActiveTS = currentTime;
             startActiveTS = currentTime;
         }
