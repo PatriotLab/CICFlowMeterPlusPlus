@@ -10,14 +10,16 @@ public class FlowFeatures extends FeatureCollection {
     public FwdBwdSplit<PacketLength> packet_length;
     public TCPFlags tcp_flags = new TCPFlags();
     public FwdBwdSplit<FlowIAT> flow_iat;
+    public ActivityIdle activeIdle;
     public WinBytes initWinBytes = new WinBytes();
 
-    private void init() {
+    private void init(long activityTimeout) {
         // Initialize any of the members that need special code
         try {
             packet_count = new FwdBwdSplit<>(PacketCount.class);
             packet_length = new FwdBwdSplit<>(PacketLength.class);
             flow_iat = new FwdBwdSplit<>(FlowIAT.class);
+            activeIdle = new ActivityIdle(activityTimeout);
         } catch (InstantiationException | IllegalAccessException e) {
             logger.error("FlowFeatures could not be initialized");
         }
@@ -30,16 +32,17 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(packet_length)
                 .addField(tcp_flags)
                 .addField(flow_iat)
+                .addField(activeIdle)
                 .addField(initWinBytes)
                 .build();
     }
 
     public FlowFeatures() {
-        init();
+        init(0);
     }
 
     public FlowFeatures(BasicPacketInfo packet, long activityTimeout) {
-        init();
+        init(activityTimeout);
 
         origin = packet.fwdFlowId();
 
@@ -56,6 +59,7 @@ public class FlowFeatures extends FeatureCollection {
         times.onPacket(packet);
         tcp_flags.onPacket(packet);
         flow_iat.onPacket(packet);
+        activeIdle.onPacket(packet);
         initWinBytes.onPacket(packet);
     }
 }
