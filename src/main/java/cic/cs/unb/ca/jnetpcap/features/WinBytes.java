@@ -2,11 +2,17 @@ package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
-public class winBytes extends FeatureCollection{
-    private int fwd_win_bytes = 0;
-    private int bwd_win_bytes = 0;
+public class WinBytes extends FeatureCollection{
+    private int fwd_win_bytes = -1;
+    private int bwd_win_bytes = -1;
 
-    public winBytes() {
+    public WinBytes() {
+        if(bwd_win_bytes == -1){
+            bwd_win_bytes = 0;
+        }
+        if(fwd_win_bytes == -1){
+            fwd_win_bytes = 0;
+        }
         fields = new FeatureCollection.FieldBuilder()
                 .addField(() -> fwd_win_bytes, "FWD Init Win Bytes")
                 .addField(() -> bwd_win_bytes, "Bwd Init Win Bytes")

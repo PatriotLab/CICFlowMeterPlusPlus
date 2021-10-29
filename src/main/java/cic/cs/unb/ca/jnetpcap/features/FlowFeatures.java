@@ -10,7 +10,7 @@ public class FlowFeatures extends FeatureCollection {
     public FwdBwdSplit<PacketLength> packet_length;
     public TCPFlags tcp_flags = new TCPFlags();
     public FwdBwdSplit<FlowIAT> flow_iat;
-    public winBytes initWinBytes = new winBytes();
+    public WinBytes initWinBytes = new WinBytes();
 
     private void init() {
         // Initialize any of the members that need special code
