@@ -9,9 +9,9 @@ public class PacketLength extends FeatureCollection{
     private final StatsFeature payloadSize = new StatsFeature();
 
     public PacketLength(){
-        fields = new FeatureCollection.FieldBuilder()
+        new FeatureCollection.FieldBuilder()
                 .addField(payloadSize, "Packet Length {0}")
-                .build();
+                .build(this);
     }
 
     @Override

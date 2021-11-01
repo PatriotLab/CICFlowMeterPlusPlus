@@ -13,7 +13,7 @@ public class TCPFlags extends FeatureCollection {
     private int rst_count = 0;
 
     public TCPFlags(){
-        fields = new FeatureCollection.FieldBuilder()
+        new FeatureCollection.FieldBuilder()
                 .addField(() -> fin_count, "Count FIN Flag")
                 .addField(() -> psh_count, "Count PSH Flag")
                 .addField(() -> urg_count, "Count URG Flag")
@@ -22,7 +22,7 @@ public class TCPFlags extends FeatureCollection {
                 .addField(() -> ack_count, "Count ACK FLag")
                 .addField(() -> cwr_count, "Count CWR Flag")
                 .addField(() -> rst_count, "Count RST Flag")
-                .build();
+                .build(this);
     }
 
     @Override

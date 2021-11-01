@@ -16,13 +16,13 @@ public class StatsFeature extends FeatureCollection {
     SummaryStatistics summary = new SummaryStatistics();
 
     public StatsFeature() {
-        this.fields = new FeatureCollection.FieldBuilder()
+        new FeatureCollection.FieldBuilder()
                 .addField(() -> nanCheck(summary.getMax()), "Max")
                 .addField(() -> nanCheck(summary.getMin()), "Min")
                 .addField(() -> nanCheck(summary.getMean()), "Mean")
                 .addField(() -> nanCheck(summary.getStandardDeviation()), "Std")
                 .addField(() -> nanCheck(summary.getSum()), "Total")
-                .build();
+                .build(this);
     }
 
     // This is a hack to make sure that if there is no data, it will instead return zero

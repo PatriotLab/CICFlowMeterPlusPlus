@@ -8,10 +8,10 @@ public class Time extends  FeatureCollection {
     public long last_time = 0;
 
     Time(){
-        fields = new FeatureCollection.FieldBuilder()
-                .addField(() -> first_time, "Timestamp")
-                .addField(() -> last_time - first_time, "Duration")
-                .build();
+        new FeatureCollection.FieldBuilder()
+                .addField(this::getStartTime, "Timestamp")
+                .addField(this::getDuration, "Duration")
+                .build(this);
     }
 
     @Override
@@ -26,5 +26,9 @@ public class Time extends  FeatureCollection {
 
     public long getStartTime(){
         return first_time;
+    }
+
+    public long getDuration() {
+        return last_time - first_time;
     }
 }

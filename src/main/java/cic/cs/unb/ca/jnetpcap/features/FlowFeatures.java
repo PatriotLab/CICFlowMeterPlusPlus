@@ -6,25 +6,16 @@ public class FlowFeatures extends FeatureCollection {
     public String origin;
     public Time times = new Time();
     public Protocol protocol = new Protocol();
-    public FwdBwdSplit<PacketCount> packet_count;
-    public FwdBwdSplit<PacketLength> packet_length;
+    public FwdBwdSplit<PacketCount> packet_count = new FwdBwdSplit<>(PacketCount::new);
+    public FwdBwdSplit<PacketLength> packet_length = new FwdBwdSplit<>(PacketLength::new);
     public TCPFlags tcp_flags = new TCPFlags();
-    public FwdBwdSplit<FlowIAT> flow_iat;
+    public FwdBwdSplit<FlowIAT> flow_iat = new FwdBwdSplit<>(FlowIAT::new);
     public ActivityIdle activeIdle;
     public WinBytes initWinBytes = new WinBytes();
 
     private void init(long activityTimeout) {
-        // Initialize any of the members that need special code
-        try {
-            packet_count = new FwdBwdSplit<>(PacketCount.class);
-            packet_length = new FwdBwdSplit<>(PacketLength.class);
-            flow_iat = new FwdBwdSplit<>(FlowIAT.class);
-            activeIdle = new ActivityIdle(activityTimeout);
-        } catch (InstantiationException | IllegalAccessException e) {
-            logger.error("FlowFeatures could not be initialized");
-        }
-
-        fields = new FeatureCollection.FieldBuilder()
+        activeIdle = new ActivityIdle(activityTimeout);
+        new FeatureCollection.FieldBuilder()
                 .addField(() -> origin, "Origin")
                 .addField(times)
                 .addField(protocol)
@@ -34,7 +25,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(flow_iat)
                 .addField(activeIdle)
                 .addField(initWinBytes)
-                .build();
+                .build(this);
     }
 
     public FlowFeatures() {
@@ -52,14 +43,6 @@ public class FlowFeatures extends FeatureCollection {
     @Override
     public void onPacket(BasicPacketInfo packet) {
         packet.isBwdPacket = !origin.equals(packet.fwdFlowId());
-
-        protocol.onPacket(packet);
-        packet_count.onPacket(packet);
-        packet_length.onPacket(packet);
-        times.onPacket(packet);
-        tcp_flags.onPacket(packet);
-        flow_iat.onPacket(packet);
-        activeIdle.onPacket(packet);
-        initWinBytes.onPacket(packet);
+        this.delegatePacket(packet);
     }
 }

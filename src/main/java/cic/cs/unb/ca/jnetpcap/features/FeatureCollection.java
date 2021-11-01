@@ -19,6 +19,7 @@ public abstract class FeatureCollection {
     protected static final Logger logger = LoggerFactory.getLogger(FeatureCollection.class);
 
     protected Field[] fields;
+    protected FeatureCollection[] subfeatures;
 
     /**
      * FeatureCollections may use this function to recursively process information about incoming packets.
@@ -28,6 +29,11 @@ public abstract class FeatureCollection {
     public void onPacket(BasicPacketInfo packet) {
     }
 
+    protected final void delegatePacket(BasicPacketInfo packet){
+        for(FeatureCollection subfeature : subfeatures){
+            subfeature.onPacket(packet);
+        }
+    }
 
     /**
      * Get an array of strings representing the field's headers
@@ -63,6 +69,8 @@ public abstract class FeatureCollection {
     static class FieldBuilder {
         private final ArrayList<Field> fields = new ArrayList<Field>() {
         };
+        private final ArrayList<FeatureCollection> subfeatures = new ArrayList<FeatureCollection>(){
+        };
 
         /**
          * Add a new subfeature's field and rename with the format string.
@@ -71,6 +79,7 @@ public abstract class FeatureCollection {
          * @param format     MessageFormat style formatting string
          */
         public FieldBuilder addField(FeatureCollection subfeature, String format) {
+            subfeatures.add(subfeature);
             for (Field field : subfeature.fields) {
                 fields.add(field.addFormat(format));
             }
@@ -84,6 +93,7 @@ public abstract class FeatureCollection {
          * @see #addField(cic.cs.unb.ca.jnetpcap.features.FeatureCollection, java.lang.String)
          */
         public FieldBuilder addField(FeatureCollection subfeature) {
+            subfeatures.add(subfeature);
             fields.addAll(Arrays.asList(subfeature.fields));
             return this;
         }
@@ -100,12 +110,12 @@ public abstract class FeatureCollection {
         }
 
         /**
-         * Finish building the fields of your FeatureCollection to an array.
+         * Finish building the fields of your FeatureCollection.
          *
-         * @return an array of fields representing your feature collection
+         * @param self The feature collection you are building for (usually just {@code this})
          */
-        public Field[] build() {
-            return this.fields.toArray(new Field[]{});
+        public void build(FeatureCollection self) {
+            self.fields = this.fields.toArray(new Field[]{});
         }
     }
 

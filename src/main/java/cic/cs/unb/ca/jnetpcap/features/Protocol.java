@@ -11,8 +11,8 @@ public class Protocol extends FeatureCollection {
     }
 
     public Protocol() {
-        fields = new FeatureCollection.FieldBuilder()
+        new FeatureCollection.FieldBuilder()
                 .addField(() -> protocol, "Protocol")
-                .build();
+                .build(this);
     }
 }

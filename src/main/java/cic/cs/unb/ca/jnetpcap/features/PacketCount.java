@@ -6,9 +6,9 @@ public class PacketCount extends FeatureCollection {
     public int count = 0;
 
     PacketCount(){
-        fields = new FeatureCollection.FieldBuilder()
+        new FeatureCollection.FieldBuilder()
                 .addField(() -> count, "Packet Count")
-                .build();
+                .build(this);
     }
 
     @Override

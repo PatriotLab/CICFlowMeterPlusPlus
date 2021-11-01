@@ -15,10 +15,10 @@ public class ActivityIdle extends FeatureCollection{
     public ActivityIdle(long activityTimeout) {
         timeout = activityTimeout;
 
-        fields = new FeatureCollection.FieldBuilder()
+        new FeatureCollection.FieldBuilder()
                 .addField(activeSummary, "Active {0}")
                 .addField(idleSummary, "Idle {0}")
-                .build();
+                .build(this);
     }
 
     private void updateActiveIdleTS(){

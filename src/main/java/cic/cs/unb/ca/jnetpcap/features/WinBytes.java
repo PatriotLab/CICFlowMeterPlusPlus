@@ -13,10 +13,10 @@ public class WinBytes extends FeatureCollection{
         if(fwd_win_bytes == -1){
             fwd_win_bytes = 0;
         }
-        fields = new FeatureCollection.FieldBuilder()
+        new FeatureCollection.FieldBuilder()
                 .addField(() -> fwd_win_bytes, "FWD Init Win Bytes")
                 .addField(() -> bwd_win_bytes, "Bwd Init Win Bytes")
-                .build();
+                .build(this);
     }
 
     @Override

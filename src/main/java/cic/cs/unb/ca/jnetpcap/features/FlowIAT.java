@@ -8,9 +8,9 @@ public class FlowIAT extends FeatureCollection {
     private StatsFeature iat_summary = new StatsFeature();
 
     public FlowIAT() {
-        fields = new FeatureCollection.FieldBuilder()
+        new FeatureCollection.FieldBuilder()
                 .addField(iat_summary, "IAT {0}")
-                .build();
+                .build(this);
     }
 
     @Override
