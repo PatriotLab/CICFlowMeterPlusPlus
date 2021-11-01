@@ -116,6 +116,7 @@ public abstract class FeatureCollection {
          */
         public void build(FeatureCollection self) {
             self.fields = this.fields.toArray(new Field[]{});
+            self.subfeatures = this.subfeatures.toArray(new FeatureCollection[]{});
         }
     }
 
