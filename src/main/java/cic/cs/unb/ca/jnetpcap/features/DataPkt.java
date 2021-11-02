@@ -4,11 +4,14 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
 public class DataPkt extends FeatureCollection{
     private int actDataPkt = 0;
+    private long minFwdSeg;
+    private long currentPckSeg;
     private boolean isFirstPacket = true;
 
     public DataPkt() {
         new FeatureCollection.FieldBuilder()
                 .addField(() -> actDataPkt, "Fwd Act Data Pkts")
+                .addField(() -> minFwdSeg, "Fwd Seg Size Min")
                 .build(this);
     }
 
@@ -19,6 +22,14 @@ public class DataPkt extends FeatureCollection{
                 actDataPkt++;
             }
         }
+
+        if(isFirstPacket){
+            minFwdSeg = packet.getHeaderBytes();
+        }
+
+        currentPckSeg = packet.getHeaderBytes();
+        minFwdSeg = Math.min(minFwdSeg, currentPckSeg);
+
         isFirstPacket = false;
     }
 }
