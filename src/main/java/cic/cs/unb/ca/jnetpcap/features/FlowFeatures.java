@@ -12,6 +12,7 @@ public class FlowFeatures extends FeatureCollection {
     public FwdBwdSplit<FlowIAT> flow_iat = new FwdBwdSplit<>(FlowIAT::new);
     public ActivityIdle activeIdle;
     public WinBytes initWinBytes = new WinBytes();
+    public DataPkt data = new DataPkt();
 
     private void init(long activityTimeout) {
         activeIdle = new ActivityIdle(activityTimeout);
@@ -25,6 +26,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(flow_iat)
                 .addField(activeIdle)
                 .addField(initWinBytes)
+                .addField(data)
                 .build(this);
     }
 
