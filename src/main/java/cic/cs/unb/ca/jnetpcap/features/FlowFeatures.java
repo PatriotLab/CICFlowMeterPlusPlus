@@ -16,6 +16,7 @@ public class FlowFeatures extends FeatureCollection {
     public WinBytes initWinBytes = new WinBytes();
     public DataPkt data = new DataPkt();
     public Segment seg = new Segment();
+    public Subflow subflow = new Subflow();
 
     private void init(long activityTimeout) {
         activeIdle = new ActivityIdle(activityTimeout);
@@ -33,6 +34,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(initWinBytes)
                 .addField(data)
                 .addField(seg)
+                .addField(subflow)
                 .build(this);
     }
 
