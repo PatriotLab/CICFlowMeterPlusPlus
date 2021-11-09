@@ -11,7 +11,7 @@ public class DataPkt extends FeatureCollection{
     public DataPkt() {
         new FeatureCollection.FieldBuilder()
                 .addField(() -> actDataPkt, "Fwd Act Data Pkts")
-                .addField(() -> minFwdSeg, "Fwd Seg Size Min")
+                .addField(() -> minFwdSeg, "Fwd Header Size Min")
                 .build(this);
     }
 
