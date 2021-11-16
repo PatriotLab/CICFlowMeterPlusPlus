@@ -53,14 +53,6 @@ public abstract class FeatureCollection {
                 .toArray(String[]::new);
     }
 
-    public final String dumpFlowBasedFeaturesEx(){
-        return String.join(",", getData());
-    }
-
-    public final String dumpHeader() {
-        return String.join(",", getHeader());
-    }
-
     /**
      * A builder of Fields for the feature collection.
      *

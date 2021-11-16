@@ -105,7 +105,7 @@ public class FlowMonitorPane extends JPanel {
 
 
         String header = null;
-        header = new FlowFeatures().dumpHeader();
+        header = FlowFeatures.dumpHeader();
         String[] arrayHeader = StringUtils.split(header, ",");
         defaultTableModel = new DefaultTableModel(arrayHeader,0);
         flowTable = new JTable(defaultTableModel);
