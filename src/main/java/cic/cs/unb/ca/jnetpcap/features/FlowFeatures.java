@@ -51,7 +51,7 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("Bwd Packet Length Min", "Bwd Packet Length Min");
         compatMap.put("Bwd Packet Length Mean", "Bwd Packet Length Mean");
         compatMap.put("Bwd Packet Length Std", "Bwd Packet Length Std");
-        compatMap.put("Flow Bytes/s", null);
+        compatMap.put("Flow Bytes/s", "Flow Bytes/s");
         compatMap.put("Flow Packets/s", null);
         compatMap.put("Flow IAT Mean", "IAT Mean");
         compatMap.put("Flow IAT Std", "IAT Std");
@@ -88,21 +88,21 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("ECE Flag Count", "Count ECE Flag");
         compatMap.put("Down/Up Ratio", null);
         compatMap.put("Average Packet Size", "Packet Length Mean"); // This is stupid. Yes, packet length mean is just in here twice
-        compatMap.put("Fwd Segment Size Avg", "Fwd Packet Length Mean");
-        compatMap.put("Bwd Segment Size Avg", "Bwd Packet Length Mean");
+        compatMap.put("Fwd Segment Size Avg", "Fwd Segment Size Mean");
+        compatMap.put("Bwd Segment Size Avg", "Fwd Segment Size Mean");
         compatMap.put("Fwd Bytes/Bulk Avg", null);
         compatMap.put("Fwd Packet/Bulk Avg", null);
         compatMap.put("Fwd Bulk Rate Avg", null);
         compatMap.put("Bwd Bytes/Bulk Avg", null);
         compatMap.put("Bwd Packet/Bulk Avg", null);
         compatMap.put("Bwd Bulk Rate Avg", null);
-        compatMap.put("Subflow Fwd Packets", null);
-        compatMap.put("Subflow Fwd Bytes", null);
-        compatMap.put("Subflow Bwd Packets", null);
-        compatMap.put("Subflow Bwd Bytes", null);
+        compatMap.put("Subflow Fwd Packets", "Fwd Packets Subflow");
+        compatMap.put("Subflow Fwd Bytes", "Fwd Bytes Subflow");
+        compatMap.put("Subflow Bwd Packets", "Bwd Packets Subflow");
+        compatMap.put("Subflow Bwd Bytes", "Bwd Bytes Subflow");
         compatMap.put("FWD Init Win Bytes", "FWD Init Win Bytes");
         compatMap.put("Bwd Init Win Bytes", "Bwd Init Win Bytes");
-        compatMap.put("Fwd Act Data Pkts", null); // terrible name
+        compatMap.put("Fwd Act Data Pkts", "Fwd Act Data Pkts"); // terrible name
         compatMap.put("Fwd Seg Size Min", "Fwd Packet Length Min"); // why does this exist
         compatMap.put("Active Mean", "Active Mean");
         compatMap.put("Active Std", "Active Std");
