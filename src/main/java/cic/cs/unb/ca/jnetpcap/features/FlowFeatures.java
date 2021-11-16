@@ -17,6 +17,7 @@ public class FlowFeatures extends FeatureCollection {
     public DataPkt data = new DataPkt();
     public Segment seg = new Segment();
     public Subflow subflow = new Subflow();
+    public FlowBytes flowbytes = new FlowBytes();
 
     private void init(long activityTimeout) {
         activeIdle = new ActivityIdle(activityTimeout);
@@ -35,6 +36,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(data)
                 .addField(seg)
                 .addField(subflow)
+                .addField(flowbytes)
                 .build(this);
     }
 
