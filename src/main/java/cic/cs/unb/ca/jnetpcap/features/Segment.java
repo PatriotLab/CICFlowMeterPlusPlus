@@ -2,6 +2,12 @@ package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
+/**
+ * Feature that returns statistical information on fwd and bwd segment sizes. (payload bytes)
+ *
+ * @author Dylan Westlund
+ */
+
 public class Segment extends FeatureCollection{
     private boolean isBackward;
     private StatsFeature fwdPckBytes = new StatsFeature();

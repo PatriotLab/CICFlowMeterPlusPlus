@@ -2,6 +2,13 @@ package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
+/**
+ * Feature that collects amount of time a flow is active vs idling.
+ * Outputs into the CSV with stats from Active and Idle statistics
+ *
+ * @author Dylan Westlund
+ */
+
 public class ActivityIdle extends FeatureCollection{
     private long timeout;
     private long currentTime;

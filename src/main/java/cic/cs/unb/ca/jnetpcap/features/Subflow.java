@@ -2,6 +2,13 @@ package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
+/**
+ * Feature that collects information on subflows in the flow.
+ * Returns average flow bytes (payload bytes) and packets per subflow. Differentiating between fwd and bwd.
+ *
+ * @author Dylan Westlund
+ */
+
 public class Subflow extends FeatureCollection{
     private long fwdBytes = 0;
     private long bwdBytes = 0;

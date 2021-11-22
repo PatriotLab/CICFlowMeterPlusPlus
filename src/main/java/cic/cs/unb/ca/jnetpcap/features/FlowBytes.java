@@ -2,6 +2,12 @@ package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
+/**
+ * Feature that collects returns the flow bytes/s in each flow.
+ * Returns into the CSV file
+ *
+ * @author Dylan Westlund
+ */
 public class FlowBytes extends FeatureCollection{
     private long totalBytes = 0;
     private long flowLastTS = 0;

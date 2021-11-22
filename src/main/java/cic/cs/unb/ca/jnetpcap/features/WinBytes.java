@@ -2,6 +2,12 @@ package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
+/**
+ * Feature returns the size of the fwd and bwd initial window size.
+ *
+ * @author Dylan Westlund
+ */
+
 public class WinBytes extends FeatureCollection{
     private int fwd_win_bytes = 0;
     private int bwd_win_bytes = 0;
