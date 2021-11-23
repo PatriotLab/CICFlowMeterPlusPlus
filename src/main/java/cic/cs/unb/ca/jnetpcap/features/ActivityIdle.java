@@ -4,7 +4,7 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
 /**
  * Feature that collects amount of time a flow is active vs idling.
- * Outputs into the CSV with stats from Active and Idle statistics
+ * Returns active and idle timing statistics per flow
  *
  * @author Dylan Westlund
  */
@@ -31,16 +31,17 @@ public class ActivityIdle extends FeatureCollection{
     private void updateActiveIdleTS(){
         // update endActiveTS and startActiveTS
         if((currentTime - lastPacketTS) > timeout){
-            // packet was idling
+            // packet could be idling
             if(endActiveTS - startActiveTS > 0){
+                // packet is active
                 activeSummary.addValue((double)(endActiveTS - startActiveTS));
             }
+            // packet is idling
             idleSummary.addValue((double)(currentTime - endActiveTS));
             endActiveTS = currentTime;
             startActiveTS = currentTime;
         }
         else{
-            // packet is active
             endActiveTS = currentTime;
         }
 

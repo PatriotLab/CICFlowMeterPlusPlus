@@ -3,6 +3,12 @@ package cic.cs.unb.ca.jnetpcap.features;
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 import org.jnetpcap.packet.format.FormatUtils;
 
+/**
+ * Feature that returns source IP and source port.
+ *
+ * @author INSERTNAME
+ */
+
 public class SourceInfo extends FeatureCollection {
     private int srcPort = 0;
     private byte[] src = null;

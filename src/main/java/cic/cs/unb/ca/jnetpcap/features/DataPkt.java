@@ -3,9 +3,13 @@ package cic.cs.unb.ca.jnetpcap.features;
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
 /**
- * Feature that collects the count of data packets (payload bytes) that are >= 1 byte
- * Feature also collects the smallest Fwd Segment (header bytes)
- * Returns into the CSV file.
+ * Feature that two values based on the data in the packet.
+ * Segment = header bytes
+ * Data packet = payload bytes
+ *
+ * Returns
+ *      - actDataPck, or number of fwd packets with data in them (>=1)
+ *      - minFwdSeg, or minimum fwd segment size
  *
  * @author Dylan Westlund
  */
@@ -36,6 +40,7 @@ public class DataPkt extends FeatureCollection{
         }
 
         currentPckSeg = packet.getHeaderBytes();
+        // store the min value
         minFwdSeg = Math.min(minFwdSeg, currentPckSeg);
 
         isFirstPacket = false;

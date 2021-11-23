@@ -3,8 +3,7 @@ package cic.cs.unb.ca.jnetpcap.features;
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
 /**
- * Feature that collects returns the flow bytes/s in each flow.
- * Returns into the CSV file
+ * Feature that collects returns the flow payload bytes/s in each flow.
  *
  * @author Dylan Westlund
  */

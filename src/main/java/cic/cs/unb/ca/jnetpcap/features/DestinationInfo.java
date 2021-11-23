@@ -3,6 +3,11 @@ package cic.cs.unb.ca.jnetpcap.features;
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 import org.jnetpcap.packet.format.FormatUtils;
 
+/**
+ * Feature that returns destination ip and port.
+ *
+ * @author INSERT_NAME
+ */
 public class DestinationInfo extends FeatureCollection {
     private int destPort = 0;
     private byte[] dest = null;

@@ -2,6 +2,12 @@ package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
+/**
+ * Feature collects time between each packet in a desired flow
+ *
+ * @author INSERT-NAME
+ */
+
 public class FlowIAT extends FeatureCollection {
     private boolean seen_first = false;
     private long last_seen_timestamp = 0;

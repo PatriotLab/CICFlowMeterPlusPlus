@@ -2,6 +2,13 @@ package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
+/**
+ * Feature that collects TCP flag count
+ * Flags include, FIN, PSH, URG, ECE, SYN, ACK, CWR, and RST
+ *
+ * @author INSERTNAME
+ */
+
 public class TCPFlags extends FeatureCollection {
     private int fin_count = 0;
     private int psh_count = 0;

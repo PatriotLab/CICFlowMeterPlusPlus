@@ -2,6 +2,12 @@ package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
+/**
+ * Feature that collects protocol for each flow
+ *
+ * @author INSERTNAME
+ */
+
 public class Protocol extends FeatureCollection {
     int protocol = 0;
 

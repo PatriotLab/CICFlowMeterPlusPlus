@@ -2,6 +2,12 @@ package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
+/**
+ * Feature that collects flow timestamp and duration
+ *
+ * @author INSERTNAME
+ */
+
 public class Time extends  FeatureCollection {
     boolean seen_first = false;
     public long first_time = 0;
