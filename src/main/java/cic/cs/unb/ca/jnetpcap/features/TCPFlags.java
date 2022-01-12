@@ -26,7 +26,7 @@ public class TCPFlags extends FeatureCollection {
                 .addField(() -> urg_count, "Count URG Flag")
                 .addField(() -> ece_count, "Count ECE Flag")
                 .addField(() -> syn_count, "Count SYN Flag")
-                .addField(() -> ack_count, "Count ACK FLag")
+                .addField(() -> ack_count, "Count ACK Flag")
                 .addField(() -> cwr_count, "Count CWR Flag")
                 .addField(() -> rst_count, "Count RST Flag")
                 .build(this);
