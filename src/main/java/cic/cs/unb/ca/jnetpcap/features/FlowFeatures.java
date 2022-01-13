@@ -115,6 +115,7 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("Label", "Label");
         compatMap.put("Fwd Packet Length Variance", "Fwd Packet Length Variance");
         compatMap.put("Bwd Packet Length Variance", "Bwd Packet Length Variance");
+        compatMap.put("Packet Length Variance", "Packet Length Variance");
     }
 
     private static Integer[] getCompatShuffle() {

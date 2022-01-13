@@ -13,6 +13,7 @@ public class PacketLength extends FeatureCollection{
     public PacketLength(){
         new FeatureCollection.FieldBuilder()
                 .addField(payloadSize, "Packet Length {0}")
+                .addField(() -> payloadSize.getVariance(), "Packet Length Variance")
                 .addField(() -> fwdPayloadSize.getVariance(), "Fwd Packet Length Variance")
                 .addField(() -> bwdPayloadSize.getVariance(), "Bwd Packet Length Variance")
                 .build(this);
