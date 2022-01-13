@@ -22,7 +22,6 @@ public class FlowFeatures extends FeatureCollection {
     public Subflow subflow = new Subflow();
     public FlowBytes flowbytes = new FlowBytes();
     public Label label = new Label();
-    public TCPAnalysis tcp_analysis = new TCPAnalysis();
 
     public static String[] getHeaders() {
         return new FlowFeatures().getHeader();
@@ -114,7 +113,8 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("Idle Max", "Idle Max");
         compatMap.put("Idle Min", "Idle Min");
         compatMap.put("Label", "Label");
-        compatMap.put("Duplicate ACK", "Duplicate ACK");
+        compatMap.put("Fwd Packet Length Variance", "Fwd Packet Length Variance");
+        compatMap.put("Bwd Packet Length Variance", "Bwd Packet Length Variance");
     }
 
     private static Integer[] getCompatShuffle() {
@@ -170,7 +170,6 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(subflow)
                 .addField(flowbytes)
                 .addField(label)
-                .addField(tcp_analysis)
                 .build(this);
     }
 

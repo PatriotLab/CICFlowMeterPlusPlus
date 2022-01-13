@@ -42,4 +42,8 @@ public class StatsFeature extends FeatureCollection {
     void addValue(double v) {
         summary.addValue(v);
     }
+
+    double getVariance(){
+        return summary.getVariance();
+    }
 }
