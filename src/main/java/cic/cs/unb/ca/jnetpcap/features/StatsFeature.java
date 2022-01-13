@@ -20,6 +20,7 @@ public class StatsFeature extends FeatureCollection {
                 .addField(() -> nanCheck(summary.getMax()), "Max")
                 .addField(() -> nanCheck(summary.getMin()), "Min")
                 .addField(() -> nanCheck(summary.getMean()), "Mean")
+                .addField(() -> nanCheck(summary.getVariance()), "Variance")
                 .addField(() -> nanCheck(summary.getStandardDeviation()), "Std")
                 .addField(() -> nanCheck(summary.getSum()), "Total")
                 .build(this);
