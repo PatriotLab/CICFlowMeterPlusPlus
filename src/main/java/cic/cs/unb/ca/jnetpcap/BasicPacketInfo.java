@@ -28,6 +28,7 @@ public class BasicPacketInfo {
 	private	   long headerBytes;
 	private int payloadPacket=0;
 
+
 	public boolean isBwdPacket = false;
 
 //	public BasicPacketInfo(byte[] src, byte[] dst, int srcPort, int dstPort,

@@ -11,6 +11,7 @@ import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.protocol.lan.Ethernet;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.network.Ip6;
+import org.jnetpcap.protocol.tcpip.Http;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
 import org.jnetpcap.protocol.vpn.L2TP;
@@ -24,7 +25,8 @@ public class PacketReader {
 	
 	private long firstPacket;
 	private long lastPacket;
-	
+	/////////////////////is this right??
+	private Http Http;
 	private Tcp  tcp;
 	private Udp  udp;
 	private Ip4  ipv4;
@@ -51,26 +53,27 @@ public class PacketReader {
 		this.config(filename);
 	}	
 	
-	private void config(String filename){
-        file = filename;
+	private void config(String filename) {
+		file = filename;
 		StringBuilder errbuf = new StringBuilder(); // For any error msgs
 		pcapReader = Pcap.openOffline(filename, errbuf);
-		
+
 		this.firstPacket = 0L;
 		this.lastPacket = 0L;
 
 		if (pcapReader == null) {
-			logger.error("Error while opening file for capture: "+errbuf.toString());
+			logger.error("Error while opening file for capture: " + errbuf.toString());
 			System.exit(-1);
-		}else{
+		} else {
 			this.tcp = new Tcp();
 			this.udp = new Udp();
 			this.ipv4 = new Ip4();
 			this.ipv6 = new Ip6();
 			this.l2tp = new L2TP();
+			this.Http = new Http();
 			hdr = new PcapHeader(JMemory.POINTER);
-			buf = new JBuffer(JMemory.POINTER);		
-		}		
+			buf = new JBuffer(JMemory.POINTER);
+		}
 	}
 	
 	public BasicPacketInfo nextPacket(){
@@ -138,6 +141,10 @@ public class PacketReader {
 					packetInfo.setFlagRST(tcp.flags_RST());
 					packetInfo.setPayloadBytes(tcp.getPayloadLength());
 					packetInfo.setHeaderBytes(tcp.getHeaderLength());
+					if(packet.hasHeader(Http)) {
+						//packetInfo.set
+					}
+					//packetInfo.
 				}else if(packet.hasHeader(this.udp)){
 					packetInfo.setSrcPort(udp.source());
 					packetInfo.setDstPort(udp.destination());

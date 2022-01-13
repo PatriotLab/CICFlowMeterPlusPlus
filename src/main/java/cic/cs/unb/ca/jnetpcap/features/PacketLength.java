@@ -5,6 +5,7 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 /**
  * Feature to keep statistics on packet payload sizes in bytes.
  */
+
 public class PacketLength extends FeatureCollection{
     private final StatsFeature payloadSize = new StatsFeature();
 

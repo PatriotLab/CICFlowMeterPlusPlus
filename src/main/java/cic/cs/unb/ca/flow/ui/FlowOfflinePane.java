@@ -27,6 +27,7 @@ public class FlowOfflinePane extends JPanel{
     private PcapFileFilter pcapChooserFilter;
     private JTextArea textArea;
     private JButton btnClr;
+    private JCheckBox newNewFeatures;
     private JComboBox<File> cmbInput;
     private JComboBox<File> cmbOutput;
     private Vector<File> cmbInputEle;
@@ -128,6 +129,7 @@ public class FlowOfflinePane extends JPanel{
         optPane.add(initFilePane());
         optPane.add(initSettingPane());
         optPane.add(initActionPane());
+        optPane.add(includeNewFeatures());
 
         jPanel.add(optPane, BorderLayout.CENTER);
 
@@ -257,6 +259,29 @@ public class FlowOfflinePane extends JPanel{
         return jPanel;
     }
 
+    //If Checkbox is checked
+    private JPanel includeNewFeatures() {
+        JPanel jPanel = new JPanel();
+        jPanel.setLayout(new BoxLayout(jPanel,BoxLayout.X_AXIS));
+        jPanel.setBorder(PADDING);
+
+        JCheckBox featureChbx = new JCheckBox("Include New Features");
+        Dimension d = new Dimension(200,36);
+        featureChbx.setPreferredSize(d);
+        featureChbx.setMaximumSize(d);
+        featureChbx.setMinimumSize(d);
+        jPanel.add(Box.createHorizontalGlue());
+        jPanel.add(featureChbx);
+        jPanel.add(Box.createHorizontalGlue());
+
+        // Set checkbox
+        featureChbx.setSelected(true);
+        featureChbx.addActionListener(actionEvent -> startReadPcap());
+
+        return jPanel;
+    }
+
+    //If Checkbox is not checked
     private JPanel initActionPane() {
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BoxLayout(jPanel,BoxLayout.X_AXIS));

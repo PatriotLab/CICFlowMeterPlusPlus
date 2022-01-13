@@ -22,6 +22,7 @@ public class FlowFeatures extends FeatureCollection {
     public Subflow subflow = new Subflow();
     public FlowBytes flowbytes = new FlowBytes();
     public Label label = new Label();
+    public FwdBwdSplit<HttpBytes> HttpBytes = new FwdBwdSplit<>(HttpBytes::new);
 
     public static String[] getHeaders() {
         return new FlowFeatures().getHeader();
@@ -168,6 +169,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(subflow)
                 .addField(flowbytes)
                 .addField(label)
+                .addField(HttpBytes)
                 .build(this);
     }
 

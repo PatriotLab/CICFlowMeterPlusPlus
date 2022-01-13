@@ -11,7 +11,7 @@ repositories {
     maven { url "https://clojars.org/repo" }
 }
 dependencies {
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.16.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.0'
     implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.32'
     implementation group: 'jnetpcap', name: 'jnetpcap', version: '1.4.r1425-1g'
     implementation group: 'junit', name: 'junit', version: '4.13.2'
