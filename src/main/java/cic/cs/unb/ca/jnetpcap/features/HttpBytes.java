@@ -13,12 +13,17 @@ import java.util.IntSummaryStatistics;
  */
 
 public class HttpBytes extends  FeatureCollection{
-    SummaryStatistics summary = new SummaryStatistics();
+    //SummaryStatistics summary = new SummaryStatistics();
     public StatsFeature httpSummary = new StatsFeature();
+
     Http httpData = new Http();
-    public HttpBytes{
+    public HttpBytes() {
         new FeatureCollection.FieldBuilder()
-                .addField(() -> , "HTTP Bytes Avg")
+                .addField(() -> httpSummary, "HTTP Header Bytes")
+                .addField(() -> httpSummary, "HTTP Payload Bytes")
+                .addField(() -> httpSummary, "HTTP Total Bytes")
+
+                /*.addField(() -> , "HTTP Bytes Avg")
                 .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Entropy")
                 .addField(() -> , "HTTP Bytes FirstQ")
                 .addField(() -> , "HTTP Bytes Max")
@@ -27,7 +32,14 @@ public class HttpBytes extends  FeatureCollection{
                 .addField(() -> , "HTTP Bytes STDev")
                 .addField(() -> , "HTTP Bytes Sum")
                 .addField(() -> , "HTTP Bytes ThirdQ")
-                .addField(() -> , "HTTP Bytes Variance")
+                .addField(() -> , "HTTP Bytes Variance")*/
                 .build(this);
+    }
+
+    @Override
+    public void onPacket(BasicPacketInfo packet) {
+        httpSummary.addValue((double) httpData.getHeaderLength());
+        httpSummary.addValue((double) httpData.getPayloadLength());
+        httpSummary.addValue((double) httpData.getPayloadLength() + httpData.getHeaderLength());
     }
 }
