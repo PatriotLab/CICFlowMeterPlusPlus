@@ -13,7 +13,7 @@ public class FlowFeatures extends FeatureCollection {
     public FwdBwdSplit<PacketLength> packet_length = new FwdBwdSplit<>(PacketLength::new);
     public DestinationInfo dest_info = new DestinationInfo();
     public SourceInfo src_info = new SourceInfo();
-    public TCPFlags tcp_flags = new TCPFlags();
+    public FwdBwdSplit<TCPFlags> tcp_flags = new FwdBwdSplit<>(TCPFlags::new);
     public FwdBwdSplit<FlowIAT> flow_iat = new FwdBwdSplit<>(FlowIAT::new);
     public ActivityIdle activeIdle;
     public WinBytes initWinBytes = new WinBytes();
@@ -66,10 +66,10 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("Bwd IAT Std", "Bwd IAT Std");
         compatMap.put("Bwd IAT Max", "Bwd IAT Max");
         compatMap.put("Bwd IAT Min", "Bwd IAT Min");
-        compatMap.put("Fwd PSH Flags", null);
-        compatMap.put("Bwd PSH Flags", null);
-        compatMap.put("Fwd URG Flags", null);
-        compatMap.put("Bwd URG Flags", null);
+        compatMap.put("Fwd PSH Flags", "Fwd Count PSH Flag");
+        compatMap.put("Bwd PSH Flags", "Bwd Count PSH Flag");
+        compatMap.put("Fwd URG Flags", "Fwd Count PSH Flag");
+        compatMap.put("Bwd URG Flags", "Bwd Count URG Flag");
         compatMap.put("Fwd Header Length", null);
         compatMap.put("Bwd Header Length", null);
         compatMap.put("Fwd Packets/s", null);
