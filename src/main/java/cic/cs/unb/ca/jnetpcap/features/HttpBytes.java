@@ -19,20 +19,20 @@ public class HttpBytes extends  FeatureCollection{
     Http httpData = new Http();
     public HttpBytes() {
         new FeatureCollection.FieldBuilder()
-                .addField(() -> httpSummary, "HTTP Header Bytes")
-                .addField(() -> httpSummary, "HTTP Payload Bytes")
-                .addField(() -> httpSummary, "HTTP Total Bytes")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Header Bytes")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Payload Bytes")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Total Bytes")
 
-                /*.addField(() -> , "HTTP Bytes Avg")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Avg")
                 .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Entropy")
-                .addField(() -> , "HTTP Bytes FirstQ")
-                .addField(() -> , "HTTP Bytes Max")
-                .addField(() -> , "HTTP Bytes Median")
-                .addField(() -> , "HTTP Bytes Min")
-                .addField(() -> , "HTTP Bytes STDev")
-                .addField(() -> , "HTTP Bytes Sum")
-                .addField(() -> , "HTTP Bytes ThirdQ")
-                .addField(() -> , "HTTP Bytes Variance")*/
+                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes FirstQ")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Max")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Median")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Min")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes STDev")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Sum")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes ThirdQ")
+                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Variance")
                 .build(this);
     }
 

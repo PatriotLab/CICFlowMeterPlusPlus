@@ -22,7 +22,7 @@ public class FlowFeatures extends FeatureCollection {
     public Subflow subflow = new Subflow();
     public FlowBytes flowbytes = new FlowBytes();
     public Label label = new Label();
-    public FwdBwdSplit<HttpBytes> HttpBytes = new FwdBwdSplit<>(HttpBytes::new);
+    public FwdBwdSplit<HttpBytes> http_bytes = new FwdBwdSplit<>(HttpBytes::new);
 
     public static String[] getHeaders() {
         return new FlowFeatures().getHeader();
@@ -113,7 +113,16 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("Idle Std", "Idle Std");
         compatMap.put("Idle Max", "Idle Max");
         compatMap.put("Idle Min", "Idle Min");
-        compatMap.put("Label", "Label");
+        compatMap.put("HTTP Bytes Avg", "HTTP Bytes Avg");
+        compatMap.put("HTTP Bytes Entropy", "HTTP Bytes Entropy");
+        compatMap.put("HTTP Bytes FirstQ", "HTTP Bytes FirstQ");
+        compatMap.put("HTTP Bytes Max", "HTTP Bytes Max");
+        compatMap.put("HTTP Bytes Median", "HTTP Bytes Median");
+        compatMap.put("HTTP Bytes Min", "HTTP Bytes Min");
+        compatMap.put("HTTP Bytes STDev", "HTTP Bytes STDev");
+        compatMap.put("HTTP Bytes Sum", "HTTP Bytes Sum");
+        compatMap.put("HTTP Bytes ThirdQ", "HTTP Bytes ThirdQ");
+        compatMap.put("HTTP Bytes Variance", "HTTP Bytes Variance");
     }
 
     private static Integer[] getCompatShuffle() {
@@ -169,7 +178,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(subflow)
                 .addField(flowbytes)
                 .addField(label)
-                .addField(HttpBytes)
+                .addField(http_bytes)
                 .build(this);
     }
 
