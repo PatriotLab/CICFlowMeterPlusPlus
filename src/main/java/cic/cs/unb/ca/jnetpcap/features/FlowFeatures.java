@@ -21,6 +21,7 @@ public class FlowFeatures extends FeatureCollection {
     public Segment seg = new Segment();
     public Subflow subflow = new Subflow();
     public FlowBytes flowbytes = new FlowBytes();
+    public FwdBwdSplit<TimeToLive> ttl = new FwdBwdSplit<>(TimeToLive::new);
     public Label label = new Label();
 
     public static String[] getHeaders() {
@@ -141,12 +142,22 @@ public class FlowFeatures extends FeatureCollection {
         }).toArray(String[]::new);
     }
 
+    static final boolean enableColumnCompat = true;
+
     public final String dumpFlowBasedFeaturesEx() {
-        return String.join(",", getCompatData());
+        if(enableColumnCompat){
+            return String.join(",", getCompatData());
+        } else {
+            return String.join(",", getData());
+        }
     }
 
     public static String dumpHeader() {
-        return String.join(",", getCompatHeaders());
+        if(enableColumnCompat){
+            return String.join(",", getCompatHeaders());
+        } else {
+            return String.join(",", getHeaders());
+        }
     }
 
     private void init(long activityTimeout) {
@@ -168,6 +179,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(subflow)
                 .addField(flowbytes)
                 .addField(label)
+                .addField(ttl)
                 .build(this);
     }
 

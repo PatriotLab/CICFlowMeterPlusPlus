@@ -30,6 +30,8 @@ public class BasicPacketInfo {
 
 	public boolean isBwdPacket = false;
 
+	public int ttl = 0;
+
 //	public BasicPacketInfo(byte[] src, byte[] dst, int srcPort, int dstPort,
 //			int protocol, long timeStamp, IdGenerator generator) {
 //		super();
