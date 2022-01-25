@@ -179,7 +179,7 @@ public class PacketReader {
 				packetInfo = new BasicPacketInfo();
 				packetInfo.setSrc(this.ipv6.source());
 				packetInfo.setDst(this.ipv6.destination());
-				packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMillis());			
+				packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMicros());
 				
 				if(packet.hasHeader(this.tcp)){						
 					packetInfo.setSrcPort(tcp.source());
@@ -344,7 +344,7 @@ public class PacketReader {
 				packetInfo = new BasicPacketInfo();
 				packetInfo.setSrc(protocol.getIpv6().source());
 				packetInfo.setDst(protocol.getIpv6().destination());
-				packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMillis());			
+				packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMicros());
 				
 				if(packet.hasHeader(protocol.getTcp())){
 					packetInfo.setSrcPort(protocol.getTcp().source());
@@ -388,7 +388,6 @@ public class PacketReader {
 				packetInfo = new BasicPacketInfo();
 				packetInfo.setSrc(protocol.getIpv4().source());
 				packetInfo.setDst(protocol.getIpv4().destination());
-				//packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMillis());
 				packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMicros());
 				
 				/*if(this.firstPacket == 0L)
