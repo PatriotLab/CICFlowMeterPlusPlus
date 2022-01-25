@@ -9,6 +9,8 @@ public class PacketLength extends FeatureCollection{
     private final StatsFeature payloadSize = new StatsFeature();
     private final StatsFeature fwdPayloadSize = new StatsFeature();
     private final StatsFeature bwdPayloadSize = new StatsFeature();
+    private final Quartile quartiles = new Quartile();
+    private boolean first = true;
 
     public PacketLength(){
         new FeatureCollection.FieldBuilder()
@@ -16,6 +18,7 @@ public class PacketLength extends FeatureCollection{
                 .addField(() -> payloadSize.getVariance(), "Packet Length Variance")
                 .addField(() -> fwdPayloadSize.getVariance(), "Fwd Packet Length Variance")
                 .addField(() -> bwdPayloadSize.getVariance(), "Bwd Packet Length Variance")
+                .addField(quartiles, "Packet Length {0}") // returns Q1 Q2 Q3
                 .build(this);
     }
 
@@ -29,5 +32,11 @@ public class PacketLength extends FeatureCollection{
         else{
             fwdPayloadSize.addValue(packet.getPayloadBytes());
         }
+        quartiles.add(packet.getPayloadBytes());
+        if(first){
+            System.out.println(packet.getSourceIP() + " " + packet.getSrcPort() + " " + packet.getDestinationIP() + " " + packet.getDstPort());
+        }
+        System.out.println(packet.getPayloadBytes());
+        first = false;
     }
 }
