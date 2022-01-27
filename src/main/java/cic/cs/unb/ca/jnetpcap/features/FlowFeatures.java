@@ -142,7 +142,7 @@ public class FlowFeatures extends FeatureCollection {
         }).toArray(String[]::new);
     }
 
-    static final boolean enableColumnCompat = true;
+    static final boolean enableColumnCompat = false;
 
     public final String dumpFlowBasedFeaturesEx() {
         if(enableColumnCompat){
