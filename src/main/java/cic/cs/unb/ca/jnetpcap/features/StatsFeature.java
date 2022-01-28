@@ -21,6 +21,7 @@ public class StatsFeature extends FeatureCollection {
                 .addField(() -> nanCheck(summary.getMin()), "Min")
                 .addField(() -> nanCheck(summary.getMean()), "Mean")
                 .addField(() -> nanCheck(summary.getStandardDeviation()), "Std")
+                .addField(() -> nanCheck(summary.getVariance()), "Variance")
                 .addField(() -> nanCheck(summary.getSum()), "Total")
                 .build(this);
     }
@@ -41,9 +42,5 @@ public class StatsFeature extends FeatureCollection {
      */
     void addValue(double v) {
         summary.addValue(v);
-    }
-
-    double getVariance(){
-        return summary.getVariance();
     }
 }

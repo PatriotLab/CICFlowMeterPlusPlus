@@ -1,24 +1,43 @@
 package cic.cs.unb.ca.jnetpcap.features;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-public class Entropy {
-    private ArrayList<Float> values;
-    private int size;
+public class Entropy extends FeatureCollection{
+    private int size = 0;
+    private double entropy;
+    private HashMap<Float, Integer> values = new HashMap();
 
-    public Entropy(ArrayList<Float> values) {
-        this.values = values;
+    public Entropy() {
+        new FeatureCollection.FieldBuilder()
+                .addField(() -> entropy, "Entropy")
+                .build(this);
     }
 
-    private float calculateEntropy(){
-        long entropy = 0;
-        size = values.size();
-        HashMap<Float, Integer> freq = new HashMap<>();
-
-        for(int i = 0; i < size; i++){
-
+    public void add(float value){
+        Integer number = values.get(value);
+        if(number == null || number == 0){
+            values.put(value, 1);
         }
-        return entropy;
+        else if(number >= 1){
+            values.put(value, number+1);
+        }
+        size++;
+        calculateEntropy();
+    }
+
+    private void calculateEntropy(){
+        entropy = 0.0;
+        Iterator valIterator = values.entrySet().iterator();
+
+        while(valIterator.hasNext()){
+            Map.Entry<Float, Integer> new_Map = (Map.Entry<Float,Integer>) valIterator.next();
+            double p = 1.0 * new_Map.getValue() / size;
+            if(new_Map.getValue() > 0){
+                entropy -= p * Math.log(p) / Math.log(2);
+            }
+        }
+
     }
 }

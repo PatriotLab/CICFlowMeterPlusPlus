@@ -113,12 +113,16 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("Idle Max", "Idle Max");
         compatMap.put("Idle Min", "Idle Min");
         compatMap.put("Label", "Label");
-        compatMap.put("Fwd Packet Length Variance", "Fwd Packet Length Variance");
-        compatMap.put("Bwd Packet Length Variance", "Bwd Packet Length Variance");
-        compatMap.put("Packet Length Variance", "Packet Length Variance");
         compatMap.put("Packet Length Q1", "Packet Length Q1");
         compatMap.put("Packet Length Q2", "Packet Length Q2");
         compatMap.put("Packet Length Q3", "Packet Length Q3");
+        compatMap.put("Fwd Packet Length Q1", "Fwd Packet Length Q1");
+        compatMap.put("Fwd Packet Length Q2", "Fwd Packet Length Q2");
+        compatMap.put("Fwd Packet Length Q3", "Fwd Packet Length Q3");
+        compatMap.put("Bwd Packet Length Q1", "Bwd Packet Length Q1");
+        compatMap.put("Bwd Packet Length Q2", "Bwd Packet Length Q2");
+        compatMap.put("Bwd Packet Length Q3", "Bwd Packet Length Q3");
+        compatMap.put("Packet Length Entropy", "Packet Length Entropy");
     }
 
     private static Integer[] getCompatShuffle() {

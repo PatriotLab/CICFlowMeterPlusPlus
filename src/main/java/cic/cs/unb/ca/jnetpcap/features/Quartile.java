@@ -13,8 +13,8 @@ public class Quartile extends FeatureCollection{
 
     public Quartile() {
         new FeatureCollection.FieldBuilder()
-                .addField(() -> Q1, "Q2")
-                .addField(() -> Q2, "Q1")
+                .addField(() -> Q1, "Q1")
+                .addField(() -> Q2, "Q2")
                 .addField(() -> Q3, "Q3")
                 .build(this);
 
