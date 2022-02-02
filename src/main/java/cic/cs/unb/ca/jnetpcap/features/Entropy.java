@@ -4,23 +4,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * Feature class to return Shannon Entropy
- *
- * @author Dylan Westlund
- */
-
 public class Entropy extends FeatureCollection{
     private int size = 0;
-    private double entropy;
     private HashMap<Float, Integer> values = new HashMap();
 
     public Entropy() {
         new FeatureCollection.FieldBuilder()
-                .addField(() -> entropy, "Entropy")
+                .addField(() -> calculateEntropy(size), "Entropy")
                 .build(this);
     }
-
     public void add(float value){
         Integer number = values.get(value);
         if(number == null || number == 0){
@@ -30,11 +22,14 @@ public class Entropy extends FeatureCollection{
             values.put(value, number+1);
         }
         size++;
-        calculateEntropy();
     }
 
-    private void calculateEntropy(){
-        entropy = 0.0;
+    private double calculateEntropy(int size){
+        if(size == 0){
+            return 0;
+        }
+
+        double entropy = 0.0;
         Iterator valIterator = values.entrySet().iterator();
 
         while(valIterator.hasNext()){
@@ -44,6 +39,7 @@ public class Entropy extends FeatureCollection{
                 entropy -= p * Math.log(p) / Math.log(2);
             }
         }
+        return entropy;
 
     }
 }
