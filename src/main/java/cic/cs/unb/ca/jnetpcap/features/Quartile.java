@@ -7,33 +7,25 @@ public class Quartile extends FeatureCollection{
     private ArrayList<Float> values = new ArrayList<>();
     private int size = 0;
 
-    private float Q2 = 0;
-    private float Q1 = 0;
-    private float Q3 = 0;
-
     public Quartile() {
         new FeatureCollection.FieldBuilder()
-                .addField(() -> Q1, "Q1")
-                .addField(() -> Q2, "Q2")
-                .addField(() -> Q3, "Q3")
+                .addField(() -> getFirst(size), "Q1")
+                .addField(() -> getSecond(size), "Q2")
+                .addField(() -> getThird(size), "Q3")
                 .build(this);
 
     }
 
     public void add(float value) {
         values.add(value);
-        Collections.sort(values);
-        size = values.size();
-        Q2 = getSecond();
-        Q1 = getFirst();
-        Q3 = getThird();
-
+        size++;
     }
 
-    private float getFirst(){
+    private float getFirst(int size){
         if(size < 3){
             return -1;
         }
+        Collections.sort(values);
         int midpoint = (size / 2);
         if(size % 2 != 0){
             // odd size
@@ -59,7 +51,11 @@ public class Quartile extends FeatureCollection{
 
     }
 
-    private float getSecond(){
+    private float getSecond(int size){
+        if(size == 0){
+            return -1;
+        }
+        Collections.sort(values);
         if(size % 2 != 0){
             // odd size, pick middle
             return values.get(size/2);
@@ -70,10 +66,11 @@ public class Quartile extends FeatureCollection{
         }
     }
 
-    private float getThird(){
+    private float getThird(int size){
         if(size < 3){
             return -1;
         }
+        Collections.sort(values);
         int midpoint = size/2;
         if(size % 2 != 0){
             // odd size
