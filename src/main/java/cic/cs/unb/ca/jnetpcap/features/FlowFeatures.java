@@ -23,6 +23,7 @@ public class FlowFeatures extends FeatureCollection {
     public FlowBytes flowbytes = new FlowBytes();
     public FwdBwdSplit<TimeToLive> ttl = new FwdBwdSplit<>(TimeToLive::new);
     public Label label = new Label();
+    public SiteRank siteRank = new  SiteRank();
 
     public static String[] getHeaders() {
         return new FlowFeatures().getHeader();
@@ -180,6 +181,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(flowbytes)
                 .addField(label)
                 .addField(ttl)
+                .addField(siteRank)
                 .build(this);
     }
 
