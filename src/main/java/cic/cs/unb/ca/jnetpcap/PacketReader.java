@@ -11,6 +11,7 @@ import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.protocol.lan.Ethernet;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.network.Ip6;
+import org.jnetpcap.protocol.tcpip.Http;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
 import org.jnetpcap.protocol.vpn.L2TP;
@@ -30,6 +31,7 @@ public class PacketReader {
 	private Ip4  ipv4;
 	private Ip6  ipv6;
 	private L2TP l2tp;
+	private Http http;
 	private PcapHeader hdr;
 	private JBuffer buf;
 	
@@ -110,7 +112,7 @@ public class PacketReader {
 	}
 	
 	private BasicPacketInfo getIpv4Info(PcapPacket packet){
-		BasicPacketInfo packetInfo = null;		
+		BasicPacketInfo packetInfo = null;
 		try {
 						
 			if (packet.hasHeader(ipv4)){
@@ -144,7 +146,10 @@ public class PacketReader {
 					packetInfo.setDstPort(udp.destination());
 					packetInfo.setPayloadBytes(udp.getPayloadLength());
 					packetInfo.setHeaderBytes(udp.getHeaderLength());
-					packetInfo.setProtocol(17);			
+					packetInfo.setProtocol(17);
+				}else if (packet.hasHeader(this.http)){
+					packetInfo.setRequestURL(this.http.fieldValue(Http.Request.RequestUrl));
+
 				}else {
 
 					int headerCount = packet.getHeaderCount();
@@ -182,8 +187,8 @@ public class PacketReader {
 				packetInfo.setDst(this.ipv6.destination());
 				packetInfo.setTimeStamp(packet.getCaptureHeader().timestampInMicros());
 				packetInfo.ttl = this.ipv6.hopLimit();
-				
-				if(packet.hasHeader(this.tcp)){						
+
+				if(packet.hasHeader(this.tcp)){
 					packetInfo.setSrcPort(tcp.source());
 					packetInfo.setDstPort(tcp.destination());
 					packetInfo.setPayloadBytes(tcp.getPayloadLength());
@@ -195,7 +200,9 @@ public class PacketReader {
 					packetInfo.setPayloadBytes(udp.getPayloadLength());
 					packetInfo.setHeaderBytes(tcp.getHeaderLength());
 					packetInfo.setProtocol(17);								
-				}		
+				}else if(packet.hasHeader(this.http)){
+					packetInfo.setRequestURL(this.http.fieldValue(Http.Request.RequestUrl));
+				}
 			}
 		}catch(Exception e){
 			logger.debug(e.getMessage());
@@ -214,7 +221,7 @@ public class PacketReader {
 				
 		return packetInfo;
 	}
-	
+
 	private BasicPacketInfo getVPNInfo(PcapPacket packet){		
 		BasicPacketInfo packetInfo = null;		
 		try {
@@ -418,7 +425,7 @@ public class PacketReader {
 					packetInfo.setDstPort(protocol.getUdp().destination());
 					packetInfo.setPayloadBytes(protocol.getUdp().getPayloadLength());
 					packetInfo.setHeaderBytes(protocol.getUdp().getHeaderLength());
-					packetInfo.setProtocol(17);			
+					packetInfo.setProtocol(17);
 				} else {
 					int headerCount = packet.getHeaderCount();
 					for(int i=0;i<headerCount;i++) {

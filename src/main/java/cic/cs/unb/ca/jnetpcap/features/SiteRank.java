@@ -26,7 +26,7 @@ public class SiteRank extends FeatureCollection {
     public void onPacket(BasicPacketInfo packet) {
         if (url == null) {
             //prints out numbers (length of the Header).
-             url = String.valueOf(packet.getHeaderBytes());
+             url = packet.getRequestURL();
         }
     }
 }
