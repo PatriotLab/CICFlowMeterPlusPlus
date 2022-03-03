@@ -27,7 +27,7 @@ public class BasicPacketInfo {
 	private	   int TCPWindow=0;
 	private	   long headerBytes;
 	private int payloadPacket=0;
-	private 	String requestURL;
+	private 	String requestHost;
 
 	public boolean isBwdPacket = false;
 
@@ -223,7 +223,7 @@ public class BasicPacketInfo {
 		this.TCPWindow = TCPWindow;
 	}
 
-	public String getRequestURL() { return requestURL; }
+	public String getRequestHost() { return requestHost; }
 
-	public void setRequestURL(String requestURL) {this.requestURL = requestURL;}
+	public void setRequestHost(String requestHost) {this.requestHost = requestHost;}
 }

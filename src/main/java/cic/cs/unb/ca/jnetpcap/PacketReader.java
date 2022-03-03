@@ -70,6 +70,7 @@ public class PacketReader {
 			this.ipv4 = new Ip4();
 			this.ipv6 = new Ip6();
 			this.l2tp = new L2TP();
+			this.http = new Http();
 			hdr = new PcapHeader(JMemory.POINTER);
 			buf = new JBuffer(JMemory.POINTER);		
 		}		
@@ -141,15 +142,16 @@ public class PacketReader {
 					packetInfo.setFlagRST(tcp.flags_RST());
 					packetInfo.setPayloadBytes(tcp.getPayloadLength());
 					packetInfo.setHeaderBytes(tcp.getHeaderLength());
+
+					if (packet.hasHeader(this.http)){
+						packetInfo.setRequestHost(this.http.fieldValue(Http.Request.Host));
+					}
 				}else if(packet.hasHeader(this.udp)){
 					packetInfo.setSrcPort(udp.source());
 					packetInfo.setDstPort(udp.destination());
 					packetInfo.setPayloadBytes(udp.getPayloadLength());
 					packetInfo.setHeaderBytes(udp.getHeaderLength());
 					packetInfo.setProtocol(17);
-				}else if (packet.hasHeader(this.http)){
-					packetInfo.setRequestURL(this.http.fieldValue(Http.Request.RequestUrl));
-
 				}else {
 
 					int headerCount = packet.getHeaderCount();
@@ -194,14 +196,16 @@ public class PacketReader {
 					packetInfo.setPayloadBytes(tcp.getPayloadLength());
 					packetInfo.setHeaderBytes(tcp.getHeaderLength());
 					packetInfo.setProtocol(6);
+
+					if(packet.hasHeader(this.http)){
+						packetInfo.setRequestHost(this.http.fieldValue(Http.Request.Host));
+					}
 				}else if(packet.hasHeader(this.udp)){
 					packetInfo.setSrcPort(udp.source());
 					packetInfo.setDstPort(udp.destination());
 					packetInfo.setPayloadBytes(udp.getPayloadLength());
 					packetInfo.setHeaderBytes(tcp.getHeaderLength());
 					packetInfo.setProtocol(17);								
-				}else if(packet.hasHeader(this.http)){
-					packetInfo.setRequestURL(this.http.fieldValue(Http.Request.RequestUrl));
 				}
 			}
 		}catch(Exception e){
