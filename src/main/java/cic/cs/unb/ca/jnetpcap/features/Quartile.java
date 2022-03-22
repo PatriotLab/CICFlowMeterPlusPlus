@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Quartile extends FeatureCollection{
-    private ArrayList<Float> values = new ArrayList<>();
+    private final ArrayList<Double> values = new ArrayList<>();
     private int size = 0;
 
     public Quartile() {
@@ -13,15 +13,14 @@ public class Quartile extends FeatureCollection{
                 .addField(() -> getSecond(size), "Q2")
                 .addField(() -> getThird(size), "Q3")
                 .build(this);
-
     }
 
-    public void add(float value) {
+    public void add(double value) {
         values.add(value);
         size++;
     }
 
-    private float getFirst(int size){
+    private double getFirst(int size){
         if(size < 3){
             return -1;
         }
@@ -51,7 +50,7 @@ public class Quartile extends FeatureCollection{
 
     }
 
-    private float getSecond(int size){
+    private double getSecond(int size){
         if(size == 0){
             return -1;
         }
@@ -66,7 +65,7 @@ public class Quartile extends FeatureCollection{
         }
     }
 
-    private float getThird(int size){
+    private double getThird(int size){
         if(size < 3){
             return -1;
         }

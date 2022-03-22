@@ -70,22 +70,12 @@ public class TrafficFlowWorker extends SwingWorker<String,String> implements Flo
         firePropertyChange("progress","open successfully","listening: "+device);
         int ret = pcap.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, device);
 
-		String str;
-        switch (ret) {
-            case 0:
-                str = "listening: " + device + " finished";
-                break;
-            case -1:
-                str = "listening: " + device + " error";
-                break;
-            case -2:
-                str = "stop listening: " + device;
-                break;
-                default:
-                    str = String.valueOf(ret);
-        }
-
-        return str;
+		return switch (ret) {
+			case 0 -> "listening: " + device + " finished";
+			case -1 -> "listening: " + device + " error";
+			case -2 -> "stop listening: " + device;
+			default -> String.valueOf(ret);
+		};
 	}
 
 	@Override
