@@ -18,7 +18,6 @@ public class FlowFeatures extends FeatureCollection {
     public ActivityIdle activeIdle;
     public WinBytes initWinBytes = new WinBytes();
     public DataPkt data = new DataPkt();
-    public Segment seg = new Segment();
     public Subflow subflow = new Subflow();
     public FlowBytes flowbytes = new FlowBytes();
     public FwdBwdSplit<TimeToLive> ttl = new FwdBwdSplit<>(TimeToLive::new);
@@ -89,8 +88,8 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("ECE Flag Count", "Count ECE Flag");
         compatMap.put("Down/Up Ratio", null);
         compatMap.put("Average Packet Size", "Packet Length Mean"); // This is stupid. Yes, packet length mean is just in here twice
-        compatMap.put("Fwd Segment Size Avg", "Fwd Segment Size Mean");
-        compatMap.put("Bwd Segment Size Avg", "Fwd Segment Size Mean");
+        compatMap.put("Fwd Segment Size Avg", "Fwd Packet Length Mean");
+        compatMap.put("Bwd Segment Size Avg", "Bwd Packet Length Mean");
         compatMap.put("Fwd Bytes/Bulk Avg", null);
         compatMap.put("Fwd Packet/Bulk Avg", null);
         compatMap.put("Fwd Bulk Rate Avg", null);
@@ -104,7 +103,7 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("FWD Init Win Bytes", "FWD Init Win Bytes");
         compatMap.put("Bwd Init Win Bytes", "Bwd Init Win Bytes");
         compatMap.put("Fwd Act Data Pkts", "Fwd Act Data Pkts"); // terrible name
-        compatMap.put("Fwd Seg Size Min", "Fwd Packet Length Min"); // why does this exist
+        compatMap.put("Fwd Seg Size Min", "Fwd Header Length Min"); // why does this do header length while "Fwd Segment Size Avg" is the mean payload length
         compatMap.put("Active Mean", "Active Mean");
         compatMap.put("Active Std", "Active Std");
         compatMap.put("Active Max", "Active Max");
@@ -175,7 +174,6 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(activeIdle)
                 .addField(initWinBytes)
                 .addField(data)
-                .addField(seg)
                 .addField(subflow)
                 .addField(flowbytes)
                 .addField(label)
