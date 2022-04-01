@@ -34,6 +34,7 @@ public class FlowOfflinePane extends JPanel{
 
     private JComboBox<Long> param1;
     private JComboBox<Long> param2;
+    private JCheckBox compatModeBox;
     private Vector<Long> param1Ele;
     private Vector<Long> param2Ele;
 
@@ -248,11 +249,15 @@ public class FlowOfflinePane extends JPanel{
         param2 = new JComboBox<>(param2Ele);
         param2.setEditable(true);
 
+        compatModeBox = new JCheckBox("Compatibility mode:");
+
         jPanel.add(lbl1);
         jPanel.add(param1);
         jPanel.add(Box.createHorizontalGlue());
         jPanel.add(lbl2);
         jPanel.add(param2);
+        jPanel.add(Box.createHorizontalGlue());
+        jPanel.add(compatModeBox);
 
         return jPanel;
     }
@@ -338,6 +343,7 @@ public class FlowOfflinePane extends JPanel{
         try {
             flowTimeout = getComboParameter(param1, param1Ele);
             activityTimeout = getComboParameter(param2, param2Ele);
+            FlowFeatures.enableColumnCompat = compatModeBox.isSelected();
 
             Map<String, Long> flowCnt = new HashMap<>();
 
