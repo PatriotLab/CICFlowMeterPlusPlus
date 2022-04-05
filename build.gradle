@@ -143,7 +143,3 @@ applicationDistribution.from("jnetpcap/win/jnetpcap-1.4.r1425") {
 applicationDistribution.from('LICENSE.txt'){
     into('')
 }
-applicationDistribution.from('ReadMe.txt'){
-    into('')
-    rename("ReadMe.txt","README.md")
-}

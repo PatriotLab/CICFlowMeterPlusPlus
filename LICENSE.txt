@@ -1,6 +1,6 @@
-# Copyright (c) 2016 
+# Copyright (c) 2022
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (CICFlowMeter), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (CICFlowMeter++), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
@@ -12,7 +12,12 @@ Arash Habibi Lashkari, Gerard Draper-Gil, Mohammad Saiful Islam Mamun and Ali A.
 
 Gerard Drapper Gil, Arash Habibi Lashkari, Mohammad Mamun, Ali A. Ghorbani, "Characterization of Encrypted and VPN Traffic Using Time-Related Features", In Proceedings of the 2nd International Conference on Information Systems Security and Privacy(ICISSP 2016) , pages 407-414, Rome , Italy
 
-# Contributors:
+#CICFlowMeter Contributors:
 Arash Habibi Lashkari: Researcher and Developer (Founder)
 Gerard Drapper: Researcher and Developer (Co-funder)
 muhammad saiful islam: Researcher and Developer (Co-funder)
+
+#CICFlowMeter++ Contributors:
+Michael Fahnlander
+Julia Scheaffer
+Dylan Westlund

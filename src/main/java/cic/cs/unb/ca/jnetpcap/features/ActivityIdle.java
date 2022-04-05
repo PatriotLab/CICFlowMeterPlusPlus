@@ -10,13 +10,13 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
  */
 
 public class ActivityIdle extends FeatureCollection{
-    private long timeout;
+    private final long timeout;
     private long currentTime;
     private long lastPacketTS = -1L;
     private long startActiveTS;
     private long endActiveTS;
-    private StatsFeature activeSummary = new StatsFeature();
-    private StatsFeature idleSummary = new StatsFeature();
+    private final StatsFeature activeSummary = new StatsFeature();
+    private final StatsFeature idleSummary = new StatsFeature();
 
 
     public ActivityIdle(long activityTimeout) {

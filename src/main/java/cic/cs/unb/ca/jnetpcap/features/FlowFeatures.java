@@ -13,14 +13,14 @@ public class FlowFeatures extends FeatureCollection {
     public FwdBwdSplit<PacketLength> packet_length = new FwdBwdSplit<>(PacketLength::new);
     public DestinationInfo dest_info = new DestinationInfo();
     public SourceInfo src_info = new SourceInfo();
-    public TCPFlags tcp_flags = new TCPFlags();
+    public FwdBwdSplit<TCPFlags> tcp_flags = new FwdBwdSplit<>(TCPFlags::new);
     public FwdBwdSplit<FlowIAT> flow_iat = new FwdBwdSplit<>(FlowIAT::new);
     public ActivityIdle activeIdle;
     public WinBytes initWinBytes = new WinBytes();
     public DataPkt data = new DataPkt();
-    public Segment seg = new Segment();
     public Subflow subflow = new Subflow();
     public FlowBytes flowbytes = new FlowBytes();
+    public FwdBwdSplit<TimeToLive> ttl = new FwdBwdSplit<>(TimeToLive::new);
     public Label label = new Label();
 
     public static String[] getHeaders() {
@@ -65,10 +65,10 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("Bwd IAT Std", "Bwd IAT Std");
         compatMap.put("Bwd IAT Max", "Bwd IAT Max");
         compatMap.put("Bwd IAT Min", "Bwd IAT Min");
-        compatMap.put("Fwd PSH Flags", null);
-        compatMap.put("Bwd PSH Flags", null);
-        compatMap.put("Fwd URG Flags", null);
-        compatMap.put("Bwd URG Flags", null);
+        compatMap.put("Fwd PSH Flags", "Fwd Count PSH Flag");
+        compatMap.put("Bwd PSH Flags", "Bwd Count PSH Flag");
+        compatMap.put("Fwd URG Flags", "Fwd Count PSH Flag");
+        compatMap.put("Bwd URG Flags", "Bwd Count URG Flag");
         compatMap.put("Fwd Header Length", null);
         compatMap.put("Bwd Header Length", null);
         compatMap.put("Fwd Packets/s", null);
@@ -88,8 +88,8 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("ECE Flag Count", "Count ECE Flag");
         compatMap.put("Down/Up Ratio", null);
         compatMap.put("Average Packet Size", "Packet Length Mean"); // This is stupid. Yes, packet length mean is just in here twice
-        compatMap.put("Fwd Segment Size Avg", "Fwd Segment Size Mean");
-        compatMap.put("Bwd Segment Size Avg", "Fwd Segment Size Mean");
+        compatMap.put("Fwd Segment Size Avg", "Fwd Packet Length Mean");
+        compatMap.put("Bwd Segment Size Avg", "Bwd Packet Length Mean");
         compatMap.put("Fwd Bytes/Bulk Avg", null);
         compatMap.put("Fwd Packet/Bulk Avg", null);
         compatMap.put("Fwd Bulk Rate Avg", null);
@@ -103,7 +103,7 @@ public class FlowFeatures extends FeatureCollection {
         compatMap.put("FWD Init Win Bytes", "FWD Init Win Bytes");
         compatMap.put("Bwd Init Win Bytes", "Bwd Init Win Bytes");
         compatMap.put("Fwd Act Data Pkts", "Fwd Act Data Pkts"); // terrible name
-        compatMap.put("Fwd Seg Size Min", "Fwd Packet Length Min"); // why does this exist
+        compatMap.put("Fwd Seg Size Min", "Fwd Header Length Min"); // why does this do header length while "Fwd Segment Size Avg" is the mean payload length
         compatMap.put("Active Mean", "Active Mean");
         compatMap.put("Active Std", "Active Std");
         compatMap.put("Active Max", "Active Max");
@@ -141,12 +141,22 @@ public class FlowFeatures extends FeatureCollection {
         }).toArray(String[]::new);
     }
 
+    public static boolean enableColumnCompat = false;
+
     public final String dumpFlowBasedFeaturesEx() {
-        return String.join(",", getCompatData());
+        if(enableColumnCompat){
+            return String.join(",", getCompatData());
+        } else {
+            return String.join(",", getData());
+        }
     }
 
     public static String dumpHeader() {
-        return String.join(",", getCompatHeaders());
+        if(enableColumnCompat){
+            return String.join(",", getCompatHeaders());
+        } else {
+            return String.join(",", getHeaders());
+        }
     }
 
     private void init(long activityTimeout) {
@@ -164,10 +174,10 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(activeIdle)
                 .addField(initWinBytes)
                 .addField(data)
-                .addField(seg)
                 .addField(subflow)
                 .addField(flowbytes)
                 .addField(label)
+                .addField(ttl)
                 .build(this);
     }
 
