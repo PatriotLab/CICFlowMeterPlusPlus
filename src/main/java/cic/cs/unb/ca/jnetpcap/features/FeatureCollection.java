@@ -59,9 +59,9 @@ public abstract class FeatureCollection {
      * <p>All extending classes should build an array of Fields in their constructor and assign it to {@link FeatureCollection#fields}
      */
     static class FieldBuilder {
-        private final ArrayList<Field> fields = new ArrayList<Field>() {
+        private final ArrayList<Field> fields = new ArrayList<>() {
         };
-        private final ArrayList<FeatureCollection> subfeatures = new ArrayList<FeatureCollection>(){
+        private final ArrayList<FeatureCollection> subfeatures = new ArrayList<>(){
         };
 
         /**
@@ -115,16 +115,7 @@ public abstract class FeatureCollection {
     /**
      * Represents a field's headers and a supplier that allow the user to get the field's current value.
      */
-    private static final class Field {
-        public final String header;
-        public final Supplier<String> supplier;
-
-        public Field(String header, Supplier<String> supplier) {
-            this.header = header;
-            this.supplier = supplier;
-        }
-
-
+    private record Field(String header, Supplier<String> supplier) {
         /**
          * Create a new Field as copy of the current one but with the name modified via the format string.
          * @param format MessageFormat-style formatting string to modify the name of the field
