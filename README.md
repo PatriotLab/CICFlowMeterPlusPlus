@@ -38,7 +38,7 @@ mvn install:install-file -Dfile=jnetpcap.jar -DgroupId=org.jnetpcap -DartifactId
 
 ### Command Line
 
->./gradlew exeCMD --args={“PathToPCAP PathToCSVOutputDirectory”}
+>./gradlew exeCMD --args='“PathToPCAP" "PathToCSVOutputDirectory”'
 
 ### GUI
 >./gradlew execute
