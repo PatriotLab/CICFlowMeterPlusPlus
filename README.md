@@ -14,7 +14,7 @@ Gerard Drapper Gil, Arash Habibi Lashkari, Mohammad Mamun, Ali A. Ghorbani, "Cha
 # Prerequisites
 
 Clone Repository
->git clone https://github.com/ahlashkari/CICFlowMeter
+>git clone https://github.com/PatriotLab/IoTCICFlowMeter
 
 Install libpcap-dev
 >sudo apt-get install libpcap-dev
