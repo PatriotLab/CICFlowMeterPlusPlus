@@ -14,7 +14,7 @@ Gerard Drapper Gil, Arash Habibi Lashkari, Mohammad Mamun, Ali A. Ghorbani, "Cha
 # Prerequisites
 
 Clone Repository
->git clone https://github.com/ahlashkari/CICFlowMeter
+>git clone https://github.com/PatriotLab/IoTCICFlowMeter
 
 Install libpcap-dev
 >sudo apt-get install libpcap-dev
@@ -38,7 +38,7 @@ mvn install:install-file -Dfile=jnetpcap.jar -DgroupId=org.jnetpcap -DartifactId
 
 ### Command Line
 
->./gradlew exeCMD --args={“PathToPCAP PathToCSVOutputDirectory”}
+>./gradlew exeCMD --args='“PathToPCAP" "PathToCSVOutputDirectory”'
 
 ### GUI
 >./gradlew execute
