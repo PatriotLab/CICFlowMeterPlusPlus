@@ -38,9 +38,11 @@ mvn install:install-file -Dfile=jnetpcap.jar -DgroupId=org.jnetpcap -DartifactId
 
 ### Command Line
 
->./gradlew exeCMD --args='“PathToPCAP" "PathToCSVOutputDirectory”'
+Select False to use the PATRIOT Lab's new CICFlowMeter++ features or True to use the orginal ones
+>./gradlew exeCMD --args='“PathToPCAP" "PathToCSVOutputDirectory” <true/false>'
 
 ### GUI
+Use the checkbox in the Offline tab to use the original CICFlowMeter features or leave it blank to use the new CICFlowMeter++ ones
 >./gradlew execute
 
 ### IntelliJ IDEA
