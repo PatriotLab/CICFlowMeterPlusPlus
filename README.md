@@ -14,7 +14,7 @@ Gerard Drapper Gil, Arash Habibi Lashkari, Mohammad Mamun, Ali A. Ghorbani, "Cha
 # Prerequisites
 
 Clone Repository
->git clone https://github.com/PatriotLab/IoTCICFlowMeter
+>git clone https://github.com/ahlashkari/CICFlowMeter
 
 Install libpcap-dev
 >sudo apt-get install libpcap-dev
@@ -22,7 +22,7 @@ Install libpcap-dev
 Install JDK 17
 >sudo apt-get install openjdk-17-jdk
 
-Grant Execution Privileges to gradlew
+Grant Execution Privileges to gradlew in repository root
 >chmod +x gradlew
 
 ### Install jnetpcap local repo
@@ -38,7 +38,7 @@ mvn install:install-file -Dfile=jnetpcap.jar -DgroupId=org.jnetpcap -DartifactId
 
 ### Command Line
 
->./gradlew exeCMD --args='“PathToPCAP" "PathToCSVOutputDirectory”'
+>./gradlew exeCMD --args={“PathToPCAP PathToCSVOutputDirectory”}
 
 ### GUI
 >./gradlew execute
@@ -84,145 +84,91 @@ the jar file will be in the pathtoproject/CICFlowMeter/target
 --------------------------------------------------------------
 #Extracted Features and Descriptions
 
-Flow Duration
-Duration of the flow in Microsecond
+Timestamp
+Duration
+Protocol
+Packet Count
+FwdPacketCount
+BwdPacketCount
+Packet Length Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total Packet size
 
-Total Fwd Packet
-Total packets in the forward direction
+Header Length Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size
 
-Total Bwd packets
-Total packets in the backward direction
+Fwd Packet Length Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total Packet size in the forward direction
 
-Total Length of Fwd Packet	
-Total size of packet in forward direction
+Fwd Header Length Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size in the forward direction
 
-Total Length of Bwd Packet
-Total size of packet in backward direction
+Bwd Packet Length Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size in the backward direction
 
-Fwd Packet Length Min, Max, Mean, Std, Variance
-Minimum, Maximum, Mean, Standard Deviation, and Variance in the size of packet in forward direction
+Bwd Header Length Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size in the backward direction
 
-Bwd Packet Length Min, Max, Mean, Std, Variance
-Minimum, Maximum, Mean, Standard Deviation, and Variance of packet in backward direction
+Fwd, Bwd, Total Count FIN Flag
+FIN Flags in the Forward and Backward directions and Total
 
-Flow Bytes/s
-Number of flow bytes per second
+Fwd, Bwd, Total Count PSH Flag
+PSH Flags in the Forward and Backward directions and Total
 
-Flow Packets/s
-Number of flow packets per second
+Fwd, Bwd, Total Count URG Flag
+URG Flags in the Forward and Backward directions and Total
 
-Flow IAT Min, Max, Mean, Std, Variance
-Minimum, Maximum, Mean, Standard Deviation, and Variance in the	time between two packets sent in the flow
+Fwd, Bwd, Total Count ECE Flag
+ECE Flags in the Forward and Backward directions and Total
 
-Fwd IAT Min, Max, Mean, Std, Variance
-Minimum, Maximum, Mean, Standard Deviation, and Variance in the time between two packets sent in the forward direction
+Fwd, Bwd, Total Count SYN Flag
+SYN Flags in the Forward and Backward directions and Total
 
-Fwd IAT Total
-Total time between two packets sent in the forward direction
+Fwd, Bwd, Total Count ACK Flag
+ACK Flags in the Forward and Backward directions and Total
 
-Bwd IAT Min, Max, Mean, Std, Variance, Total
-Minimum, Maximum, Mean, Standard Deviation, Variance, and Total time between two packets sent in the backward direction
+Fwd, Bwd, Total Count CWR Flag
+CWR Flags in the Forward and Backward directions and Total
 
-Fwd PSH flags
-Number of times the PSH flag was set in packets travelling in the forward direction (0 for UDP)
+Fwd, Bwd, Total Count RST Flag
+RST Flags in the Forward and Backward directions and Total
 
-Bwd PSH Flags
-Number of times the PSH flag was set in packets travelling in the backward direction (0 for UDP)
+IAT Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total time between packet arrivals
 
-Fwd URG Flags
-Number of times the URG flag was set in packets travelling in the forward direction (0 for UDP)
+Fwd IAT Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total time between packet arrivals in the forward direction
 
-Bwd URG Flags
-Number of times the URG flag was set in packets travelling in the backward direction (0 for UDP)
+Bwd IAT Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total time between packet arrivals in the backward direction
 
-Fwd Header Length
-Total bytes used for headers in the forward direction
+Active Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total time a flow was actively sending packets
 
-Bwd Header Length
-Total bytes used for headers in the backward direction
+Idle Max, Min, Mean, Std, Total
+Maximum, Minimum, Mean, Standard Deviation, and Total time a flow was idle before sending packets
 
-FWD Packets/s
-Number of forward packets per second
-
-Bwd Packets/s
-Number of backward packets per second
-
-Packet Length Min, Max, Mean, Std, Variance
-Minimum, Maximum, Mean, Standard Deviation, and Variance in the length of a packet
-
-FIN Flag Count -> Number of packets with FIN
-
-SYN Flag Count -> Number of packets with SYN
-
-RST Flag Count -> Number of packets with RST
-
-PSH Flag Count -> Number of packets with PUSH
-
-ACK Flag Count -> Number of packets with ACK
-
-URG Flag Count -> Number of packets with URG
-
-CWR Flag Count -> Number of packets with CWR
-
-ECE Flag Count -> Number of packets with ECE
-
-Down/Up Ratio
-Download and upload ratio
-
-Average Packet Size
-Average size of packet
-
-Fwd Segment Size Avg
-Average size observed of the  in the forward direction
-
-Bwd Segment Size Avg
-Average size observed in the backward direction
-
-Fwd Bytes/Bulk Avg
-Average number of bytes bulk rate in the forward direction
-
-Fwd Packet/Bulk Avg
-Average number of packets bulk rate in the forward direction
-
-Fwd Bulk Rate Avg
-Average number of bulk rate in the forward direction
-
-Bwd Bytes/Bulk Avg
-Average number of bytes bulk rate in the backward direction
-
-Bwd Packet/Bulk Avg
-Average number of packets bulk rate in the backward direction
-
-Bwd Bulk Rate Avg
-Average number of bulk rate in the backward direction
-
-Subflow Fwd Packets
-The average number of packets in a sub flow in the forward direction
-Subflow Fwd Bytes
-The average number of bytes in a sub flow in the forward direction
-
-Subflow Bwd Packets
-The average number of packets in a sub flow in the backward direction
-
-Subflow Bwd Bytes
-The average number of bytes in a sub flow in the backward direction
-
-Fwd Init Win bytes
-The total number of bytes sent in initial window in the forward direction
-
-Bwd Init Win bytes
-The total number of bytes sent in initial window in the backward direction
+Fwd, Bwd Init Win Bytes
+The number of bytes sent in the initial window in the forward and backward directions
 
 Fwd Act Data Pkts
 Count of packets with at least 1 byte of TCP data payload in the forward direction
 
-Fwd Seg Size Min
-Minimum segment size observed in the forward direction
+Fwd, Bwd Bytes Subflow
+The average number of bytes in a subflow in the forward and backward directions Subflow Fwd Bytes The average number of bytes in a sub flow
 
-Active Min, Max, Mean, Std, Variance 
-Minimum, Maximum, Mean, Standard Deviation, and Variance
-in the time a flow was active before becoming idle
+Fwd, Bwd Packets Subflow
+The average number of packets in a subflow in the forward and backward directions Subflow Fwd Bytes The average number of bytes in a sub flow
 
-Idle Min, Max, Mean, Std, Variance 
-Minimum, Maximum, Mean, Standard Deviation, and Variance in the time a flow was idle before becoming active
+Flow Bytes/s
+The bytes per second of a flow
+
+TTL Max, Min, Mean, Std, Total, Q1, Q2, Q3
+Maximum, Minimum, Mean, Standard Deviation, Total, 1st, 2nd, and 3rd Quartiles in the Time-To-Live values of packets
+
+Fwd TTL Max, Min, Mean, Std, Total, Q1, Q2, Q3
+Maximum, Minimum, Mean, Standard Deviation, Total, 1st, 2nd, and 3rd Quartiles in the Time-To-Live values of packets send in the forward direction
+
+Bwd TTL Max, Min, Mean, Std, Total, Q1, Q2, Q3
+Maximum, Minimum, Mean, Standard Deviation, Total, 1st, 2nd, and 3rd Quartiles in the Time-To-Live values of packets send in the backward direction
+
 --------------------------------------------------------------------------------------
