@@ -43,6 +43,9 @@ public class Cmd {
         }else {
         }*/
 
+        FlowFeatures.enableColumnCompat = Boolean.parseBoolean(args[2]);
+        logger.info("Enabled Column Compat -> {}", FlowFeatures.enableColumnCompat);
+
         if (args.length < 1) {
             logger.info("Please select pcap!");
             return;
