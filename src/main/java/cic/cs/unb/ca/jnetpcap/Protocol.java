@@ -1,18 +1,20 @@
 package cic.cs.unb.ca.jnetpcap;
 
+import org.jnetpcap.protocol.lan.Ethernet;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.network.Ip6;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
 import org.jnetpcap.protocol.vpn.L2TP;
 
-public class Protocol {
+public final class Protocol {
 
-	private Tcp  tcp;
-	private Udp  udp;
-	private Ip4  ipv4;
-	private Ip6  ipv6;
-	private L2TP l2tp;
+	private final Tcp  tcp;
+	private final Udp  udp;
+	private final Ip4  ipv4;
+	private final Ip6  ipv6;
+	private final L2TP l2tp;
+	private final Ethernet ethernet;
 	public Protocol() {
 		super();
 		tcp = new Tcp();
@@ -20,6 +22,7 @@ public class Protocol {
 		ipv4 = new Ip4();
 		ipv6 = new Ip6();
 		l2tp = new L2TP();
+		ethernet = new Ethernet();
 	}
 	public Tcp getTcp() {
 		return tcp;
@@ -40,5 +43,7 @@ public class Protocol {
 	public L2TP getL2tp() {
 		return l2tp;
 	}
+
+	public Ethernet getEthernet() { return ethernet; }
 	
 }
