@@ -7,43 +7,8 @@ import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
 import org.jnetpcap.protocol.vpn.L2TP;
 
-public final class Protocol {
-
-	private final Tcp  tcp;
-	private final Udp  udp;
-	private final Ip4  ipv4;
-	private final Ip6  ipv6;
-	private final L2TP l2tp;
-	private final Ethernet ethernet;
-	public Protocol() {
-		super();
-		tcp = new Tcp();
-		udp = new Udp();
-		ipv4 = new Ip4();
-		ipv6 = new Ip6();
-		l2tp = new L2TP();
-		ethernet = new Ethernet();
+public record Protocol(Tcp tcp, Udp udp, Ip4 ipv4, Ip6 ipv6, L2TP l2tp, Ethernet ethernet) {
+	public Protocol(){
+		this(new Tcp(), new Udp(), new Ip4(), new Ip6(), new L2TP(), new Ethernet());
 	}
-	public Tcp getTcp() {
-		return tcp;
-	}
-
-	public Udp getUdp() {
-		return udp;
-	}
-
-	public Ip4 getIpv4() {
-		return ipv4;
-	}
-
-	public Ip6 getIpv6() {
-		return ipv6;
-	}
-
-	public L2TP getL2tp() {
-		return l2tp;
-	}
-
-	public Ethernet getEthernet() { return ethernet; }
-	
 }
