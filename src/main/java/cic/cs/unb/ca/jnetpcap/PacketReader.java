@@ -1,6 +1,5 @@
 package cic.cs.unb.ca.jnetpcap;
 
-import cic.cs.unb.ca.jnetpcap.features.TCPFlags;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapClosedException;
 import org.jnetpcap.PcapHeader;
