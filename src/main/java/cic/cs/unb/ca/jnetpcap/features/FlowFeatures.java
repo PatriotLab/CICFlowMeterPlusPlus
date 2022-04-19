@@ -11,7 +11,6 @@ public class FlowFeatures extends FeatureCollection {
     public Protocol protocol = new Protocol();
     public FwdBwdSplit<PacketCount> packet_count = new FwdBwdSplit<>(PacketCount::new);
     public FwdBwdSplit<PacketLength> packet_length = new FwdBwdSplit<>(PacketLength::new);
-    public DestinationInfo dest_info = new DestinationInfo();
     public SourceInfo src_info = new SourceInfo();
     public FwdBwdSplit<TCPFlags> tcp_flags = new FwdBwdSplit<>(TCPFlags::new);
     public FwdBwdSplit<FlowIAT> flow_iat = new FwdBwdSplit<>(FlowIAT::new);
@@ -168,7 +167,6 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(packet_count)
                 .addField(packet_length)
                 .addField(tcp_flags)
-                .addField(dest_info)
                 .addField(src_info)
                 .addField(flow_iat)
                 .addField(activeIdle)

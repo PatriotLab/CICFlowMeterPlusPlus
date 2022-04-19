@@ -2,6 +2,7 @@ package cic.cs.unb.ca.jnetpcap.worker;
 
 import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
+import cic.cs.unb.ca.jnetpcap.Protocol;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.nio.JMemory.Type;
@@ -55,10 +56,12 @@ public class TrafficFlowWorker extends SwingWorker<String,String> implements Flo
              * but it seems not work
              */
 
+			Protocol protocol = new Protocol();
+
             PcapPacket permanent = new PcapPacket(Type.POINTER);
             packet.transferStateAndDataTo(permanent);
 
-			flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false));
+			flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false, protocol));
 			if(isCancelled()) {
                 pcap.breakloop();
                 logger.debug("break Packet loop");
