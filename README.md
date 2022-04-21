@@ -13,17 +13,12 @@ Gerard Drapper Gil, Arash Habibi Lashkari, Mohammad Mamun, Ali A. Ghorbani, "Cha
 
 # Prerequisites
 
-Clone Repository
->git clone https://github.com/ahlashkari/CICFlowMeter
-
 Install libpcap-dev
 >sudo apt-get install libpcap-dev
 
 Install JDK 17
 >sudo apt-get install openjdk-17-jdk
 
-Grant Execution Privileges to gradlew in repository root
->chmod +x gradlew
 
 ### Install jnetpcap local repo
 
@@ -91,84 +86,136 @@ Packet Count
 FwdPacketCount
 BwdPacketCount
 Packet Length Max, Min, Mean, Std, Total
+
+
 Maximum, Minimum, Mean, Standard Deviation, and Total Packet size
 
 Header Length Max, Min, Mean, Std, Total
+
 Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size
 
+
 Fwd Packet Length Max, Min, Mean, Std, Total
+
 Maximum, Minimum, Mean, Standard Deviation, and Total Packet size in the forward direction
 
+
 Fwd Header Length Max, Min, Mean, Std, Total
+
 Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size in the forward direction
 
+
 Bwd Packet Length Max, Min, Mean, Std, Total
+
 Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size in the backward direction
+
 
 Bwd Header Length Max, Min, Mean, Std, Total
+
 Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size in the backward direction
 
+
 Fwd, Bwd, Total Count FIN Flag
+
 FIN Flags in the Forward and Backward directions and Total
 
+
 Fwd, Bwd, Total Count PSH Flag
+
 PSH Flags in the Forward and Backward directions and Total
 
+
 Fwd, Bwd, Total Count URG Flag
+
 URG Flags in the Forward and Backward directions and Total
 
 Fwd, Bwd, Total Count ECE Flag
+
 ECE Flags in the Forward and Backward directions and Total
 
+
 Fwd, Bwd, Total Count SYN Flag
+
 SYN Flags in the Forward and Backward directions and Total
 
+
 Fwd, Bwd, Total Count ACK Flag
+
 ACK Flags in the Forward and Backward directions and Total
 
+
 Fwd, Bwd, Total Count CWR Flag
+
 CWR Flags in the Forward and Backward directions and Total
 
 Fwd, Bwd, Total Count RST Flag
+
 RST Flags in the Forward and Backward directions and Total
 
+
 IAT Max, Min, Mean, Std, Total
+
 Maximum, Minimum, Mean, Standard Deviation, and Total time between packet arrivals
 
+
 Fwd IAT Max, Min, Mean, Std, Total
+
 Maximum, Minimum, Mean, Standard Deviation, and Total time between packet arrivals in the forward direction
 
+
 Bwd IAT Max, Min, Mean, Std, Total
+
 Maximum, Minimum, Mean, Standard Deviation, and Total time between packet arrivals in the backward direction
 
+
 Active Max, Min, Mean, Std, Total
+
 Maximum, Minimum, Mean, Standard Deviation, and Total time a flow was actively sending packets
 
+
 Idle Max, Min, Mean, Std, Total
+
 Maximum, Minimum, Mean, Standard Deviation, and Total time a flow was idle before sending packets
 
+
 Fwd, Bwd Init Win Bytes
+
 The number of bytes sent in the initial window in the forward and backward directions
 
+
 Fwd Act Data Pkts
+
 Count of packets with at least 1 byte of TCP data payload in the forward direction
 
+
 Fwd, Bwd Bytes Subflow
+
 The average number of bytes in a subflow in the forward and backward directions Subflow Fwd Bytes The average number of bytes in a sub flow
 
+
 Fwd, Bwd Packets Subflow
+
 The average number of packets in a subflow in the forward and backward directions Subflow Fwd Bytes The average number of bytes in a sub flow
 
+
 Flow Bytes/s
+
 The bytes per second of a flow
 
+
 TTL Max, Min, Mean, Std, Total, Q1, Q2, Q3
+
 Maximum, Minimum, Mean, Standard Deviation, Total, 1st, 2nd, and 3rd Quartiles in the Time-To-Live values of packets
 
+
 Fwd TTL Max, Min, Mean, Std, Total, Q1, Q2, Q3
+
 Maximum, Minimum, Mean, Standard Deviation, Total, 1st, 2nd, and 3rd Quartiles in the Time-To-Live values of packets send in the forward direction
 
+
 Bwd TTL Max, Min, Mean, Std, Total, Q1, Q2, Q3
+
 Maximum, Minimum, Mean, Standard Deviation, Total, 1st, 2nd, and 3rd Quartiles in the Time-To-Live values of packets send in the backward direction
+
 
 --------------------------------------------------------------------------------------
