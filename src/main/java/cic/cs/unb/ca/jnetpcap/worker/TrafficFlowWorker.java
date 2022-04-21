@@ -2,6 +2,7 @@ package cic.cs.unb.ca.jnetpcap.worker;
 
 import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
+import cic.cs.unb.ca.jnetpcap.Protocol;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.nio.JMemory.Type;
@@ -55,10 +56,12 @@ public class TrafficFlowWorker extends SwingWorker<String,String> implements Flo
              * but it seems not work
              */
 
+			Protocol protocol = new Protocol();
+
             PcapPacket permanent = new PcapPacket(Type.POINTER);
             packet.transferStateAndDataTo(permanent);
 
-			flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false));
+			flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false, protocol));
 			if(isCancelled()) {
                 pcap.breakloop();
                 logger.debug("break Packet loop");
@@ -70,22 +73,12 @@ public class TrafficFlowWorker extends SwingWorker<String,String> implements Flo
         firePropertyChange("progress","open successfully","listening: "+device);
         int ret = pcap.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, device);
 
-		String str;
-        switch (ret) {
-            case 0:
-                str = "listening: " + device + " finished";
-                break;
-            case -1:
-                str = "listening: " + device + " error";
-                break;
-            case -2:
-                str = "stop listening: " + device;
-                break;
-                default:
-                    str = String.valueOf(ret);
-        }
-
-        return str;
+		return switch (ret) {
+			case 0 -> "listening: " + device + " finished";
+			case -1 -> "listening: " + device + " error";
+			case -2 -> "stop listening: " + device;
+			default -> String.valueOf(ret);
+		};
 	}
 
 	@Override

@@ -5,26 +5,21 @@ group = 'cic.unb.ca'
 version = '4.0'
 description = """CICFlowMeterV4"""
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 repositories {
     mavenLocal()
     mavenCentral()
     maven { url "https://clojars.org/repo" }
 }
 dependencies {
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.16.0'
-    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.32'
-    implementation group: 'org.jnetpcap', name: 'jnetpcap', version: '1.4.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
+    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.36'
+    implementation group: 'jnetpcap', name: 'jnetpcap', version: '1.4.r1425-1g'
     implementation group: 'junit', name: 'junit', version: '4.13.2'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
-    // https://mvnrepository.com/artifact/org.jfree/jfreechart
     implementation group: 'org.jfree', name: 'jfreechart', version: '1.5.3'
-    // https://mvnrepository.com/artifact/org.apache.tika/tika-core
-    implementation group: 'org.apache.tika', name: 'tika-core', version: '2.0.0'
+    implementation group: 'org.apache.tika', name: 'tika-core', version: '2.3.0'
 }
 sourceSets {
     main {
@@ -86,7 +81,6 @@ task fatJar(type: Jar) {
     with jar*/
 }
 
-
 task execute(type: JavaExec) {
     println 'type JavaExec'
 
@@ -109,9 +103,7 @@ task exeCMD(type: JavaExec){
     }else{
         jvmArgs '-Djava.library.path=jnetpcap/linux/jnetpcap-1.4.r1425'
     }
-    //args = ["/home/yzhang29/0a/Capture/", "/home/yzhang29/0a/Capture/out/"]
 }
-
 
 task cmdScript(type: CreateStartScripts) {
     mainClass = "cic.cs.unb.ca.ifm.Cmd"
@@ -142,8 +134,4 @@ applicationDistribution.from("jnetpcap/win/jnetpcap-1.4.r1425") {
 }
 applicationDistribution.from('LICENSE.txt'){
     into('')
-}
-applicationDistribution.from('ReadMe.txt'){
-    into('')
-    rename("ReadMe.txt","README.md")
 }

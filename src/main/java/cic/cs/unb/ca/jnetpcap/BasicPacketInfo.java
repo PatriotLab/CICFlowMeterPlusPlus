@@ -1,34 +1,69 @@
 package cic.cs.unb.ca.jnetpcap;
 
 import org.jnetpcap.packet.format.FormatUtils;
+import org.jnetpcap.protocol.tcpip.Tcp;
 
 import java.util.Arrays;
 
-public class BasicPacketInfo {
-	
-/*  Basic Info to generate flows from packets  	*/
-    private    byte[] src;
-    private    byte[] dst;
-    private    int srcPort;
-    private    int dstPort;
-    private    int protocol;
-    private    long   timeStamp;
-    private    long   payloadBytes;
-    private    String  flowId = null;  
-/* ******************************************** */    
-    private    boolean flagFIN = false;
-	private    boolean flagPSH = false;
-	private    boolean flagURG = false;
-	private    boolean flagECE = false;
-	private    boolean flagSYN = false;
-	private    boolean flagACK = false;
-	private    boolean flagCWR = false;
-	private    boolean flagRST = false;
-	private	   int TCPWindow=0;
-	private	   long headerBytes;
-	private int payloadPacket=0;
+public final class BasicPacketInfo {
 
-	public boolean isBwdPacket = false;
+    public record TCPFlags(boolean fin, boolean psh, boolean urg, boolean ece, boolean syn, boolean ack, boolean cwr,
+                           boolean rst) {
+        static TCPFlags all_false(){
+            return new TCPFlags(
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+            );
+        }
+
+        static TCPFlags from_tcp_header(Tcp header){
+            return new TCPFlags(
+                    header.flags_FIN(),
+                    header.flags_PSH(),
+                    header.flags_URG(),
+                    header.flags_ECE(),
+                    header.flags_SYN(),
+                    header.flags_ACK(),
+                    header.flags_CWR(),
+                    header.flags_RST()
+            );
+        }
+    }
+
+    /*  Basic Info to generate flows from packets  	*/
+    private byte[] src;
+    private byte[] dst;
+    private byte[] srcMac;
+    private byte[] dstMac;
+    private int srcPort;
+    private int dstPort;
+    private int protocol;
+    private long timeStamp;
+    private long payloadBytes;
+    private String flowId = null;
+    /* ******************************************** */
+//    private boolean flagFIN = false;
+//    private boolean flagPSH = false;
+//    private boolean flagURG = false;
+//    private boolean flagECE = false;
+//    private boolean flagSYN = false;
+//    private boolean flagACK = false;
+//    private boolean flagCWR = false;
+//    private boolean flagRST = false;
+    private TCPFlags tcpFlags = TCPFlags.all_false();
+    private int TCPWindow = 0;
+    private long headerBytes;
+    private int payloadPacket = 0;
+
+    public boolean isBwdPacket = false;
+
+    public int ttl = 0;
 
 //	public BasicPacketInfo(byte[] src, byte[] dst, int srcPort, int dstPort,
 //			int protocol, long timeStamp, IdGenerator generator) {
@@ -42,181 +77,174 @@ public class BasicPacketInfo {
 //		this.timeStamp = timeStamp;
 //		generateFlowId();
 //	}
-	
+
     public BasicPacketInfo() {
-		super();
-	}
-
- 	public String fwdFlowId() {  
-		this.flowId = this.getSourceIP() + "-" + this.getDestinationIP() + "-" + this.srcPort  + "-" + this.dstPort  + "-" + this.protocol;
-		return this.flowId;
-	}
-	
-	public String bwdFlowId() {  
-		this.flowId = this.getDestinationIP() + "-" + this.getSourceIP() + "-" + this.dstPort  + "-" + this.srcPort  + "-" + this.protocol;
-		return this.flowId;
-	}
-
-	public String dumpInfo() {
-		return null;
-	}
-	public int getPayloadPacket() {
-		return payloadPacket+=1;
-	}
-
-    public String getSourceIP(){
-    	return FormatUtils.ip(this.src);
+        super();
     }
 
-    public String getDestinationIP(){
-    	return FormatUtils.ip(this.dst);
+    public String fwdFlowId() {
+        this.flowId = this.getSourceIP() + "-" + this.getDestinationIP() + "-" + this.srcPort + "-" + this.dstPort + "-" + this.protocol;
+        return this.flowId;
     }
 
-	public byte[] getSrc() {
-		return Arrays.copyOf(src,src.length);
-	}
+    public String bwdFlowId() {
+        this.flowId = this.getDestinationIP() + "-" + this.getSourceIP() + "-" + this.dstPort + "-" + this.srcPort + "-" + this.protocol;
+        return this.flowId;
+    }
 
-	public void setSrc(byte[] src) {
-		this.src = src;
-	}
+    public String dumpInfo() {
+        return null;
+    }
 
-	public byte[] getDst() {
-		return Arrays.copyOf(dst,dst.length);
-	}
+    public int getPayloadPacket() {
+        return payloadPacket += 1;
+    }
 
-	public void setDst(byte[] dst) {
-		this.dst = dst;
-	}
+    public String getSourceIP() {
+        return FormatUtils.ip(this.src);
+    }
 
-	public int getSrcPort() {
-		return srcPort;
-	}
+    public String getDestinationIP() {
+        return FormatUtils.ip(this.dst);
+    }
 
-	public void setSrcPort(int srcPort) {
-		this.srcPort = srcPort;
-	}
+    public byte[] getSrc() {
+        return Arrays.copyOf(src, src.length);
+    }
 
-	public int getDstPort() {
-		return dstPort;
-	}
+    public void setSrc(byte[] src) {
+        this.src = src;
+    }
 
-	public void setDstPort(int dstPort) {
-		this.dstPort = dstPort;
-	}
+    public byte[] getDst() {
+        return Arrays.copyOf(dst, dst.length);
+    }
 
-	public int getProtocol() {
-		return protocol;
-	}
+    public void setDst(byte[] dst) {
+        this.dst = dst;
+    }
 
-	public void setProtocol(int protocol) {
-		this.protocol = protocol;
-	}
+    public int getSrcPort() {
+        return srcPort;
+    }
 
-	public long getTimeStamp() {
-		return timeStamp;
-	}
+    public void setSrcPort(int srcPort) {
+        this.srcPort = srcPort;
+    }
 
-	public void setTimeStamp(long timeStamp) {
-		this.timeStamp = timeStamp;
-	}
+    public int getDstPort() {
+        return dstPort;
+    }
 
-	public void setFlowId(String flowId) {		
-		this.flowId = flowId;
-	}
+    public void setDstPort(int dstPort) {
+        this.dstPort = dstPort;
+    }
 
-	public boolean isForwardPacket(byte[] sourceIP) {
-		return Arrays.equals(sourceIP, this.src);
-	}
+    public int getProtocol() {
+        return protocol;
+    }
 
-	public boolean isForwardPacket() {
-		return !isBwdPacket;
-	}
+    public void setProtocol(int protocol) {
+        this.protocol = protocol;
+    }
 
-	public long getPayloadBytes() {
-		return payloadBytes;
-	}
+    public long getTimeStamp() {
+        return timeStamp;
+    }
 
-	public void setPayloadBytes(long payloadBytes) {
-		this.payloadBytes = payloadBytes;
-	}
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
-	public long getHeaderBytes() {
-		return headerBytes;
-	}
+    public void setFlowId(String flowId) {
+        this.flowId = flowId;
+    }
 
-	public void setHeaderBytes(long headerBytes) {
-		this.headerBytes = headerBytes;
-	}
+    public boolean isForwardPacket(byte[] sourceIP) {
+        return Arrays.equals(sourceIP, this.src);
+    }
 
-	public boolean hasFlagFIN() {
-		return flagFIN;
-	}
+    public boolean isForwardPacket() {
+        return !isBwdPacket;
+    }
 
-	public void setFlagFIN(boolean flagFIN) {
-		this.flagFIN = flagFIN;
-	}
+    public long getPayloadBytes() {
+        return payloadBytes;
+    }
 
-	public boolean hasFlagPSH() {
-		return flagPSH;
-	}
+    public void setPayloadBytes(long payloadBytes) {
+        this.payloadBytes = payloadBytes;
+    }
 
-	public void setFlagPSH(boolean flagPSH) {
-		this.flagPSH = flagPSH;
-	}
+    public long getHeaderBytes() {
+        return headerBytes;
+    }
 
-	public boolean hasFlagURG() {
-		return flagURG;
-	}
+    public void setHeaderBytes(long headerBytes) {
+        this.headerBytes = headerBytes;
+    }
 
-	public void setFlagURG(boolean flagURG) {
-		this.flagURG = flagURG;
-	}
+    public boolean hasFlagFIN() {
+        return this.tcpFlags.fin;
+    }
 
-	public boolean hasFlagECE() {
-		return flagECE;
-	}
+    public boolean hasFlagPSH() {
+        return this.tcpFlags.psh;
+    }
 
-	public void setFlagECE(boolean flagECE) {
-		this.flagECE = flagECE;
-	}
+    public boolean hasFlagURG() {
+        return this.tcpFlags.urg;
+    }
 
-	public boolean hasFlagSYN() {
-		return flagSYN;
-	}
+    public boolean hasFlagECE() {
+        return this.tcpFlags.ece;
+    }
 
-	public void setFlagSYN(boolean flagSYN) {
-		this.flagSYN = flagSYN;
-	}
+    public boolean hasFlagSYN() {
+        return this.tcpFlags.syn;
+    }
 
-	public boolean hasFlagACK() {
-		return flagACK;
-	}
+    public boolean hasFlagACK() {
+        return this.tcpFlags.ack;
+    }
 
-	public void setFlagACK(boolean flagACK) {
-		this.flagACK = flagACK;
-	}
+    public boolean hasFlagCWR() {
+        return this.tcpFlags.cwr;
+    }
 
-	public boolean hasFlagCWR() {
-		return flagCWR;
-	}
+    public boolean hasFlagRST() {
+        return this.tcpFlags.rst;
+    }
 
-	public void setFlagCWR(boolean flagCWR) {
-		this.flagCWR = flagCWR;
-	}
+    public void setTcpFlags(TCPFlags flags){
+        this.tcpFlags = flags;
+    }
 
-	public boolean hasFlagRST() {
-		return flagRST;
-	}
+    public TCPFlags getTcpFlags() {
+        return tcpFlags;
+    }
 
-	public void setFlagRST(boolean flagRST) {
-		this.flagRST = flagRST;
-	}
+    public int getTCPWindow() {
+        return TCPWindow;
+    }
 
-	public int getTCPWindow(){
-		return TCPWindow;
-	}
+    public void setTCPWindow(int TCPWindow) {
+        this.TCPWindow = TCPWindow;
+    }
 
-	public void setTCPWindow(int TCPWindow){
-		this.TCPWindow = TCPWindow;
-	}
+    public void setSrcMac(byte[] mac){
+        this.srcMac = mac;
+    }
+
+    public byte[] getSrcMac(){
+        return this.srcMac;
+    }
+
+    public void setDstMac(byte[] mac){
+        this.dstMac = mac;
+    }
+
+    public byte[] getDstMac(){
+        return this.dstMac;
+    }
 }
