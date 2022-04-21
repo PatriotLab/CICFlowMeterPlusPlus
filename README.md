@@ -77,13 +77,18 @@ mvn package
 the jar file will be in the pathtoproject/CICFlowMeter/target
 
 --------------------------------------------------------------
-#Extracted Features and Descriptions
+# Extracted Features and Descriptions
 
 Timestamp
+
 Duration
+
 Protocol
+
 Packet Count
+
 FwdPacketCount
+
 BwdPacketCount
 
 
