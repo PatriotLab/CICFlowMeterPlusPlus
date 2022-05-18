@@ -1,9 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-group = 'cic.unb.ca'
-version = '4.0'
-description = """CICFlowMeterV4"""
+group = 'edu.dsu.patriot'
+version = '1.0'
+description = """CICFlowMeter++"""
 
 repositories {
     mavenLocal()

@@ -292,7 +292,7 @@ public class FlowOfflinePane extends JPanel{
         jPanel.setLayout(new BoxLayout(jPanel,BoxLayout.X_AXIS));
         jPanel.setBorder(PADDING);
 
-        JButton btnOK = new JButton("OK");
+        JButton btnOK = new JButton("Run");
         Dimension d = new Dimension(80,36);
         btnOK.setPreferredSize(d);
         btnOK.setMaximumSize(d);
