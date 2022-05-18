@@ -13,8 +13,7 @@ import java.util.IntSummaryStatistics;
  */
 
 public class HttpBytes extends  FeatureCollection{
-    //SummaryStatistics summary = new SummaryStatistics();
-    public StatsFeature httpSummary = new StatsFeature();
+    private StatsFeature httpSummary = new StatsFeature();
 
     Http httpData = new Http();
     public HttpBytes() {
