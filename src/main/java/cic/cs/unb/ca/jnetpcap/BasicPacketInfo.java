@@ -1,6 +1,7 @@
 package cic.cs.unb.ca.jnetpcap;
 
 import org.jnetpcap.packet.format.FormatUtils;
+import org.jnetpcap.protocol.tcpip.Http;
 import org.jnetpcap.protocol.tcpip.Tcp;
 
 import java.util.Arrays;
@@ -64,6 +65,12 @@ public final class BasicPacketInfo {
     public boolean isBwdPacket = false;
 
     public int ttl = 0;
+
+    public int httpRequestHeader = 0;
+    public int httpRequestPayload = 0;
+
+    public int httpResponseHeader = 0;
+    public int httpResponsePayload = 0;
 
 //	public BasicPacketInfo(byte[] src, byte[] dst, int srcPort, int dstPort,
 //			int protocol, long timeStamp, IdGenerator generator) {

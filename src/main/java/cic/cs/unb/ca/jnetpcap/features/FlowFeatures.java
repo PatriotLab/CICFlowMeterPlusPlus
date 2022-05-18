@@ -20,6 +20,7 @@ public class FlowFeatures extends FeatureCollection {
     public Subflow subflow = new Subflow();
     public FlowBytes flowbytes = new FlowBytes();
     public FwdBwdSplit<TimeToLive> ttl = new FwdBwdSplit<>(TimeToLive::new);
+    public HttpBytes httpBytes = new HttpBytes();
     public Label label = new Label();
 
     public static String[] getHeaders() {
@@ -176,6 +177,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(flowbytes)
                 .addField(label)
                 .addField(ttl)
+                .addField(httpBytes)
                 .build(this);
     }
 

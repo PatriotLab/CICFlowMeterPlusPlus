@@ -1,10 +1,5 @@
 package cic.cs.unb.ca.jnetpcap.features;
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
-import org.jnetpcap.newstuff.TestHttp2;
-import org.jnetpcap.protocol.tcpip.Http;
-
-import java.util.IntSummaryStatistics;
 
 /**
  * Features that calculate HTTP packet Metadata.
@@ -13,32 +8,28 @@ import java.util.IntSummaryStatistics;
  */
 
 public class HttpBytes extends  FeatureCollection{
-    private StatsFeature httpSummary = new StatsFeature();
+    private final StatsFeature httpRequestPayloadStats = new StatsFeature();
 
-    Http httpData = new Http();
+    private final StatsFeature httpRequestHeaderStats = new StatsFeature();
+
+    private final StatsFeature httpResponsePayloadStats = new StatsFeature();
+
+    private final StatsFeature httpResponseHeaderStats = new StatsFeature();
+
     public HttpBytes() {
         new FeatureCollection.FieldBuilder()
-                .addField(() -> httpData.getHeaderLength(), "HTTP Header Bytes")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Payload Bytes")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Total Bytes")
-
-                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Avg")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Entropy")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes FirstQ")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Max")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Median")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Min")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes STDev")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Sum")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes ThirdQ")
-                .addField(() -> httpData.getHeaderLength(), "HTTP Bytes Variance")
+                .addField(httpRequestHeaderStats, "HTTP Request Header {0}")
+                .addField(httpRequestPayloadStats, "HTTP Request Payload {0}")
+                .addField(httpResponseHeaderStats, "HTTP Response Header {0}")
+                .addField(httpResponsePayloadStats, "HTTP Response Payload {0}")
                 .build(this);
     }
 
     @Override
     public void onPacket(BasicPacketInfo packet) {
-        httpSummary.addValue((double) httpData.getHeaderLength());
-        httpSummary.addValue((double) httpData.getPayloadLength());
-        httpSummary.addValue((double) httpData.getPayloadLength() + httpData.getHeaderLength());
+        httpRequestHeaderStats.addValue(packet.httpRequestHeader);
+        httpRequestPayloadStats.addValue(packet.httpRequestPayload);
+        httpResponseHeaderStats.addValue(packet.httpResponseHeader);
+        httpResponsePayloadStats.addValue(packet.httpResponsePayload);
     }
 }

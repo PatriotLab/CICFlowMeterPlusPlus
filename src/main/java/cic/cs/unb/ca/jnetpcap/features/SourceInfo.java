@@ -6,7 +6,7 @@ import org.jnetpcap.packet.format.FormatUtils;
 /**
  * Feature that returns source IP and source port.
  *
- * @author INSERTNAME
+ * @author Julia Scheaffer
  */
 
 public class SourceInfo extends FeatureCollection {

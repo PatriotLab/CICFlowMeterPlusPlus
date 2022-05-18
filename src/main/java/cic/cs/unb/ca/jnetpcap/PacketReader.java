@@ -7,6 +7,7 @@ import org.jnetpcap.nio.JBuffer;
 import org.jnetpcap.nio.JMemory;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.protocol.lan.Ethernet;
+import org.jnetpcap.protocol.tcpip.Http;
 import org.jnetpcap.protocol.vpn.L2TP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +148,15 @@ public class PacketReader {
 				packetInfo.setProtocol(17);
 			}
 
-			// Layer 5 and beyond would go here
+			// Layer 7 Protocols
+			if (packet.hasHeader(protocol.http()) && protocol.http().isResponse()) {
+				packetInfo.httpResponseHeader = protocol.http().getHeaderLength();
+				packetInfo.httpResponsePayload = protocol.http().getPayloadLength();
+			} else if (packet.hasHeader(protocol.http()) && !(protocol.http().isResponse())){
+				packetInfo.httpRequestHeader = protocol.http().getHeaderLength();
+				packetInfo.httpRequestPayload = protocol.http().getPayloadLength();
+			}
+
 
 			return packetInfo;
 		} catch (Exception e){

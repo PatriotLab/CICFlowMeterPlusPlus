@@ -5,7 +5,7 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 /**
  * Feature collects time between each packet in a desired flow
  *
- * @author INSERT-NAME
+ * @author Julia Scheaffer
  */
 
 public class FlowIAT extends FeatureCollection {
