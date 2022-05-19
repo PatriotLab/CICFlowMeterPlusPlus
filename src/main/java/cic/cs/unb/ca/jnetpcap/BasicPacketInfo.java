@@ -71,6 +71,10 @@ public final class BasicPacketInfo {
 
     public int httpResponseHeader = 0;
     public int httpResponsePayload = 0;
+    public long request_timestamp = 0;
+    public long response_timestamp = 0;
+    public long IAT_time;
+    public boolean isHTTP;
 
 //	public BasicPacketInfo(byte[] src, byte[] dst, int srcPort, int dstPort,
 //			int protocol, long timeStamp, IdGenerator generator) {

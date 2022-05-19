@@ -149,15 +149,19 @@ public class PacketReader {
 			}
 
 			// Layer 7 Protocols
-			if (packet.hasHeader(protocol.http()) && protocol.http().isResponse()) {
-				packetInfo.httpResponseHeader = protocol.http().getHeaderLength();
-				packetInfo.httpResponsePayload = protocol.http().getPayloadLength();
-			} else if (packet.hasHeader(protocol.http()) && !(protocol.http().isResponse())){
-				packetInfo.httpRequestHeader = protocol.http().getHeaderLength();
-				packetInfo.httpRequestPayload = protocol.http().getPayloadLength();
+			//HTTP
+			if(packet.hasHeader(protocol.http())) {
+				packetInfo.isHTTP = true;
+				if (protocol.http().isResponse()) {
+					packetInfo.httpResponseHeader = protocol.http().getHeaderLength();
+					packetInfo.httpResponsePayload = protocol.http().getPayloadLength();
+					packetInfo.response_timestamp = packet.getCaptureHeader().timestampInMicros();
+				} else if (!(protocol.http().isResponse())) {
+					packetInfo.httpRequestHeader = protocol.http().getHeaderLength();
+					packetInfo.httpRequestPayload = protocol.http().getPayloadLength();
+					packetInfo.request_timestamp = packet.getCaptureHeader().timestampInMicros();
+				}
 			}
-
-
 			return packetInfo;
 		} catch (Exception e){
 			logger.error("Error in reading packet info", e);

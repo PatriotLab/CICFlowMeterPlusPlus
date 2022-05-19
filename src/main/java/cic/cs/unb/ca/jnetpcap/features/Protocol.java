@@ -5,7 +5,7 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 /**
  * Feature that collects protocol for each flow
  *
- * @author INSERTNAME
+ * @author Julia Scheaffer
  */
 
 public class Protocol extends FeatureCollection {
