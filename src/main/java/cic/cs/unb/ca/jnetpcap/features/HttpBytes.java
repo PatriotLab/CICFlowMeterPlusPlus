@@ -15,6 +15,8 @@ public class HttpBytes extends  FeatureCollection{
     private final StatsFeature httpServerIAT = new StatsFeature();
     private boolean seen_first = false;
     private long last_seen_timestamp = 0;
+    private long request = 0;
+    private long response = 0;
     private final StatsFeature httpIAT = new StatsFeature();
 
     public HttpBytes() {
@@ -48,8 +50,10 @@ public class HttpBytes extends  FeatureCollection{
             last_seen_timestamp = this_time;
 
             //IAT between a client's HTTP Request and the HTTP Server's Response
-            if(packet.request_timestamp != 0 && packet.response_timestamp != 0) {
-                httpServerIAT.addValue(packet.response_timestamp - packet.request_timestamp);
+            request = packet.request_timestamp;
+            response = packet.response_timestamp;
+            if(request != 0 && response != 0) {
+                httpServerIAT.addValue((double) (response - request));
             }
         }
     }
