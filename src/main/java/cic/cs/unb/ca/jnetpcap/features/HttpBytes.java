@@ -25,8 +25,8 @@ public class HttpBytes extends  FeatureCollection{
                 .addField(httpRequestPayloadStats, "HTTP Request Payload {0}")
                 .addField(httpResponseHeaderStats, "HTTP Response Header {0}")
                 .addField(httpResponsePayloadStats, "HTTP Response Payload {0}")
-                .addField(httpIAT, "HTTP IAT {0}")
-                .addField(httpServerIAT, "HTTP Server IAT {0}")
+                //.addField(httpIAT, "HTTP IAT {0}")
+                //.addField(httpServerIAT, "HTTP Server IAT {0}")
                 .build(this);
     }
 
@@ -40,7 +40,7 @@ public class HttpBytes extends  FeatureCollection{
             httpResponseHeaderStats.addValue(packet.httpResponseHeader);
             httpResponsePayloadStats.addValue(packet.httpResponsePayload);
 
-            //IAT between HTTP Packets
+            /*//IAT between HTTP Packets
             long this_time = packet.getTimeStamp();
             if (!seen_first) {
                 seen_first = true;
@@ -54,7 +54,7 @@ public class HttpBytes extends  FeatureCollection{
             response = packet.response_timestamp;
             if(request != 0 && response != 0) {
                 httpServerIAT.addValue((double) (response - request));
-            }
+            }*/
         }
     }
 }
