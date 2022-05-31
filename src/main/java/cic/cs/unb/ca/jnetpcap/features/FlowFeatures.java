@@ -175,7 +175,6 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(data)
                 .addField(subflow)
                 .addField(flowbytes)
-                .addField(label)
                 .addField(ttl)
                 .addField(httpBytes)
                 .build(this);
