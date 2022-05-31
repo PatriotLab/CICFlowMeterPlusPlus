@@ -138,7 +138,7 @@ public class FlowMonitorPane extends JPanel {
             if (action == JFileChooser.APPROVE_OPTION) {
 
                 File selectedFile = fileChooser.getSelectedFile();
-                String filename = selectedFile.getName();
+                String filename = FilenameUtils.removeExtension(selectedFile.getName());
                 if (FilenameUtils.getExtension(filename).equalsIgnoreCase("csv")) {
                     //save name ok
                 } else {

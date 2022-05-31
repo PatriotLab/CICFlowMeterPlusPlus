@@ -11,7 +11,7 @@ public class Utils {
     public static final String FILE_SEP = System.getProperty("file.separator");
     public static final String LINE_SEP = System.lineSeparator();
     private final static String PCAP = "application/vnd.tcpdump.pcap";
-    public static final String FLOW_SUFFIX = "_Flow.csv";
+    public static final String FLOW_SUFFIX = ".csv";
 
 
     private static boolean isPcapFile(String contentType) {

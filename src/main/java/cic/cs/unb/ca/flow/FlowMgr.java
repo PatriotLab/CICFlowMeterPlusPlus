@@ -10,7 +10,7 @@ public class FlowMgr {
 
     protected static final Logger logger = LoggerFactory.getLogger(FlowMgr.class);
 
-    public static final String FLOW_SUFFIX = "_Flow.csv";
+    public static final String FLOW_SUFFIX = ".csv";
 
     private static FlowMgr Instance = new FlowMgr();
 

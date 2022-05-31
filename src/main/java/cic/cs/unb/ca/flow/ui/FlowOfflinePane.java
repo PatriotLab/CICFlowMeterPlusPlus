@@ -4,6 +4,7 @@ import cic.cs.unb.ca.flow.FlowMgr;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import cic.cs.unb.ca.jnetpcap.worker.ReadPcapFileWorker;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swing.common.PcapFileFilter;
@@ -420,7 +421,7 @@ public class FlowOfflinePane extends JPanel{
 
                     //write flows to csv file
                     String header = FlowFeatures.dumpHeader();
-                    csvWriterThread.execute(new InsertCsvRow(header, flow.dumpFlowBasedFeaturesEx(), out.getPath(), fileName+FlowMgr.FLOW_SUFFIX));
+                    csvWriterThread.execute(new InsertCsvRow(header, flow.dumpFlowBasedFeaturesEx(), out.getPath(), FilenameUtils.removeExtension(fileName)+FlowMgr.FLOW_SUFFIX));
                 }
             });
             worker.execute();

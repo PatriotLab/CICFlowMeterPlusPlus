@@ -111,7 +111,7 @@ public class Cmd {
         if(inputFile==null ||outPath==null ) {
             return;
         }
-        String fileName = FilenameUtils.getName(inputFile);
+        String fileName = FilenameUtils.removeExtension(FilenameUtils.getName(inputFile));
 
         if(!outPath.endsWith(FILE_SEP)){
             outPath += FILE_SEP;

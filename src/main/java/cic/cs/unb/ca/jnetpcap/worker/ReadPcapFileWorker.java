@@ -2,6 +2,7 @@ package cic.cs.unb.ca.jnetpcap.worker;
 
 import cic.cs.unb.ca.jnetpcap.*;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
+import org.apache.commons.io.FilenameUtils;
 import org.jnetpcap.PcapClosedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,7 +138,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
             outPath += FILE_SEP;
         }
 
-        File saveFileFullPath = new File(outPath+fileName+Utils.FLOW_SUFFIX);
+        File saveFileFullPath = new File(outPath+ FilenameUtils.removeExtension(fileName)+Utils.FLOW_SUFFIX);
 
         if (saveFileFullPath.exists()) {
             if (!saveFileFullPath.delete()) {

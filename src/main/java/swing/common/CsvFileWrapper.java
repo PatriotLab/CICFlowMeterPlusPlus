@@ -50,7 +50,7 @@ public class CsvFileWrapper {
 
 
         File[] csvFiles = csvPath.listFiles((dir, name) ->
-                (name.toLowerCase().endsWith("csv") && !name.equals(LocalDate.now().toString()+"_online.csv"))
+                (name.toLowerCase().endsWith("csv") && !name.equals(LocalDate.now().toString()+".csv"))
         );
 
         if(csvFiles == null) {
