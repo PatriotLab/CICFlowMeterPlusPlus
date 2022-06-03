@@ -51,7 +51,7 @@ public class FlowMgr {
     }
 
     public String getAutoSaveFile() {
-		String filename = LocalDate.now().toString()+FLOW_SUFFIX;
+		String filename = LocalDate.now().toString();
 		return mFlowSavePath+filename;
 	}
 }

@@ -117,7 +117,7 @@ public class Cmd {
             outPath += FILE_SEP;
         }
 
-        File saveFileFullPath = new File(outPath+fileName+FlowMgr.FLOW_SUFFIX);
+        File saveFileFullPath = new File(outPath+fileName);
 
         if (saveFileFullPath.exists()) {
            if (!saveFileFullPath.delete()) {
@@ -195,7 +195,7 @@ public class Cmd {
             String flowDump = flow.dumpFlowBasedFeaturesEx();
             List<String> flowStringList = new ArrayList<>();
             flowStringList.add(flowDump);
-            InsertCsvRow.insert(flow.dumpHeader(),flowStringList,outPath,fileName+ FlowMgr.FLOW_SUFFIX);
+            InsertCsvRow.insert(flow.dumpHeader(),flowStringList,outPath,fileName);
 
             cnt++;
 
