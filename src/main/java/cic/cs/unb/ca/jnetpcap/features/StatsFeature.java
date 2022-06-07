@@ -1,6 +1,12 @@
 package cic.cs.unb.ca.jnetpcap.features;
 
+import com.tdunning.math.stats.Centroid;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import com.tdunning.math.stats.AVLTreeDigest;
+
+import java.nio.ByteBuffer;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * FeatureCollection class wrapping a {@link SummaryStatistics}
@@ -14,6 +20,7 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
  */
 public class StatsFeature extends FeatureCollection {
     SummaryStatistics summary = new SummaryStatistics();
+    AVLTreeDigest tdigest = new AVLTreeDigest(10.0);
 
     public StatsFeature() {
         new FeatureCollection.FieldBuilder()
@@ -23,6 +30,9 @@ public class StatsFeature extends FeatureCollection {
                 .addField(() -> nanCheck(summary.getVariance()), "Variance")
                 .addField(() -> nanCheck(summary.getStandardDeviation()), "Std")
                 .addField(() -> nanCheck(summary.getSum()), "Total")
+                .addField(() -> nanCheck(tdigest.quantile(0.25)), "Q1")
+                .addField(() -> nanCheck(tdigest.quantile(0.5)), "Q2")
+                .addField(() -> nanCheck(tdigest.quantile(0.75)), "Q3")
                 .build(this);
     }
 
@@ -42,5 +52,6 @@ public class StatsFeature extends FeatureCollection {
      */
     void addValue(double v) {
         summary.addValue(v);
+        tdigest.add(v);
     }
 }
