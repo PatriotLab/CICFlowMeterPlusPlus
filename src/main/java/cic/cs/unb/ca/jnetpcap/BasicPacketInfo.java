@@ -1,7 +1,6 @@
 package cic.cs.unb.ca.jnetpcap;
 
 import org.jnetpcap.packet.format.FormatUtils;
-import org.jnetpcap.protocol.tcpip.Http;
 import org.jnetpcap.protocol.tcpip.Tcp;
 
 import java.util.Arrays;

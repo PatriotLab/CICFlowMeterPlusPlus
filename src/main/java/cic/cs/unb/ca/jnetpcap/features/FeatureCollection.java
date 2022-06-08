@@ -1,7 +1,6 @@
 package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
-import cic.cs.unb.ca.jnetpcap.PacketReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,6 +1,9 @@
 package cic.cs.unb.ca.jnetpcap.worker;
 
-import cic.cs.unb.ca.jnetpcap.*;
+import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
+import cic.cs.unb.ca.jnetpcap.FlowGenerator;
+import cic.cs.unb.ca.jnetpcap.PacketReader;
+import cic.cs.unb.ca.jnetpcap.Utils;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import org.apache.commons.io.FilenameUtils;
 import org.jnetpcap.PcapClosedException;
