@@ -163,12 +163,12 @@ public class FlowFeatures extends FeatureCollection {
         activeIdle = new ActivityIdle(activityTimeout);
         new FeatureCollection.FieldBuilder()
                 .addField(() -> origin, "Origin")
+                .addField(src_info)
                 .addField(times)
                 .addField(protocol)
                 .addField(packet_count)
                 .addField(packet_length)
                 .addField(tcp_flags)
-                .addField(src_info)
                 .addField(flow_iat)
                 .addField(activeIdle)
                 .addField(initWinBytes)
