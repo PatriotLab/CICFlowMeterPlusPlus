@@ -1,6 +1,8 @@
 package cic.cs.unb.ca.jnetpcap.features;
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 
+import java.util.ArrayList;
+
 /**
  * Features that calculate HTTP packet size and inter packet arrival time.
  *
@@ -15,9 +17,8 @@ public class HttpBytes extends  FeatureCollection{
     private final StatsFeature httpServerIAT = new StatsFeature();
     private boolean seen_first = false;
     private long last_seen_timestamp = 0;
-    private long request = 0;
-    private long response = 0;
-    private long httpQueue[][];
+    private final ArrayList<Long> RequestQueue = new ArrayList<>();
+    private final ArrayList<Long> ResponseQueue = new ArrayList<>();
     private final StatsFeature httpIAT = new StatsFeature();
 
     public HttpBytes() {
@@ -35,13 +36,13 @@ public class HttpBytes extends  FeatureCollection{
     public void onPacket(BasicPacketInfo packet) {
 
         if(packet.isHTTP) {
-            //HTTP Packet Size
+            //HTTP Packet Size.
             httpRequestHeaderStats.addValue(packet.httpRequestHeader);
             httpRequestPayloadStats.addValue(packet.httpRequestPayload);
             httpResponseHeaderStats.addValue(packet.httpResponseHeader);
             httpResponsePayloadStats.addValue(packet.httpResponsePayload);
 
-            //IAT between HTTP Packets
+            //IAT between HTTP Packets.
             long this_time = packet.getTimeStamp();
             if (!seen_first) {
                 seen_first = true;
@@ -50,33 +51,20 @@ public class HttpBytes extends  FeatureCollection{
             }
             last_seen_timestamp = this_time;
 
-            //IAT between a client's HTTP Request and the HTTP Server's Response
-            /*if(packet.httpRequestHeader != 0) {
-                httpQueue[][].append(packet.request_timestamp, null);
+            //IAT between a client's HTTP Request and the HTTP Server's Response.
+            if(packet.httpRequestHeader != 0) {
+                RequestQueue.add(packet.request_timestamp);
             }
-            else if(packet.httpResponseHeader != 0){
-                response = packet.response_timestamp;
-            }*/
+            //Only want extra response packets if there were more than one unanswered request in a row.
+            else if(packet.httpResponseHeader != 0 && RequestQueue.toArray().length > ResponseQueue.toArray().length){
+                ResponseQueue.add(packet.response_timestamp);
+            }
 
-
-            if(packet.httpRequestHeader != 0)  {
-                request = packet.request_timestamp;
+            if(RequestQueue.toArray().length != 0 && ResponseQueue.toArray().length != 0){
+                httpServerIAT.addValue((double) (ResponseQueue.get(0) - RequestQueue.get(0)));
+                ResponseQueue.remove(0);
+                RequestQueue.remove(0);
             }
-            else if(packet.httpResponseHeader != 0){
-                response = packet.response_timestamp;
-            }
-            if(request != 0 && response != 0) {
-                if(response > request) {
-                    httpServerIAT.addValue((double) (response - request));
-                    response = 0;
-                    request = 0;
-                }
-                else if (request >= response){
-                    httpServerIAT.addValue((double) (response - request));
-                    response = 0;
-                    request = 0;
-                }
-            }*/
         }
     }
 }

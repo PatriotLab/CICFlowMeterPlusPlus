@@ -1,12 +1,7 @@
 package cic.cs.unb.ca.jnetpcap.features;
 
-import com.tdunning.math.stats.Centroid;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import com.tdunning.math.stats.AVLTreeDigest;
-
-import java.nio.ByteBuffer;
-import java.util.Collection;
-import java.util.List;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 /**
  * FeatureCollection class wrapping a {@link SummaryStatistics}

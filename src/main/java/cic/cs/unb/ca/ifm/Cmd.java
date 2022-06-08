@@ -1,7 +1,8 @@
 package cic.cs.unb.ca.ifm;
 
-import cic.cs.unb.ca.flow.FlowMgr;
-import cic.cs.unb.ca.jnetpcap.*;
+import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
+import cic.cs.unb.ca.jnetpcap.FlowGenerator;
+import cic.cs.unb.ca.jnetpcap.PacketReader;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
 import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;

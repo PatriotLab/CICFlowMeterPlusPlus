@@ -7,7 +7,6 @@ import org.jnetpcap.nio.JBuffer;
 import org.jnetpcap.nio.JMemory;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.protocol.lan.Ethernet;
-import org.jnetpcap.protocol.tcpip.Http;
 import org.jnetpcap.protocol.vpn.L2TP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

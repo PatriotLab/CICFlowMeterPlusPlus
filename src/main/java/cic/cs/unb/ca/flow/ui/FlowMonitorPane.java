@@ -1,8 +1,8 @@
 package cic.cs.unb.ca.flow.ui;
 
-import cic.cs.unb.ca.jnetpcap.Utils;
 import cic.cs.unb.ca.flow.FlowMgr;
 import cic.cs.unb.ca.jnetpcap.PcapIfWrapper;
+import cic.cs.unb.ca.jnetpcap.Utils;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import cic.cs.unb.ca.jnetpcap.worker.LoadPcapInterfaceWorker;
