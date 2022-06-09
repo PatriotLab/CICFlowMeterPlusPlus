@@ -92,59 +92,137 @@ FwdPacketCount
 BwdPacketCount
 
 <dl>
-    <dt>Packet Length Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total Packet size</dd>
-    <dt>Header Length Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size</dd>
-    <dt>Fwd Packet Length Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total Packet size in the forward direction</dd>
-    <dt>Fwd Header Length Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size in the forward direction</dd>
-    <dt>Bwd Packet Length Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size in the backward direction</dd>
-    <dt>Bwd Header Length Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total Packet Header size in the backward direction</dd>
-    <dt>Fwd, Bwd, Total Count FIN Flag</dt>
-    <dd>FIN Flags in the Forward and Backward directions and Total</dd>
-    <dt>Fwd, Bwd, Total Count PSH Flag</dt>
-    <dd>PSH Flags in the Forward and Backward directions and Total</dd>
-    <dt>Fwd, Bwd, Total Count URG Flag</dt>
-    <dd>URG Flags in the Forward and Backward directions and Total</dd>
-    <dt>Fwd, Bwd, Total Count ECE Flag</dt>
-    <dd>ECE Flags in the Forward and Backward directions and Total</dd>
-    <dt>Fwd, Bwd, Total Count SYN Flag</dt>
-    <dd>SYN Flags in the Forward and Backward directions and Total</dd>
-    <dt>Fwd, Bwd, Total Count ACK Flag</dt>
-    <dd>ACK Flags in the Forward and Backward directions and Total</dd>
-    <dt>Fwd, Bwd, Total Count CWR Flag</dt>
-    <dd>CWR Flags in the Forward and Backward directions and Total</dd>
-    <dt>Fwd, Bwd, Total Count RST Flag</dt>
-    <dd>RST Flags in the Forward and Backward directions and Total</dd>
-    <dt>IAT Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total time between packet arrivals</dd>
-    <dt>Fwd IAT Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total time between packet arrivals in the forward direction</dd>
-    <dt>Bwd IAT Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total time between packet arrivals in the backward direction</dd>
-    <dt>Active Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total time a flow was actively sending packets</dd>
-    <dt>Idle Max, Min, Mean, Std, Total</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, and Total time a flow was idle before sending packets</dd>
-    <dt>Fwd, Bwd Init Win Bytes</dt>
-    <dd>The number of bytes sent in the initial window in the forward and backward directions</dd>
-    <dt>Fwd Act Data Pkts</dt>
-    <dd>Count of packets with at least 1 byte of TCP data payload in the forward direction</dd>
-    <dt>Fwd, Bwd Bytes Subflow</dt>
-    <dd>The average number of bytes in a subflow in the forward and backward directions Subflow Fwd Bytes The average number of bytes in a sub flow</dd>
-    <dt>Fwd, Bwd Packets Subflow</dt>
-    <dd>The average number of packets in a subflow in the forward and backward directions Subflow Fwd Bytes The average number of bytes in a sub flow</dd>
-    <dt>Flow Bytes/s</dt>
-    <dd>The bytes per second of a flow</dd>
-    <dt>TTL Max, Min, Mean, Std, Total, Q1, Q2, Q3</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, Total, 1st, 2nd, and 3rd Quartiles in the Time-To-Live values of packets</dd>
-    <dt>Fwd TTL Max, Min, Mean, Std, Total, Q1, Q2, Q3</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, Total, 1st, 2nd, and 3rd Quartiles in the Time-To-Live values of packets send in the forward direction</dd>
-    <dt>Bwd TTL Max, Min, Mean, Std, Total, Q1, Q2, Q3</dt>
-    <dd>Maximum, Minimum, Mean, Standard Deviation, Total, 1st, 2nd, and 3rd Quartiles in the Time-To-Live values of packets send in the backward direction</dd>
+        <dt>Origin</dt>
+    <dd>Source IP, Destination IP, Source Port, Destination Port, Protocol</dd>
+        <dt>Source IP Address</dt>
+    <dd>Source IP Address</dd>
+        <dt>Source Port</dt>
+    <dd>Source Port</dd>
+        <dt>Source MAC Address</dt>
+    <dd>Source MAC Address</dd>
+        <dt>Destination IP Address</dt>
+    <dd>Destination IP Address</dd>
+        <dt>Destination Port</dt>
+    <dd>Destination Port</dd>
+        <dt>Destination MAC Address</dt>
+    <dd>Destination MAC Address</dd>
+        <dt>Timestamp</dt>
+    <dd>Timestamp</dd>
+        <dt>Duration</dt>
+    <dd>Flow Duration</dd>
+        <dt>Protocol</dt>
+    <dd>Protocol</dd>
+        <dt>Packet Count</dt>
+    <dd>Total Number of Packets</dd>
+        <dt>Fwd Packet Count</dt>
+    <dd>Total Number of Packets in the Forward Direction</dd>
+        <dt>Bwd Packet Count</dt>
+    <dd>Total Number of Packets in the Backward Direction</dd>
+        <dt>Packet Length Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Packet Length</dd>
+        <dt>Header Length Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Header Length</dd>
+        <dt>Fwd Packet Length Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Packet Length in the Forward Direction</dd>
+        <dt>Fwd Header Length Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Header Length in the Forward Direction</dd>
+        <dt>Bwd Packet Length Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Packet Length in the Backward Direction</dd>
+        <dt>Bwd Header Length Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Header Length in the Backward Direction</dd>
+        <dt>Count FIN Flag</dt>
+    <dd>Number of FIN Flags Seen in a Flow</dd>
+        <dt>Count PSH Flag</dt>
+    <dd>Number of PSH Flags Seen in a Flow</dd>
+        <dt>Count URG Flag</dt>
+    <dd>Number of URG Flags Seen in a Flow</dd>
+        <dt>Count ECE Flag</dt>
+    <dd>Number of ECE Flags Seen in a Flow</dd>
+        <dt>Count SYN Flag</dt>
+    <dd>Number of SYN Flags Seen in a Flow</dd>
+        <dt>Count ACK Flag</dt>
+    <dd>Number of ACK Flags Seen in a Flow</dd>
+        <dt>Count CWR Flag</dt>
+    <dd>Number of CWR Flags Seen in a Flow</dd>
+        <dt>Count RST Flag</dt>
+    <dd>Number of RST Flags Seen in a Flow</dd>
+        <dt>Fwd Count FIN Flag</dt>
+    <dd>FIN Flags Sent in the Forward Direction</dd>
+        <dt>Fwd Count PSH Flag</dt>
+    <dd>PSH Flags Sent in the Forward Direction</dd>
+        <dt>Fwd Count URG Flag</dt>
+    <dd>URG Flags Sent in the Forward Direction</dd>
+        <dt>Fwd Count ECE Flag</dt>
+    <dd>ECE Flags Sent in the Forward Direction</dd>
+        <dt>Fwd Count SYN Flag</dt>
+    <dd>SYN Flags Sent in the Forward Direction</dd>
+        <dt>Fwd Count ACK Flag</dt>
+    <dd>ACK Flags Sent in the Forward Direction</dd>
+        <dt>Fwd Count CWR Flag</dt>
+    <dd>CWR Flags Sent in the Forward Direction</dd>
+        <dt>Fwd Count RST Flag</dt>
+    <dd>RST Flags Sent in the Forward Direction</dd>
+        <dt>Bwd Count FIN Flag</dt>
+    <dd>FIN Flags Sent in the Backward Direction</dd>
+        <dt>Bwd Count PSH Flag</dt>
+    <dd>PSH Flags Sent in the Backward Direction</dd>
+        <dt>Bwd Count URG Flag</dt>
+    <dd>URG Flags Sent in the Backward Direction</dd>
+        <dt>Bwd Count ECE Flag</dt>
+    <dd>ECE Flags Sent in the Backward Direction</dd>
+        <dt>Bwd Count SYN Flag</dt>
+    <dd>SYN Flags Sent in the Backward Direction</dd>
+        <dt>Bwd Count ACK Flag</dt>
+    <dd>ACK Flags Sent in the Backward Direction</dd>
+        <dt>Bwd Count CWR Flag</dt>
+    <dd>CWR Flags Sent in the Backward Direction</dd>
+        <dt>Bwd Count RST Flag</dt>
+    <dd>RST Flags Sent in the Backward Direction</dd>
+        <dt>IAT Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Inter-Packet Arrival Time</dd>
+        <dt>Fwd IAT Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Inter-Packet Arrival Time  in the Forward Direction</dd>
+        <dt>Bwd IAT Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Inter-Packet Arrival Time  in the Backward Direction</dd>
+        <dt>Active Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Active Time in a Flow Before Going Idle</dd>
+        <dt>Idle Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Idle Time in a Flow Before Going Active</dd>
+        <dt>FWD Init Win Bytes</dt>
+    <dd>Number of Bytes Sent in the Initial Window in the Forward Direction</dd>
+        <dt>Bwd Init Win Bytes</dt>
+    <dd>Number of Bytes Sent in the Initial Window in the Backward Direction</dd>
+        <dt>Fwd Act Data Pkts</dt>
+    <dd>Number of Packets with at Least One Byte in the Payload in the Forward Direction</dd>
+        <dt>Fwd Header Size Min</dt>
+    <dd>Forward Header Size Minimum</dd>
+        <dt>Fwd Bytes Subflow</dt>
+    <dd>Total Bytes in Subflows in the forward Direction</dd>
+        <dt>Fwd Packets Subflow</dt>
+    <dd>Total Packets in Subflows in the Forward Direction</dd>
+        <dt>Bwd Bytes Subflow</dt>
+    <dd>Total Bytes in Subflows in the Backward Direction</dd>
+        <dt>Bwd Packets Subflow</dt>
+    <dd>Total Packets in Subflows in the Backward Direction</dd>
+        <dt>Flow Bytes/s</dt>
+    <dd>Bytes Per Second in the Flow</dd>
+        <dt>TTL Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Time To Live Value</dd>
+        <dt>Fwd TTL Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Time To Live Value in the Forward Direction</dd>
+        <dt>Bwd TTL Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Time To Live Value in the Backward Direction</dd>
+        <dt>HTTP Request Header Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>HTTP Request Header Length</dd>
+        <dt>HTTP Request Payload Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>HTTP Request Payload Length</dd>
+        <dt>HTTP Response Header Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>HTTP Response Header Length</dd>
+        <dt>HTTP Response Payload Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>HTTP Response Payload Length</dd>
+        <dt>HTTP IAT Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Inter-Packet Arrival Time Between HTTP Packets</dd>
+        <dt>HTTP Server IAT Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
+    <dd>Inter-Packet Arrival Time Between HTTP Request and Response</dd>
 </dl>
 --------------------------------------------------------------------------------------
