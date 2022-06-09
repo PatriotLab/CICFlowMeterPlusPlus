@@ -79,17 +79,7 @@ the jar file will be in the pathtoproject/CICFlowMeter/target
 --------------------------------------------------------------
 # Extracted Features and Descriptions
 
-Timestamp
-
-Duration
-
-Protocol
-
-Packet Count
-
-FwdPacketCount
-
-BwdPacketCount
+#### Common features include Maximum (Max), Minimum (Min), Mean (Average), Variance (Variance), Standard Deviation (Std), Total (Total), First Quartile (Q1), Second Quartile (Q2), and Third Quartile (Q3) 
 
 <dl>
         <dt>Origin</dt>
