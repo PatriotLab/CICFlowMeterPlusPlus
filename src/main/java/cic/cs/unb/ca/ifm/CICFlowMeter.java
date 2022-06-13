@@ -59,7 +59,7 @@ public class CICFlowMeter {
 		}
 		
 		logger.info("");
-		logger.info("CICFlowMeterV2 found: {} Files.",pcapfiles.length);
+		logger.info("CICFlowMeter++ found: {} Files.",pcapfiles.length);
 	
 		for(String file:pcapfiles){
 			flowGen = new FlowGenerator(true,120000000L, 5000000L);

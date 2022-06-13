@@ -18,7 +18,7 @@ public class MainFrame extends JFrame{
 	private final FlowMonitorPane monitorPane;
 	
 	public MainFrame() throws HeadlessException {
-		super("CICFlowMeter");
+		super("CICFlowMeter++");
 		
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().getInsets().set(5, 5, 5, 5);

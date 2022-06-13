@@ -14,10 +14,10 @@ Gerard Drapper Gil, Arash Habibi Lashkari, Mohammad Mamun, Ali A. Ghorbani, "Cha
 # Prerequisites
 
 Install libpcap-dev
->sudo apt-get install libpcap-dev
+>sudo apt install libpcap-dev
 
 Install JDK 17
->sudo apt-get install openjdk-17-jdk
+>sudo apt install openjdk-17-jdk
 
 
 ### Install jnetpcap local repo
@@ -32,8 +32,8 @@ mvn install:install-file -Dfile=jnetpcap.jar -DgroupId=org.jnetpcap -DartifactId
 ## Run
 
 ### Command Line
-
->./gradlew exeCMD --args={“PathToPCAP PathToCSVOutputDirectory”}
+Gradle's first argument is for the path to the PCAP, the second one specifies the output directory, and the third one, not in quotes, tells CICFlowMeter++ whether to include new features (True for Original features, False for full functionality).
+>./gradlew exeCMD --args='“PathToPCAP" "PathToCSVOutputDirectory” true/false'
 
 ### GUI
 >./gradlew execute
