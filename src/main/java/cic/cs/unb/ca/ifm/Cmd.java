@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cic.cs.unb.ca.jnetpcap.Utils.FILE_SEP;
+import static cic.cs.unb.ca.jnetpcap.Utils.FLOW_SUFFIX;
 
 public class Cmd {
 
@@ -118,7 +119,7 @@ public class Cmd {
             outPath += FILE_SEP;
         }
 
-        File saveFileFullPath = new File(outPath+fileName);
+        File saveFileFullPath = new File(outPath+fileName + FLOW_SUFFIX);
 
         if (saveFileFullPath.exists()) {
            if (!saveFileFullPath.delete()) {
@@ -186,7 +187,7 @@ public class Cmd {
         private long cnt;
 
         public FlowListener(String fileName, String outPath) {
-            this.fileName = fileName;
+            this.fileName = fileName + FLOW_SUFFIX;
             this.outPath = outPath;
         }
 
