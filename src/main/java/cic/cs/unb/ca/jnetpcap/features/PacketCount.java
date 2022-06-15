@@ -5,7 +5,7 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 /**
  * Feature that collects packet count
  *
- * @author INSERTNAME
+ * @author Michael Fahnlander
  */
 
 public class PacketCount extends FeatureCollection {

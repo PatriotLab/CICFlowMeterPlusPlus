@@ -23,6 +23,7 @@ public class FlowFeatures extends FeatureCollection {
     public HttpBytes httpBytes = new HttpBytes();
     public HttpIAT http_iat = new HttpIAT();
     public BulkRate bulk = new BulkRate();
+    public Ratio ratio = new Ratio();
 
     public static String[] getHeaders() {
         return new FlowFeatures().getHeader();
@@ -168,6 +169,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(times)
                 .addField(protocol)
                 .addField(packet_count)
+                .addField(ratio)
                 .addField(packet_length)
                 .addField(tcp_flags)
                 .addField(flow_iat)
