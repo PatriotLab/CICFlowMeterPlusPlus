@@ -22,6 +22,7 @@ public class FlowFeatures extends FeatureCollection {
     public FwdBwdSplit<TimeToLive> ttl = new FwdBwdSplit<>(TimeToLive::new);
     public HttpBytes httpBytes = new HttpBytes();
     public HttpIAT http_iat = new HttpIAT();
+    public BulkRate bulk = new BulkRate();
 
     public static String[] getHeaders() {
         return new FlowFeatures().getHeader();
@@ -178,6 +179,7 @@ public class FlowFeatures extends FeatureCollection {
                 .addField(ttl)
                 .addField(httpBytes)
                 .addField(http_iat)
+                .addField(bulk)
                 .build(this);
     }
 
