@@ -17,7 +17,7 @@ public class WinBytes extends FeatureCollection{
 
     public WinBytes() {
         new FeatureCollection.FieldBuilder()
-                .addField(() -> fwd_win_bytes, "FWD Init Win Bytes")
+                .addField(() -> fwd_win_bytes, "Fwd Init Win Bytes")
                 .addField(() -> bwd_win_bytes, "Bwd Init Win Bytes")
                 .build(this);
     }
