@@ -19,29 +19,19 @@ Install libpcap-dev
 Install JDK 17
 >sudo apt install openjdk-17-jdk
 
+# Run
 
-### Install jnetpcap local repo
-
-for linux, sudo is a prerequisite
-```
-//linux :at the pathtoproject/jnetpcap/linux/jnetpcap-1.4.r1425
-//windows: at the pathtoproject/jnetpcap/win/jnetpcap-1.4.r1425
-mvn install:install-file -Dfile=jnetpcap.jar -DgroupId=org.jnetpcap -DartifactId=jnetpcap -Dversion=1.4.1 -Dpackaging=jar
-```
-
-## Run
-
-### Command Line
-Gradle's first argument is for the path to the PCAP, the second one specifies the output directory, and the third one, not in quotes, tells CICFlowMeter++ whether to include new features (True for Original features, False for full functionality).
+## Command Line
+Gradle's first argument is for the path to the PCAP, the second one specifies the output directory, and the third one, a boolean not in quotes, tells CICFlowMeter++ whether to include new features (True for Original features, False for full functionality).
 >./gradlew exeCMD --args='“PathToPCAP" "PathToCSVOutputDirectory” true/false'
 
-### GUI
+## GUI
 >./gradlew execute
 
-### IntelliJ IDEA
+## IntelliJ IDEA
 
 Linux (IDE Terminal)
-> ./gradlew execute
+> Add 'execute' as a Gradle argument
 
 Windows (IDE Terminal)
 > gradlew execute
@@ -214,5 +204,17 @@ the jar file will be in the pathtoproject/CICFlowMeter/target
     <dd>Inter-Packet Arrival Time Between HTTP Packets</dd>
         <dt>HTTP Server IAT Max, Min, Mean, Variance, Std, Total, Q1, Q2, Q3</dt>
     <dd>Inter-Packet Arrival Time Between HTTP Request and Response</dd>
+    <dt>Fwd Avg Bytes/Bulk</dt>
+        <dd>Average number of bytes bulk rate in the forward direction</dd>
+    <dt>Fwd Avg Packets/Bulk</dt>
+        <dd>Average number of packets bulk rate in the forward direction</dd>
+    <dt>Fwd Bulk Rate</dt>
+        <dd>Average number of bulk rate in the forward direction</dd>
+    <dt>Bwd Avg Bytes/Bulk</dt>
+        <dd>Average number of bytes bulk rate in the backward direction</dd>
+    <dt>Bwd Avg Packets/Bulk</dt>
+        <dd>Average number of packets bulk rate in the backward direction</dd>
+    <dt>Bwd Bulk Rate</dt>
+        <dd>Average number of bulk rate in the backward direction</dd>
 </dl>
 --------------------------------------------------------------------------------------
