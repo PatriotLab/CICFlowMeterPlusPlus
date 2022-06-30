@@ -1,6 +1,7 @@
 package cic.cs.unb.ca.jnetpcap;
 
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
+import cic.cs.unb.ca.jnetpcap.features.TcpTracker;
 import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,27 +16,6 @@ import static cic.cs.unb.ca.jnetpcap.Utils.LINE_SEP;
 public class FlowGenerator {
     public static final Logger logger = LoggerFactory.getLogger(FlowGenerator.class);
 
-    //total 85 colums
-	/*public static final String timeBasedHeader = "Flow ID, Source IP, Source Port, Destination IP, Destination Port, Protocol, "
-			+ "Timestamp, Flow Duration, Total Fwd Packets, Total Backward Packets,"
-			+ "Total Length of Fwd Packets, Total Length of Bwd Packets, "
-			+ "Fwd Packet Length Max, Fwd Packet Length Min, Fwd Packet Length Mean, Fwd Packet Length Std,"
-			+ "Bwd Packet Length Max, Bwd Packet Length Min, Bwd Packet Length Mean, Bwd Packet Length Std,"
-			+ "Flow Bytes/s, Flow Packets/s, Flow IAT Mean, Flow IAT Std, Flow IAT Max, Flow IAT Min,"
-			+ "Fwd IAT Total, Fwd IAT Mean, Fwd IAT Std, Fwd IAT Max, Fwd IAT Min,"
-			+ "Bwd IAT Total, Bwd IAT Mean, Bwd IAT Std, Bwd IAT Max, Bwd IAT Min,"
-			+ "Fwd PSH Flags, Bwd PSH Flags, Fwd URG Flags, Bwd URG Flags, Fwd Header Length, Bwd Header Length,"
-			+ "Fwd Packets/s, Bwd Packets/s, Min Packet Length, Max Packet Length, Packet Length Mean, Packet Length Std, Packet Length Variance,"
-			+ "FIN Flag Count, SYN Flag Count, RST Flag Count, PSH Flag Count, ACK Flag Count, URG Flag Count, "
-			+ "CWR Flag Count, ECE Flag Count, Down/Up Ratio, Average Packet Size, Avg Fwd Segment Size, Avg Bwd Segment Size, Fwd Header Length,"
-			+ "Fwd Avg Bytes/Bulk, Fwd Avg Packets/Bulk, Fwd Avg Bulk Rate, Bwd Avg Bytes/Bulk, Bwd Avg Packets/Bulk,"
-			+ "Bwd Avg Bulk Rate,"
-			+ "Subflow Fwd Packets, Subflow Fwd Bytes, Subflow Bwd Packets, Subflow Bwd Bytes,"
-			+ "Init_Win_bytes_forward, Init_Win_bytes_backward, act_data_pkt_fwd, min_seg_size_forward,"
-			+ "Active Mean, Active Std, Active Max, Active Min,"
-			+ "Idle Mean, Idle Std, Idle Max, Idle Min, Label";*/
-
-    //40/86
     private FlowGenListener mListener;
     private LinkedHashMap<String, FlowFeatures> currentFlows;
     private HashMap<Integer, FlowFeatures> finishedFlows;
@@ -125,11 +105,11 @@ public class FlowGenerator {
                     logger.debug("Timeout current has {} flow", cfsize);
                 }
 
-                // Flow finished due FIN flag (tcp only):
+                // Flow finished due TCP teardown sequence:
                 // 1.- we add the packet-in-process to the flow (it is the last packet)
                 // 2.- we move the flow to finished flow list
                 // 3.- we eliminate the flow from the current flow list
-            } else if (packet.hasFlagFIN()) {
+            } else if (TcpTracker.FlowEnded) {
                 logger.debug("FlagFIN current has {} flow", currentFlows.size());
                 flow.onPacket(packet);
                 if (mListener != null) {
@@ -149,34 +129,6 @@ public class FlowGenerator {
             currentFlows.put(packet.fwdFlowId(), new_flow);
         }
     }
-
-//    public void dumpFlowBasedFeatures(String path, String filename, String header) {
-//        FlowFeatures flow;
-//        try {
-//            System.out.println("TOTAL Flows: " + (finishedFlows.size() + currentFlows.size()));
-//            FileOutputStream output = new FileOutputStream(new File(path + filename));
-//
-//            output.write((header + "\n").getBytes());
-//            Set<Integer> fkeys = finishedFlows.keySet();
-//            for (Integer key : fkeys) {
-//                flow = finishedFlows.get(key);
-//                if (flow.packet_count.total.count > 1)
-//                    output.write((flow.dumpFlowBasedFeaturesEx() + "\n").getBytes());
-//            }
-//            Set<String> ckeys = currentFlows.keySet();
-//            for (String key : ckeys) {
-//                flow = currentFlows.get(key);
-//                if (flow.packet_count.total.count > 1)
-//                    output.write((flow.dumpFlowBasedFeaturesEx() + "\n").getBytes());
-//            }
-//
-//            output.flush();
-//            output.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 
     public int dumpLabeledFlowBasedFeatures(String path, String filename) {
         FlowFeatures flow;

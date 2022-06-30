@@ -24,6 +24,7 @@ public class FlowFeatures extends FeatureCollection {
     public HttpIAT http_iat = new HttpIAT();
     public BulkRate bulk = new BulkRate();
     public Ratio ratio = new Ratio();
+    public TcpTracker tcp_tracker = new TcpTracker();
 
     public static String[] getHeaders() {
         return new FlowFeatures().getHeader();
@@ -163,6 +164,7 @@ public class FlowFeatures extends FeatureCollection {
 
     private void init(long activityTimeout) {
         activeIdle = new ActivityIdle(activityTimeout);
+        tcp_tracker = new TcpTracker();
         new FeatureCollection.FieldBuilder()
                 .addField(() -> origin, "Origin")
                 .addField(src_info)
