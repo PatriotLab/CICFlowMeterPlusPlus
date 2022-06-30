@@ -77,10 +77,12 @@ public class FlowGenerator {
 
             FlowFeatures flow = entry.getValue();
             if((currentTimestamp - flow.times.getStartTime()) > flowTimeOut) {
-                if (mListener != null) {
-                    mListener.onFlowGenerated(flow);
-                } else {
-                    finishedFlows.put(getFlowCount(), flow);
+                if(flow.packet_count.total.count > 1){
+                    if (mListener != null) {
+                        mListener.onFlowGenerated(flow);
+                    } else {
+                        finishedFlows.put(getFlowCount(), flow);
+                    }
                 }
                 removedFlows.add(entry.getKey());
             } else {
