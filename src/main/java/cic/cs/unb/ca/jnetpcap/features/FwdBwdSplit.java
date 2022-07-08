@@ -30,7 +30,7 @@ public class FwdBwdSplit<T extends FeatureCollection> extends FeatureCollection 
 
     @Override
     public void onPacket(BasicPacketInfo packet) {
-        if(packet.isForwardPacket()){
+        if(packet.isFwdPacket()){
             forward.onPacket(packet);
         } else {
             backward.onPacket(packet);
