@@ -170,14 +170,11 @@ public final class BasicPacketInfo {
         this.flowId = flowId;
     }
 
-    public boolean isForwardPacket(byte[] sourceIP) {
-        return Arrays.equals(sourceIP, this.src);
-    }
-
     public boolean isForwardPacket() {
         return !isBwdPacket;
     }
-
+    public boolean isFwdPacket() { return !isBwdPacket; }
+    public boolean isBwdPacket() { return isBwdPacket; }
     public long getPayloadBytes() {
         return payloadBytes;
     }
