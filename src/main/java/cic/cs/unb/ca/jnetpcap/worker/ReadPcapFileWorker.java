@@ -5,13 +5,18 @@ import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
 import cic.cs.unb.ca.jnetpcap.Utils;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
+import cic.cs.unb.ca.jnetpcap.features.LoadPMMLModel;
+import jakarta.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
 import org.jnetpcap.PcapClosedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -173,6 +178,8 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
                 }
             }catch(PcapClosedException e){
                 break;
+            } catch (JAXBException | IOException | ParserConfigurationException | SAXException e) {
+                throw new RuntimeException(e);
             }
         }
         flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath());
@@ -199,7 +206,8 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         }
 
         @Override
-        public void onFlowGenerated(FlowFeatures flow) {
+        public void onFlowGenerated(FlowFeatures flow) throws JAXBException, IOException, ParserConfigurationException, SAXException {
+            new LoadPMMLModel(flow);
             firePropertyChange(PROPERTY_FLOW,fileName,flow);
         }
     }

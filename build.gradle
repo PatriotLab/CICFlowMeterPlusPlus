@@ -21,8 +21,15 @@ dependencies {
     implementation group: 'org.jfree', name: 'jfreechart', version: '1.5.3'
     implementation group: 'org.apache.tika', name: 'tika-core', version: '2.4.1'
     implementation group: 'com.tdunning', name: 't-digest', version: '3.3'
-    implementation group: 'org.jpmml', name:'jpmml-sklearn', version: '1.7.9'
+    implementation group: 'org.jpmml', name:'pmml-sklearn', version: '1.7.9'
     implementation group: 'org.jpmml', name: 'pmml-evaluator-metro', version: '1.6.3'
+    implementation group: 'org.jpmml', name:'pmml-evaluator', version: '1.5.3'
+    implementation group: 'org.jpmml', name:'pmml-evaluator', version: '1.5.15'
+    implementation group: 'org.jpmml', name: 'pmml-lightgbm', version: '1.4.3'
+    implementation group: 'org.jpmml', name: 'pmml-sparkml', version: '2.2.0'
+    implementation group: 'com.beust', name: 'jcommander', version: '1.82'
+    implementation group: 'org.apache.spark', name: 'spark-sql_2.13', version: '3.3.0'
+    implementation group: 'org.apache.spark', name: 'spark-mllib_2.13', version: '3.3.0'
 }
 sourceSets {
     main {

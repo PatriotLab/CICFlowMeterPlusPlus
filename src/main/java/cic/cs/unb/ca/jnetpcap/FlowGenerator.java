@@ -3,9 +3,12 @@ package cic.cs.unb.ca.jnetpcap;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.features.TcpTracker;
 import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
+import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -45,7 +48,7 @@ public class FlowGenerator {
         mListener = listener;
     }
 
-    public void addPacket(BasicPacketInfo packet) {
+    public void addPacket(BasicPacketInfo packet) throws JAXBException, IOException, ParserConfigurationException, SAXException {
         if (packet == null) {
             return;
         }
@@ -194,7 +197,6 @@ public class FlowGenerator {
                     output.write((someFlow.dumpHeader() + LINE_SEP).getBytes());
                 }
             }
-
             for (FlowFeatures flow : currentFlows.values()) {
                 if (flow.packet_count.total.count > 1) {
                     output.write((flow.dumpFlowBasedFeaturesEx() + LINE_SEP).getBytes());

@@ -20,6 +20,7 @@ import java.util.Enumeration;
 public class SwingUtils {
     protected static final Logger logger = LoggerFactory.getLogger(SwingUtils.class);
     private final static String PCAP = "application/vnd.tcpdump.pcap";
+    private final static String PMML = "application/vnd.tcpdump.pcap";//Need to find this but for pmml/xml file types
     public static void fitTableColumns(JTable myTable) {
         JTableHeader header = myTable.getTableHeader();
         int rowCount = myTable.getRowCount();
@@ -98,8 +99,29 @@ public class SwingUtils {
         return false;
     }
 
+    public static boolean isPmmlFile(File file) {
+
+        if (file == null) {
+            return false;
+        }
+
+        try {
+            String contentType;
+            contentType = new Tika().detect(file);
+
+            if (PMML.equalsIgnoreCase(contentType)) {
+                return true;
+            }else{
+                return false;
+            }
+        } catch (IOException e) {
+            logger.debug(e.getMessage());
+        }
+        return false;
+    }
+
     public static long countLines(String fileName) {
-        File file =new File(fileName);
+        File file = new File(fileName);
         int linenumber = 0;
         FileReader fr;
         LineNumberReader lnr = null;
