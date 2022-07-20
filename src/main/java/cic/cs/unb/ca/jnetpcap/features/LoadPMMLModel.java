@@ -1,4 +1,6 @@
 package cic.cs.unb.ca.jnetpcap.features;
+import cic.cs.unb.ca.flow.ui.FlowOfflinePane;
+import cic.cs.unb.ca.jnetpcap.worker.ReadPcapFileWorker;
 import jakarta.xml.bind.JAXBException;
 //import org.apache.log4j.MDC;
 //import org.dmg.pmml.FieldName;
@@ -7,6 +9,7 @@ import org.sparkproject.dmg.pmml.FieldName;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,9 +28,11 @@ public class LoadPMMLModel {
         Path modelPath = Paths.get(modelFolder, modelName);
         Path modelPath = Paths.get(modelPath, modelName);//This line will have the PMML selected from the FlowOfflinePane
 */
+        Path modelPath = ReadPcapFileWorker;
+
         //Prepare and verify PMML file
         Evaluator evaluator = new LoadingModelEvaluatorBuilder()
-                .load(modelPath.toFile())
+                .load(modelPath)
                 .build();
         evaluator.verify();
 

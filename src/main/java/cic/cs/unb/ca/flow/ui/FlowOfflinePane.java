@@ -15,12 +15,15 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static org.apache.commons.io.FilenameUtils.getPath;
 
 public class FlowOfflinePane extends JPanel{
     protected static final Logger logger = LoggerFactory.getLogger(FlowOfflinePane.class);
@@ -51,6 +54,7 @@ public class FlowOfflinePane extends JPanel{
     private Box progressBox;
     private JProgressBar fileProgress;
     private JProgressBar fileCntProgress;
+    public File chosenClassifier;
 
     private ExecutorService csvWriterThread;
 
@@ -191,11 +195,15 @@ public class FlowOfflinePane extends JPanel{
             fileChooser.removeChoosableFileFilter(pmmlChooserFilter);
             int action = fileChooser.showOpenDialog(FlowOfflinePane.this);
             if (action == JFileChooser.APPROVE_OPTION) {
-                File chosenClassifier = fileChooser.getSelectedFile();
+                chosenClassifier = fileChooser.getSelectedFile();
                 logger.debug("offline select classifier {}", chosenClassifier.getPath());
                 setComboBox(classifierBox, classifierEle, chosenClassifier);
             }
         });
+        public void getClassifier(){
+            return chosenClassifier;
+        }
+
 
         //first row
         gc.gridx = 0;
@@ -422,7 +430,7 @@ public class FlowOfflinePane extends JPanel{
 
             Map<String, Long> flowCnt = new HashMap<>();
 
-            ReadPcapFileWorker worker = new ReadPcapFileWorker(in, out.getPath(), flowTimeout, activityTimeout);
+            ReadPcapFileWorker worker = new ReadPcapFileWorker(in, out.getPath(), flowTimeout, activityTimeout, chosenClassifier.toPath());
             worker.addPropertyChangeListener(evt -> {
                 ReadPcapFileWorker task = (ReadPcapFileWorker) evt.getSource();
                 if ("progress".equals(evt.getPropertyName())) {
@@ -479,4 +487,9 @@ public class FlowOfflinePane extends JPanel{
             JOptionPane.showMessageDialog(FlowOfflinePane.this, "The parameter is not a number,please check and try again.", "Parameter error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    public Path getClassifierPath() {
+        return this.initActionPane().
+    }
 }
+

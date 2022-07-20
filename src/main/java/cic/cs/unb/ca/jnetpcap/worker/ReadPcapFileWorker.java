@@ -39,6 +39,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
     
     private File pcapPath;
     private String outPutDirectory;
+    private File classifier;
     private List<String> chunks;
 
     public ReadPcapFileWorker(File inputFile, String outPutDir) {
@@ -54,10 +55,11 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         activityTimeout = 5000000L;
     }
 
-    public ReadPcapFileWorker(File inputFile, String outPutDir,long param1,long param2) {
+    public ReadPcapFileWorker(File inputFile, String outPutDir,long param1,long param2, Path inputClassifier) {
         super();
         pcapPath = inputFile;
         outPutDirectory = outPutDir;
+        classifier = inputClassifier;
         chunks = new ArrayList<>();
 
         if(!outPutDirectory.endsWith(FILE_SEP)) {
@@ -200,14 +202,16 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
     class FlowListener implements FlowGenListener {
 
         private String fileName;
+        private String classifier;
 
-        FlowListener(String fileName) {
+        FlowListener(String fileName, String modelName) {
             this.fileName = fileName;
+            this.
         }
 
         @Override
         public void onFlowGenerated(FlowFeatures flow) throws JAXBException, IOException, ParserConfigurationException, SAXException {
-            new LoadPMMLModel(flow);
+            new LoadPMMLModel(flow, classifier);
             firePropertyChange(PROPERTY_FLOW,fileName,flow);
         }
     }
