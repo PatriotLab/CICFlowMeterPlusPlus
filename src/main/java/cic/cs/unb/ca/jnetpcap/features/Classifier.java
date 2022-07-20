@@ -47,6 +47,9 @@ public class Classifier {
         // Extracting prediction
         Map<String, ?> resultRecord = EvaluatorUtil.decodeAll(results);
         Integer yPred = (Integer) resultRecord.get(targetName.toString());
+        MachineLearn machineLearn = new MachineLearn();
+        machineLearn.accuracy = yPred;
+        machineLearn.label = resultRecord
         //Double accuracy = resultRecord.
         //MachineLearn(resultRecord, yPred);
         System.out.printf("Prediction is %d\n", yPred);
