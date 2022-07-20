@@ -4,8 +4,8 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
 import cic.cs.unb.ca.jnetpcap.Utils;
+import cic.cs.unb.ca.jnetpcap.features.Classifier;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
-import cic.cs.unb.ca.jnetpcap.features.LoadPMMLModel;
 import jakarta.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
 import org.jnetpcap.PcapClosedException;
@@ -202,16 +202,21 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
     class FlowListener implements FlowGenListener {
 
         private String fileName;
-        private String classifier;
+        private Classifier classifier;
 
         FlowListener(String fileName, String modelName) {
             this.fileName = fileName;
-            this.
+            try {
+                this.classifier = new Classifier(modelName);
+            } catch(Exception e) {
+                logger.error("Couldn't load model", e);
+                throw new RuntimeException();
+            }
         }
 
         @Override
-        public void onFlowGenerated(FlowFeatures flow) throws JAXBException, IOException, ParserConfigurationException, SAXException {
-            new LoadPMMLModel(flow, classifier);
+        public void onFlowGenerated(FlowFeatures flow) {
+            classifier.predict(flow);
             firePropertyChange(PROPERTY_FLOW,fileName,flow);
         }
     }

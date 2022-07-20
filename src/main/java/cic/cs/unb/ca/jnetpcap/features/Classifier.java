@@ -1,6 +1,4 @@
 package cic.cs.unb.ca.jnetpcap.features;
-import cic.cs.unb.ca.flow.ui.FlowOfflinePane;
-import cic.cs.unb.ca.jnetpcap.worker.ReadPcapFileWorker;
 import jakarta.xml.bind.JAXBException;
 //import org.apache.log4j.MDC;
 //import org.dmg.pmml.FieldName;
@@ -12,29 +10,21 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
-public class LoadPMMLModel {
-    public LoadPMMLModel(FlowFeatures flow) throws JAXBException, IOException, ParserConfigurationException, SAXException {
-        main(flow);
-    }
+public class Classifier {
+    final private Evaluator evaluator;
 
-    public static void main(FlowFeatures rowData) throws JAXBException, IOException, SAXException, ParserConfigurationException {
-        //Load PMML file
-/*        String modelFolder = Objects.requireNonNull(LoadPMMLModel.class.getClassLoader().getResource("model")).getPath();
-        String modelFolder = "/";
-        String modelName = "DecisionTreeClassifier.pmml";
-        Path modelPath = Paths.get(modelFolder, modelName);
-        Path modelPath = Paths.get(modelPath, modelName);//This line will have the PMML selected from the FlowOfflinePane
-*/
-        Path modelPath = ReadPcapFileWorker;
+    public Classifier(String modelPath) throws JAXBException, IOException, ParserConfigurationException, SAXException {
+        File model_file = new File(modelPath);
 
-        //Prepare and verify PMML file
-        Evaluator evaluator = new LoadingModelEvaluatorBuilder()
-                .load(modelPath)
+        evaluator = new LoadingModelEvaluatorBuilder()
+                .load(model_file)
                 .build();
         evaluator.verify();
+    }
+
+    public void predict(FlowFeatures rowData) {
 
         FieldName targetName = FieldName.create(evaluator.getTargetFields().get(0).getName());
 
