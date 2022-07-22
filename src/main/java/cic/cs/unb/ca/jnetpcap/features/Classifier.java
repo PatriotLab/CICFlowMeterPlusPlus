@@ -2,6 +2,8 @@ package cic.cs.unb.ca.jnetpcap.features;
 import jakarta.xml.bind.JAXBException;
 //import org.apache.log4j.MDC;
 //import org.dmg.pmml.FieldName;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jpmml.evaluator.*;
 import org.sparkproject.dmg.pmml.FieldName;
 import org.xml.sax.SAXException;
@@ -14,7 +16,7 @@ import java.util.*;
 
 public class Classifier {
     final private Evaluator evaluator;
-    private InputField .;
+//    private InputField .;
 
     public Classifier(String modelPath) throws JAXBException, IOException, ParserConfigurationException, SAXException {
         File model_file = new File(modelPath);
@@ -30,7 +32,13 @@ public class Classifier {
         FieldName targetName = FieldName.create(evaluator.getTargetFields().get(0).getName());
         FieldValue inputValue;
 
-        Map<String, Double> userArguments = rowData.getHeader();
+        HashMap<String, String> featureData = new HashMap<>();
+        String[] headers = rowData.getHeader();
+        String[] values = rowData.getData();
+        for(int i = 0; i < headers.length; i++){
+            featureData.put(headers[i], values[i]);
+        }
+
         Map<String, FieldValue> arguments = new LinkedHashMap<>();
         List<InputField> inputFields = evaluator.getInputFields();
 
@@ -39,19 +47,19 @@ public class Classifier {
 
         for(InputField inputField : inputFields) {
             String inputName = inputField.getName();
+            String dataValue = featureData.get(inputName);
 
-            Object rawValue = userArguments.get(inputName.toString());
             if (inputField.getDataType().toString().equals("double")){
-                inputValue = inputField.prepare(rawValue).asDouble();
+                FieldValue fieldValue = inputField.prepare(Double.parseDouble(dataValue));
+                arguments.put(inputName, fieldValue);
             } else if (inputField.getDataType().toString().equals("integer")){
-                inputValue = inputField.prepare(rawValue).asInteger();
+                FieldValue fieldValue = inputField.prepare(Integer.parseInt(dataValue));
+                arguments.put(inputName, fieldValue);
             }
-            arguments.put(inputName, inputValue);
         }
-        //Map<String, Double> features = new HashMap<>();
-
         // Evaluate the model
         Map<String, ?> results = evaluator.evaluate(arguments);
+
 
         // Extracting prediction
         /*Map<String, Double> resultRecord = EvaluatorUtil.decodeAll(results);
