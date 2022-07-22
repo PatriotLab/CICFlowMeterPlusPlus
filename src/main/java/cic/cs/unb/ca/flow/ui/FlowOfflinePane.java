@@ -200,10 +200,6 @@ public class FlowOfflinePane extends JPanel{
                 setComboBox(classifierBox, classifierEle, chosenClassifier);
             }
         });
-        public void getClassifier(){
-            return chosenClassifier;
-        }
-
 
         //first row
         gc.gridx = 0;
@@ -430,7 +426,7 @@ public class FlowOfflinePane extends JPanel{
 
             Map<String, Long> flowCnt = new HashMap<>();
 
-            ReadPcapFileWorker worker = new ReadPcapFileWorker(in, out.getPath(), flowTimeout, activityTimeout, chosenClassifier.toPath());
+            ReadPcapFileWorker worker = new ReadPcapFileWorker(in, out.getPath(), flowTimeout, activityTimeout, chosenClassifier);
             worker.addPropertyChangeListener(evt -> {
                 ReadPcapFileWorker task = (ReadPcapFileWorker) evt.getSource();
                 if ("progress".equals(evt.getPropertyName())) {
@@ -487,9 +483,4 @@ public class FlowOfflinePane extends JPanel{
             JOptionPane.showMessageDialog(FlowOfflinePane.this, "The parameter is not a number,please check and try again.", "Parameter error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    public Path getClassifierPath() {
-        return this.initActionPane().
-    }
 }
-

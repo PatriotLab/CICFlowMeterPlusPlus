@@ -55,7 +55,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         activityTimeout = 5000000L;
     }
 
-    public ReadPcapFileWorker(File inputFile, String outPutDir,long param1,long param2, Path inputClassifier) {
+    public ReadPcapFileWorker(File inputFile, String outPutDir,long param1,long param2, File inputClassifier) {
         super();
         pcapPath = inputFile;
         outPutDirectory = outPutDir;
@@ -72,14 +72,18 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
     @Override
     protected List<String> doInBackground() {
         try {
-            if (pcapPath.isDirectory()) {
+            if (pcapPath.isDirectory() && detectPmmlFile(classifier)) {
                 readPcapDir(pcapPath, outPutDirectory);
             } else {
 
                 if (!isPcapFile(pcapPath)) {
                     publish("Please select pcap file!");
                     publish("");
-                } else {
+                } else if (!detectPmmlFile(classifier)){
+                    publish("Please select classifier file!");
+                    publish("");
+                }
+                else {
                     publish("CICFlowMeter received 1 pcap file");
                     publish("");
                     publish("");
@@ -157,7 +161,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         }
 
         FlowGenerator flowGen = new FlowGenerator(true, flowTimeout, activityTimeout);
-        flowGen.addFlowListener(new FlowListener(fileName));
+        flowGen.addFlowListener(new FlowListener(fileName, classifier.toPath()));
         boolean readIP6 = false;
         boolean readIP4 = true;
         PacketReader packetReader = new PacketReader(inputFile, readIP4, readIP6);
@@ -204,10 +208,10 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         private String fileName;
         private Classifier classifier;
 
-        FlowListener(String fileName, String modelName) {
+        FlowListener(String fileName, Path modelName) {
             this.fileName = fileName;
             try {
-                this.classifier = new Classifier(modelName);
+                this.classifier = new Classifier(modelName.toString());
             } catch(Exception e) {
                 logger.error("Couldn't load model", e);
                 throw new RuntimeException();
