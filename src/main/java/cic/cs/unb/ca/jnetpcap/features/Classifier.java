@@ -41,35 +41,34 @@ public class Classifier {
 
         Map<String, FieldValue> arguments = new LinkedHashMap<>();
         List<InputField> inputFields = evaluator.getInputFields();
+        FieldValue fieldValue;
+        String inputName;
+        String dataValue;
 
-        //Iterate through, adding the column entries into the arguments
-        //Hang on, we don't need column names, do we?
+        //Iterate through, adding the column entries into the arguments LinkedHashMap
 
         for(InputField inputField : inputFields) {
-            String inputName = inputField.getName();
-            String dataValue = featureData.get(inputName);
+            inputName = inputField.getName();
+            dataValue = featureData.get(inputName);
 
             if (inputField.getDataType().toString().equals("double")){
-                FieldValue fieldValue = inputField.prepare(Double.parseDouble(dataValue));
+                fieldValue = inputField.prepare(Double.parseDouble(dataValue));
                 arguments.put(inputName, fieldValue);
             } else if (inputField.getDataType().toString().equals("integer")){
-                FieldValue fieldValue = inputField.prepare(Integer.parseInt(dataValue));
+                fieldValue = inputField.prepare(Integer.parseInt(dataValue));
                 arguments.put(inputName, fieldValue);
             }
         }
+
         // Evaluate the model
         Map<String, ?> results = evaluator.evaluate(arguments);
 
-
-        // Extracting prediction
-        /*Map<String, Double> resultRecord = EvaluatorUtil.decodeAll(results);
-        Double yPred = (Double) resultRecord.get(targetName.toString());
+        // Extract prediction
+        Map<String, ?> resultRecord = EvaluatorUtil.decodeAll(results);
         MachineLearn machineLearn = new MachineLearn();
-        machineLearn.accuracy = yPred;
-        machineLearn.label = resultRecord.toString();
-        //Double accuracy = resultRecord.
-        //MachineLearn(resultRecord, yPred);
-        System.out.printf("Prediction is %d\n", yPred);
-        System.out.printf("PMML output %s\n", resultRecord);*/
+
+        //We need to iterate through the map resultRecord to find the key/value where the value is 1.0. The key value will be the predicted label.
+        machineLearn.label = results.
+                //(String) resultRecord.get(targetName.toString());
     }
 }

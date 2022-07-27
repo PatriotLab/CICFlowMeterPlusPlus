@@ -8,7 +8,7 @@ public class MachineLearn extends FeatureCollection{
     public MachineLearn(){
         new FeatureCollection.FieldBuilder()
                 .addField(() -> label, "Label")
-                .addField(() -> accuracy, "Accuracy")
+                //.addField(() -> accuracy, "Accuracy")
                 .addField(flow)
                 .build(this);
     }
