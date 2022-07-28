@@ -6,6 +6,7 @@ import cic.cs.unb.ca.jnetpcap.PacketReader;
 import cic.cs.unb.ca.jnetpcap.Utils;
 import cic.cs.unb.ca.jnetpcap.features.Classifier;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
+import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
 import jakarta.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
 import org.jnetpcap.PcapClosedException;
@@ -220,7 +221,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
 
         @Override
         public void onFlowGenerated(FlowFeatures flow) {
-            classifier.predict(flow);
+            FlowPrediction prediction = classifier.predict(flow);
             firePropertyChange(PROPERTY_FLOW,fileName,flow);
         }
     }

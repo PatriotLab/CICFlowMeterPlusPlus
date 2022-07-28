@@ -2,8 +2,6 @@ package cic.cs.unb.ca.jnetpcap.features;
 import jakarta.xml.bind.JAXBException;
 //import org.apache.log4j.MDC;
 //import org.dmg.pmml.FieldName;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jpmml.evaluator.*;
 import org.sparkproject.dmg.pmml.FieldName;
 import org.xml.sax.SAXException;
@@ -11,7 +9,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.*;
 
 public class Classifier {
@@ -27,7 +24,7 @@ public class Classifier {
         evaluator.verify();
     }
 
-    public void predict(FlowFeatures rowData) {
+    public FlowPrediction predict(FlowFeatures rowData) {
 
         FieldName targetName = FieldName.create(evaluator.getTargetFields().get(0).getName());
         FieldValue inputValue;
@@ -65,10 +62,25 @@ public class Classifier {
 
         // Extract prediction
         Map<String, ?> resultRecord = EvaluatorUtil.decodeAll(results);
-        MachineLearn machineLearn = new MachineLearn();
+
+        double highest_prob = 0.0;
+        String device_name = null;
+        for(Map.Entry<String, ?> result : resultRecord.entrySet()){
+            String key = result.getKey();
+            Object val = result.getValue();
+            if(val instanceof Double){
+                Double probablility = (Double)result.getValue();
+                if(probablility >= highest_prob){
+                    device_name = key;
+                    highest_prob = probablility;
+                }
+            }
+        }
+
+        return new FlowPrediction(device_name, highest_prob, rowData);
 
         //We need to iterate through the map resultRecord to find the key/value where the value is 1.0. The key value will be the predicted label.
-        machineLearn.label = results.
+//        machineLearn.label = results.
                 //(String) resultRecord.get(targetName.toString());
     }
 }
