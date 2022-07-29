@@ -1,9 +1,6 @@
 package cic.cs.unb.ca.jnetpcap.worker;
 
-import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
-import cic.cs.unb.ca.jnetpcap.FlowGenerator;
-import cic.cs.unb.ca.jnetpcap.PacketReader;
-import cic.cs.unb.ca.jnetpcap.Utils;
+import cic.cs.unb.ca.jnetpcap.*;
 import cic.cs.unb.ca.jnetpcap.features.Classifier;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
@@ -40,32 +37,21 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
     
     private File pcapPath;
     private String outPutDirectory;
+    private CSVWriter<FlowPrediction> outputWriter;
     private File classifier;
     private List<String> chunks;
 
-    public ReadPcapFileWorker(File inputFile, String outPutDir) {
+
+    public ReadPcapFileWorker(File inputFile, CSVWriter<FlowPrediction> writer, long param1, long param2, File inputClassifier) {
         super();
         pcapPath = inputFile;
-        outPutDirectory = outPutDir;
-        chunks = new ArrayList<>();
-
-        if(!outPutDirectory.endsWith(FILE_SEP)) {
-            outPutDirectory = outPutDirectory + FILE_SEP;
-        }
-        flowTimeout = 120000000L;
-        activityTimeout = 5000000L;
-    }
-
-    public ReadPcapFileWorker(File inputFile, String outPutDir,long param1,long param2, File inputClassifier) {
-        super();
-        pcapPath = inputFile;
-        outPutDirectory = outPutDir;
+        outputWriter = writer;
         classifier = inputClassifier;
         chunks = new ArrayList<>();
 
-        if(!outPutDirectory.endsWith(FILE_SEP)) {
-            outPutDirectory = outPutDirectory + FILE_SEP;
-        }
+//        if(!outPutDirectory.endsWith(FILE_SEP)) {
+//            outPutDirectory = outPutDirectory + FILE_SEP;
+//        }
         flowTimeout = param1;
         activityTimeout = param2;
     }
@@ -113,7 +99,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         firePropertyChange("progress","",chunks);
     }
 
-    private void readPcapDir(File inputPath, String outPath) {
+    private void readPcapDir(File inputPath, String outPath) throws IOException {
         if(inputPath==null||outPath==null) {
             return;
         }
@@ -139,27 +125,26 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
 
     }
 
-    private void readPcapFile(String inputFile, String outPath) {
-
-        if(inputFile==null ||outPath==null ) {
-            return;
-        }
+    private void readPcapFile(String inputFile, String outPath) throws IOException {
+//        if(inputFile==null ||outPath==null ) {
+//            return;
+//        }
 
         Path p = Paths.get(inputFile);
         String fileName = p.getFileName().toString();//FilenameUtils.getName(inputFile);
 
 
-        if(!outPath.endsWith(FILE_SEP)){
-            outPath += FILE_SEP;
-        }
+//        if(!outPath.endsWith(FILE_SEP)){
+//            outPath += FILE_SEP;
+//        }
 
-        File saveFileFullPath = new File(outPath+ FilenameUtils.removeExtension(fileName)+Utils.FLOW_SUFFIX);
+//        File saveFileFullPath = new File(outPath+ FilenameUtils.removeExtension(fileName)+Utils.FLOW_SUFFIX);
 
-        if (saveFileFullPath.exists()) {
-            if (!saveFileFullPath.delete()) {
-                System.out.println("Saved file full path cannot be deleted");
-            }
-        }
+//        if (saveFileFullPath.exists()) {
+//            if (!saveFileFullPath.delete()) {
+//                System.out.println("Saved file full path cannot be deleted");
+//            }
+//        }
 
         FlowGenerator flowGen = new FlowGenerator(true, flowTimeout, activityTimeout);
         flowGen.addFlowListener(new FlowListener(fileName, classifier.toPath()));
@@ -185,18 +170,18 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
                 }
             }catch(PcapClosedException e){
                 break;
-            } catch (JAXBException | IOException | ParserConfigurationException | SAXException e) {
-                throw new RuntimeException(e);
             }
         }
-        flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath());
+        flowGen.dumpLabeledCurrentFlow("");
 
-        long lines = countLines(saveFileFullPath.getPath());
+        outputWriter.close();
+
+//        long lines = countLines(saveFileFullPath.getPath());
 
         long end = System.currentTimeMillis();
 
         chunks.clear();
-        chunks.add(String.format("Done! Total %d flows",lines));
+//        chunks.add(String.format("Done! Total %d flows",lines));
         chunks.add(String.format("Packets stats: Total=%d,Valid=%d,Discarded=%d",nTotal,nValid,nDiscarded));
         chunks.add(DividingLine);
         publish(chunks.toArray( new String[chunks.size()]));
@@ -222,7 +207,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         @Override
         public void onFlowGenerated(FlowFeatures flow) {
             FlowPrediction prediction = classifier.predict(flow);
-            firePropertyChange(PROPERTY_FLOW,fileName,flow);
+            firePropertyChange(PROPERTY_FLOW,fileName,prediction);
         }
     }
 

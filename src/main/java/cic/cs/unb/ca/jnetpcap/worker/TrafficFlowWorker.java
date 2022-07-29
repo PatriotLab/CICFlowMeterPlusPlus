@@ -67,7 +67,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> implements Flo
 
 			try {
 				flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false, protocol));
-			} catch (JAXBException | IOException | ParserConfigurationException | SAXException e) {
+			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 			if(isCancelled()) {

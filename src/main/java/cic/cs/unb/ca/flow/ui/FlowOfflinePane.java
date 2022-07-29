@@ -1,7 +1,9 @@
 package cic.cs.unb.ca.flow.ui;
 
 import cic.cs.unb.ca.flow.FlowMgr;
+import cic.cs.unb.ca.jnetpcap.CSVWriter;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
+import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
 import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import cic.cs.unb.ca.jnetpcap.worker.ReadPcapFileWorker;
 import org.apache.commons.io.FilenameUtils;
@@ -15,6 +17,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -417,16 +420,20 @@ public class FlowOfflinePane extends JPanel{
         updateOut("PMML classifier: " + selectedClassifier.toString());
         updateOut("-------------------------------");
 
+        String output_file_path = new File(out, FilenameUtils.removeExtension(in.getName())+FlowMgr.FLOW_SUFFIX).getPath();
+
         long flowTimeout;
         long activityTimeout;
         try {
+            CSVWriter<FlowPrediction> csv_writer = new CSVWriter<>(output_file_path);
+
             flowTimeout = getComboParameter(param1, param1Ele);
             activityTimeout = getComboParameter(param2, param2Ele);
             FlowFeatures.enableColumnCompat = compatModeBox.isSelected();
 
             Map<String, Long> flowCnt = new HashMap<>();
 
-            ReadPcapFileWorker worker = new ReadPcapFileWorker(in, out.getPath(), flowTimeout, activityTimeout, chosenClassifier);
+            ReadPcapFileWorker worker = new ReadPcapFileWorker(in, csv_writer, flowTimeout, activityTimeout, chosenClassifier);
             worker.addPropertyChangeListener(evt -> {
                 ReadPcapFileWorker task = (ReadPcapFileWorker) evt.getSource();
                 if ("progress".equals(evt.getPropertyName())) {
@@ -465,7 +472,7 @@ public class FlowOfflinePane extends JPanel{
                 } else if (ReadPcapFileWorker.PROPERTY_FLOW.equalsIgnoreCase(evt.getPropertyName())) {
 
                     String fileName = (String) evt.getOldValue();
-                    FlowFeatures flow = (FlowFeatures) evt.getNewValue();
+                    FlowPrediction flow_prediction = (FlowPrediction) evt.getNewValue();
 
                     flowCnt.put(fileName, flowCnt.get(fileName) + 1);
 
@@ -473,14 +480,17 @@ public class FlowOfflinePane extends JPanel{
                     fileProgress.setString(msg);
 
                     //write flows to csv file
-                    String header = FlowFeatures.dumpHeader();
-                    csvWriterThread.execute(new InsertCsvRow(header, flow.dumpFlowBasedFeaturesEx(), out.getPath(), FilenameUtils.removeExtension(fileName)+FlowMgr.FLOW_SUFFIX));
+//                    String header = FlowFeatures.dumpHeader();
+                    csvWriterThread.execute(csv_writer.writeFuture(flow_prediction));
+//                    csvWriterThread.execute(new InsertCsvRow(header, flow.dumpFlowBasedFeaturesEx(), out.getPath(), FilenameUtils.removeExtension(fileName)+FlowMgr.FLOW_SUFFIX));
                 }
             });
             worker.execute();
         } catch(ClassCastException | NumberFormatException e){
             logger.info("startRead: {}",e.getMessage());
             JOptionPane.showMessageDialog(FlowOfflinePane.this, "The parameter is not a number,please check and try again.", "Parameter error", JOptionPane.ERROR_MESSAGE);
+        } catch(IOException e){
+            logger.error("Unable to write csv file", e);
         }
     }
 }

@@ -1,7 +1,9 @@
 package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
+import com.google.common.base.Function;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
@@ -129,38 +131,64 @@ public class FlowFeatures extends FeatureCollection {
         }).toArray(Integer[]::new);
     }
 
-    public static String[] getCompatHeaders() {
-        return compatMap.keySet().toArray(new String[]{});
-    }
+//    public static String[] getCompatHeaders() {
+//        return compatMap.keySet().toArray(new String[]{});
+//    }
 
-    public String[] getCompatData() {
-        String[] currentData = getData();
-        return Arrays.stream(getCompatShuffle()).map(i -> {
-            if (i == -1) {
-                return "";
-            } else {
-                return currentData[i];
-            }
-        }).toArray(String[]::new);
-    }
+
+    //    public String[] getCompatData() {
+//        String[] currentData = getData();
+//        return Arrays.stream(getCompatShuffle()).map(i -> {
+//            if (i == -1) {
+//                return "";
+//            } else {
+//                return currentData[i];
+//            }
+//        }).toArray(String[]::new);
+//    }
 
     public static boolean enableColumnCompat = false;
 
-    public final String dumpFlowBasedFeaturesEx() {
+//    public final String dumpFlowBasedFeaturesEx() {
+//        if(enableColumnCompat){
+//            return String.join(",", getCompatData());
+//        } else {
+//            return String.join(",", getData());
+//        }
+//    }
+
+    @Override
+    public String[] getHeader() {
         if(enableColumnCompat){
-            return String.join(",", getCompatData());
+            return compatMap.keySet().toArray(new String[]{});
         } else {
-            return String.join(",", getData());
+            return super.getHeader();
         }
     }
 
-    public static String dumpHeader() {
+    @Override
+    public String[] getData() {
+        String[] currentData = super.getData();
         if(enableColumnCompat){
-            return String.join(",", getCompatHeaders());
+            return Arrays.stream(getCompatShuffle()).map(i -> {
+                if (i == -1) {
+                    return "";
+                } else {
+                    return currentData[i];
+                }
+            }).toArray(String[]::new);
         } else {
-            return String.join(",", getHeaders());
+            return currentData;
         }
     }
+//
+//    public static String dumpHeader() {
+//        if(enableColumnCompat){
+//            return String.join(",", getCompatHeaders());
+//        } else {
+//            return String.join(",", getHeaders());
+//        }
+//    }
 
     private void init(long activityTimeout) {
         activeIdle = new ActivityIdle(activityTimeout);

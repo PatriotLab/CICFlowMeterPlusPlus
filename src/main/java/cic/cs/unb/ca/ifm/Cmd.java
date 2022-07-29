@@ -158,7 +158,7 @@ public class Cmd {
                 }
             }catch(PcapClosedException e){
                 break;
-            } catch (JAXBException | IOException | ParserConfigurationException | SAXException e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             i++;
@@ -200,10 +200,10 @@ public class Cmd {
         @Override
         public void onFlowGenerated(FlowFeatures flow) {
 
-            String flowDump = flow.dumpFlowBasedFeaturesEx();
+            String flowDump = String.join(",", flow.getData());
             List<String> flowStringList = new ArrayList<>();
             flowStringList.add(flowDump);
-            InsertCsvRow.insert(flow.dumpHeader(),flowStringList,outPath,fileName);
+            InsertCsvRow.insert(String.join(",", flow.getHeader()),flowStringList,outPath,fileName);
 
             cnt++;
 
