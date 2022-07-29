@@ -16,7 +16,7 @@ public final class CSVWriter<T extends FeatureCollection> implements java.io.Clo
         printer = new CSVPrinter(new FileWriter(filename), CSVFormat.RFC4180);
     }
 
-    private void write(T flow) throws IOException {
+    public void write(T flow) throws IOException {
         if(!has_header){
             printer.printRecord((Object[])flow.getHeader());
             has_header = true;

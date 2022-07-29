@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Flow;
 
 import static cic.cs.unb.ca.jnetpcap.Utils.*;
 
@@ -147,7 +148,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
 //        }
 
         FlowGenerator flowGen = new FlowGenerator(true, flowTimeout, activityTimeout);
-        flowGen.addFlowListener(new FlowListener(fileName, classifier.toPath()));
+        flowGen.addFlowListener(new FlowListener(outputWriter, classifier.toPath()));
         boolean readIP6 = false;
         boolean readIP4 = true;
         PacketReader packetReader = new PacketReader(inputFile, readIP4, readIP6);
@@ -191,11 +192,11 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
 
     class FlowListener implements FlowGenListener {
 
-        private String fileName;
-        private Classifier classifier;
+        private final CSVWriter<FlowPrediction> writer;
+        private final Classifier classifier;
 
-        FlowListener(String fileName, Path modelName) {
-            this.fileName = fileName;
+        FlowListener(CSVWriter<FlowPrediction> writer, Path modelName) {
+            this.writer = writer;
             try {
                 this.classifier = new Classifier(modelName.toString());
             } catch(Exception e) {
@@ -205,9 +206,9 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         }
 
         @Override
-        public void onFlowGenerated(FlowFeatures flow) {
+        public void onFlowGenerated(FlowFeatures flow) throws IOException {
             FlowPrediction prediction = classifier.predict(flow);
-            firePropertyChange(PROPERTY_FLOW,fileName,prediction);
+            writer.write(prediction);
         }
     }
 

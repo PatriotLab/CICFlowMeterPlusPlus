@@ -199,7 +199,9 @@ public class FlowGenerator {
 //                }
 //            }
             for (FlowFeatures flow : currentFlows.values()) {
-                mListener.onFlowGenerated(flow);
+                if(flow.packet_count.total.count > 1){
+                    mListener.onFlowGenerated(flow);
+                }
             }
 
         } catch (IOException e) {
