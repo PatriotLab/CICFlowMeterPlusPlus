@@ -3,7 +3,9 @@ package cic.cs.unb.ca.jnetpcap.worker;
 import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
 import cic.cs.unb.ca.jnetpcap.Protocol;
+import cic.cs.unb.ca.jnetpcap.features.Classifier;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
+import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
 import jakarta.xml.bind.JAXBException;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.nio.JMemory.Type;
@@ -23,9 +25,10 @@ public class TrafficFlowWorker extends SwingWorker<String,String> implements Flo
 	public static final Logger logger = LoggerFactory.getLogger(TrafficFlowWorker.class);
     public static final String PROPERTY_FLOW = "flow";
 	private String device;
+	private Classifier classifier;
 
 
-    public TrafficFlowWorker(String device) {
+	public TrafficFlowWorker(String device) {
 		super();
 		this.device = device;
 	}
@@ -101,6 +104,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> implements Flo
 
 	@Override
 	public void onFlowGenerated(FlowFeatures flow) {
-        firePropertyChange(PROPERTY_FLOW,null,flow);
+		FlowPrediction prediction = classifier.predict(flow);
+		firePropertyChange(PROPERTY_FLOW,null,flow);
 	}
 }
