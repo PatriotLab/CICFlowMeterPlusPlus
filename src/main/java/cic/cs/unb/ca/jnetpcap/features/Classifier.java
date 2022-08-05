@@ -1,7 +1,6 @@
 package cic.cs.unb.ca.jnetpcap.features;
+
 import jakarta.xml.bind.JAXBException;
-//import org.apache.log4j.MDC;
-//import org.dmg.pmml.FieldName;
 import org.jpmml.evaluator.*;
 import org.sparkproject.dmg.pmml.FieldName;
 import org.xml.sax.SAXException;
@@ -9,7 +8,10 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Classifier {
     final private Evaluator evaluator;
@@ -78,9 +80,5 @@ public class Classifier {
         }
 
         return new FlowPrediction(device_name, highest_prob, rowData);
-
-        //We need to iterate through the map resultRecord to find the key/value where the value is 1.0. The key value will be the predicted label.
-//        machineLearn.label = results.
-                //(String) resultRecord.get(targetName.toString());
     }
 }

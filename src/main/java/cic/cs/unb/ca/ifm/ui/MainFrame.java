@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 public class MainFrame extends JFrame{
 
@@ -40,8 +41,12 @@ public class MainFrame extends JFrame{
 		initMenu();
 		
 		offLinePane = new FlowOfflinePane();
-        monitorPane = new FlowMonitorPane();
-        getContentPane().add(monitorPane,BorderLayout.CENTER);
+		try {
+			monitorPane = new FlowMonitorPane();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		getContentPane().add(monitorPane,BorderLayout.CENTER);
 
 		setVisible(true);
 	}

@@ -1,19 +1,13 @@
 package cic.cs.unb.ca.jnetpcap;
 
-import cic.cs.unb.ca.jnetpcap.features.FeatureCollection;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.features.TcpTracker;
 import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
-
-import static cic.cs.unb.ca.jnetpcap.Utils.LINE_SEP;
 
 public class FlowGenerator {
     public static final Logger logger = LoggerFactory.getLogger(FlowGenerator.class);

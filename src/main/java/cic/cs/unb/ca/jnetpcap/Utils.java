@@ -4,7 +4,10 @@ import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 
 public class Utils {
     protected static final Logger logger = LoggerFactory.getLogger(Utils.class);

@@ -1,27 +1,26 @@
 package cic.cs.unb.ca.jnetpcap.worker;
 
-import cic.cs.unb.ca.jnetpcap.*;
+import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
+import cic.cs.unb.ca.jnetpcap.CSVWriter;
+import cic.cs.unb.ca.jnetpcap.FlowGenerator;
+import cic.cs.unb.ca.jnetpcap.PacketReader;
 import cic.cs.unb.ca.jnetpcap.features.Classifier;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
-import jakarta.xml.bind.JAXBException;
-import org.apache.commons.io.FilenameUtils;
 import org.jnetpcap.PcapClosedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 import javax.swing.*;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Flow;
 
-import static cic.cs.unb.ca.jnetpcap.Utils.*;
+import static cic.cs.unb.ca.jnetpcap.Utils.detectPmmlFile;
+import static cic.cs.unb.ca.jnetpcap.Utils.isPcapFile;
 
 
 public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
@@ -186,9 +185,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         chunks.add(String.format("Packets stats: Total=%d,Valid=%d,Discarded=%d",nTotal,nValid,nDiscarded));
         chunks.add(DividingLine);
         publish(chunks.toArray( new String[chunks.size()]));
-
     }
-
 
     class FlowListener implements FlowGenListener {
 

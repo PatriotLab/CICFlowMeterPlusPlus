@@ -1,6 +1,5 @@
 package cic.cs.unb.ca.jnetpcap;
 
-import algebra.lattice.Bool;
 import cic.cs.unb.ca.jnetpcap.features.FeatureCollection;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;

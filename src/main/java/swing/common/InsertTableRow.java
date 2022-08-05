@@ -6,14 +6,14 @@ import java.util.List;
 
 public class InsertTableRow implements Runnable  {
 
-    private DefaultTableModel defaultTableModel;
-    private List<String[]> rowList;
+    private final DefaultTableModel defaultTableModel;
+    private final List<String[]> rowList;
     private JLabel label;
 
-    public InsertTableRow(DefaultTableModel defaultTableModel, List<String[]> rowList, JLabel label) {
+    public InsertTableRow(DefaultTableModel defaultTableModel, List<String[]> rowList) {
         this.defaultTableModel = defaultTableModel;
         this.rowList = rowList;
-        this.label = label;
+        //this.label = label;
     }
 
     @Override

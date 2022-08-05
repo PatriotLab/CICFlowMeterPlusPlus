@@ -20,7 +20,7 @@ import java.util.Enumeration;
 public class SwingUtils {
     protected static final Logger logger = LoggerFactory.getLogger(SwingUtils.class);
     private final static String PCAP = "application/vnd.tcpdump.pcap";
-    private final static String PMML = "application/octet-stream"; //application/xml could also work since pmml is simply xml
+    private final static String PMML = "application/xml"; //application/octet-stream could also work since pmml is simply xml
     public static void fitTableColumns(JTable myTable) {
         JTableHeader header = myTable.getTableHeader();
         int rowCount = myTable.getRowCount();

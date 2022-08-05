@@ -4,7 +4,6 @@ import cic.cs.unb.ca.flow.FlowMgr;
 import cic.cs.unb.ca.jnetpcap.CSVWriter;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
-import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import cic.cs.unb.ca.jnetpcap.worker.ReadPcapFileWorker;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -18,15 +17,10 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import static org.apache.commons.io.FilenameUtils.getPath;
 
 public class FlowOfflinePane extends JPanel{
     protected static final Logger logger = LoggerFactory.getLogger(FlowOfflinePane.class);
@@ -59,7 +53,7 @@ public class FlowOfflinePane extends JPanel{
     private JProgressBar fileCntProgress;
     public File chosenClassifier;
 
-    private ExecutorService csvWriterThread;
+    //private ExecutorService csvWriterThread;
 
     public FlowOfflinePane() {
 
@@ -80,7 +74,7 @@ public class FlowOfflinePane extends JPanel{
         pmmlChooserFilter = new PmmlFileFilter();
         pmmlChooser.setFileFilter(pmmlChooserFilter);
 
-        csvWriterThread = Executors.newSingleThreadExecutor();
+        //csvWriterThread = Executors.newSingleThreadExecutor();
     }
 
     private JPanel initOutPane(){

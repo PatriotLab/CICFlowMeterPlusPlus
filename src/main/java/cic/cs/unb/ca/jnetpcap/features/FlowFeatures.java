@@ -1,9 +1,7 @@
 package cic.cs.unb.ca.jnetpcap.features;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
-import com.google.common.base.Function;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
@@ -215,7 +213,7 @@ public class FlowFeatures extends FeatureCollection {
                 .build(this);
     }
 
-    private FlowFeatures() {
+    public FlowFeatures() {
         init(0);
     }
 
