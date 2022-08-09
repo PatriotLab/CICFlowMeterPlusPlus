@@ -13,7 +13,7 @@ public class InsertTableRow implements Runnable  {
     public InsertTableRow(DefaultTableModel defaultTableModel, List<String[]> rowList) {
         this.defaultTableModel = defaultTableModel;
         this.rowList = rowList;
-        //this.label = label;
+        this.label = label;
     }
 
     @Override

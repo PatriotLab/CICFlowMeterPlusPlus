@@ -90,6 +90,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 
 	@Override
 	protected String doInBackground() {
+		//To Do: Figure out how Swing workers work
 		FlowGenerator flowGen = new FlowGenerator(true, 120000000L, 5000000L);
 		flowGen.addFlowListener(new FlowListener(csv_writer, classifierFile.toPath()));
 //			flowGen.addFlowListener(this);

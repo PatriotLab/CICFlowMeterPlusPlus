@@ -4,13 +4,10 @@ import cic.cs.unb.ca.flow.FlowMgr;
 import cic.cs.unb.ca.jnetpcap.CSVWriter;
 import cic.cs.unb.ca.jnetpcap.PcapIfWrapper;
 import cic.cs.unb.ca.jnetpcap.Utils;
-import cic.cs.unb.ca.jnetpcap.features.Classifier;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
-import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
 import cic.cs.unb.ca.jnetpcap.worker.LoadPcapInterfaceWorker;
 import cic.cs.unb.ca.jnetpcap.worker.TrafficFlowWorker;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jnetpcap.PcapIf;
 import org.slf4j.Logger;
@@ -24,9 +21,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.CancellationException;
@@ -101,7 +98,7 @@ public class FlowMonitorPane extends JPanel {
         pane.setLayout(new BorderLayout(0, 5));
         pane.setBorder(BorderFactory.createLineBorder(new Color(0x555555)));
 
-        pane.add(initTableBtnPane(), BorderLayout.NORTH);
+        pane.add(initClassifierPane(), BorderLayout.NORTH);
         pane.add(initTablePane(), BorderLayout.CENTER);
         pane.add(initStatusPane(), BorderLayout.SOUTH);
 
@@ -114,10 +111,16 @@ public class FlowMonitorPane extends JPanel {
         pane.setLayout(new BorderLayout(0, 0));
         pane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 
-        FlowFeatures test = new FlowFeatures();
-        String[] headers = test.getHeader();
+        FlowFeatures headers = new FlowFeatures();
+//        ArrayList<String> test = Arrays.stream(headers.getHeader()).toArray();
+        String[] headerList = headers.getHeader();
         //String[] arrayHeader = StringUtils.split(headers, ",");
-        defaultTableModel = new DefaultTableModel(headers,0);
+        //test.add(0, "Accuracy");
+        //test.add(0, "Label");
+        //String[] test = {"Label", "Accuracy"};
+        //test = test + headerList;
+        String[] test = {"Label", "Accuracy", Arrays.toString(headerList)};
+        defaultTableModel = new DefaultTableModel(StringUtils.split(Arrays.toString(test), ","),0);
         flowTable = new JTable(defaultTableModel);
         flowTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         scrollPane = new JScrollPane(flowTable);
@@ -128,7 +131,7 @@ public class FlowMonitorPane extends JPanel {
         return pane;
     }
 
-    private JPanel initTableBtnPane(){
+    private JPanel initClassifierPane(){
         JPanel btnPane = new JPanel();
         btnPane.setLayout(new BoxLayout(btnPane, BoxLayout.X_AXIS));
         /*btnSave = new JButton("Save as");
@@ -319,13 +322,14 @@ public class FlowMonitorPane extends JPanel {
     }
 
     private void startTrafficFlow() {
-
+        //Gets name of the selected interface
         String ifName = list.getSelectedValue().name();
         CSVWriter <FlowPrediction> csv_writer;
         if (mWorker != null && !mWorker.isCancelled()) {
             return;
         }
-//Want to output the Real Time csv to the /data/ directory where it will fall under .gitignore.
+        //Makes filename
+//Want to output the Real Time csv to the /data/ directory where it will fall under .gitignore. Although .csv files are already ignored
         //String filename = String.valueOf(new File("/data/" + LocalDate.now() + "_" + System.currentTimeMillis() + Utils.FLOW_SUFFIX));
         String filename = LocalDate.now() + "_" + System.currentTimeMillis() + Utils.FLOW_SUFFIX;
         try {
@@ -360,7 +364,8 @@ public class FlowMonitorPane extends JPanel {
                         }catch (InterruptedException | ExecutionException e) {
                             logger.debug(e.getMessage());
                         }
-                    //case
+                    //case LISTENING: There is no possible listening case
+
                         break;
                 }
             }
