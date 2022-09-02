@@ -62,7 +62,7 @@ public class CICFlowMeter {
 		logger.info("CICFlowMeter++ found: {} Files.",pcapfiles.length);
 	
 		for(String file:pcapfiles){
-			flowGen = new FlowGenerator(true,120000000L, 5000000L);
+			flowGen = new FlowGenerator(120000000L, 5000000L);
 			packetReader = new PacketReader(pcapPath+file,readIP4,readIP6);
 			logger.info("");
 			logger.info("");

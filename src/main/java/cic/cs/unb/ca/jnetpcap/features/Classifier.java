@@ -27,7 +27,7 @@ public class Classifier {
     }
 
     public FlowPrediction predict(FlowFeatures rowData) {
-
+//what is the existing prediction parameter?
         FieldName targetName = FieldName.create(evaluator.getTargetFields().get(0).getName());
         FieldValue inputValue;
 

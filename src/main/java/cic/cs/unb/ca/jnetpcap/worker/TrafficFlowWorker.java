@@ -5,6 +5,7 @@ import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
 import cic.cs.unb.ca.jnetpcap.Protocol;
 import cic.cs.unb.ca.jnetpcap.features.Classifier;
+import cic.cs.unb.ca.jnetpcap.features.FeatureCollection;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
 import org.apache.commons.lang3.StringUtils;
@@ -36,6 +37,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 	public final File classifierFile;
 	public CSVWriter<FlowPrediction> csv_writer;
 	public Classifier classifier;
+	public Boolean classifierPresent;
 
     public TrafficFlowWorker(String listenDevice, File classifierParam, CSVWriter<FlowPrediction> writer) {
 		super();
@@ -50,17 +52,17 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 		}
 	}
 
-	public static void insertFlow(FlowFeatures flow) {
+	public static void insertFlowFeatures(FlowPrediction flow) {
         /*List<String> flowStringList = new ArrayList<>();
         List<String[]> flowDataList = new ArrayList<>();
         String flowDump = String.join(",", flow.getData());
         flowStringList.add(flowDump);
         flowDataList.add(flow.getData(), ","));
 //What's the difference between FlowPrediction and FlowFeatures?*/
-		List<String> flowStringList = new ArrayList<>();
+		//List<String> flowStringList = new ArrayList<>();
 		List<String[]> flowDataList = new ArrayList<>();
 		String flowDump = Arrays.toString(flow.getData());
-		flowStringList.add(flowDump);
+		//flowStringList.add(flowDump);
 		flowDataList.add(StringUtils.split(flowDump, ","));
 
 		SwingUtilities.invokeLater(new InsertTableRow(defaultTableModel,flowDataList));
@@ -72,7 +74,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 
 		//FlowMonitorPane.updateFlowTable(flow);
 
-        //write flows to csv file
+		//write flows to csv file
         /*String header  = String.join(",", flowDump);
         String path = FlowMgr.getInstance().getSavePath();
         String filename = LocalDate.now().toString();
@@ -88,10 +90,10 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 //		SwingUtilities.invokeLater(new InsertTableRow(defaultTableModel,flowDataList,lblFlowCnt));
 	}
 
-	@Override
+	/*@Override
 	protected String doInBackground() {
 		//To Do: Figure out how Swing workers work
-		FlowGenerator flowGen = new FlowGenerator(true, 120000000L, 5000000L);
+		FlowGenerator flowGen = new FlowGenerator(120000000L, 5000000L);
 		flowGen.addFlowListener(new FlowListener(csv_writer, classifierFile.toPath()));
 //			flowGen.addFlowListener(this);
 		int snaplen = 64 * 1024;//2048; // Truncate packet at this size
@@ -104,7 +106,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 			logger.info("open {} fail -> {}", device, errbuf);
 			return String.format("open %s fail ->", device) + errbuf;
 		} else if (classifier == null){
-			return String.format("Select a Classifier!");
+			classifierPresent = false;
 		}
 
 		PcapPacketHandler<String> jpacketHandler = (packet, user) -> {
@@ -123,7 +125,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 
 			try {
 				flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, ipv4, ipv6, protocol));
-				//flowGen.addFlowListener(new TrafficFlowWorker().FlowListener(writer, classifier.toPath()));
+				//flowGen.addFlowListener(new TrafficFlowWorker().FlowListener(csv_writer, classifierFile.toPath()));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -144,8 +146,74 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 			case -2 -> "stop listening: " + device;
 			default -> String.valueOf(ret);
 		};
-	}
+	}*/
+    @Override
+    protected String doInBackground() {
+        //To Do: Figure out how Swing workers work
+        FlowGenerator flowGen = new FlowGenerator(120000000L, 5000000L);
+        flowGen.addFlowListener(new FlowListener(csv_writer, classifierFile.toPath()));
+//			flowGen.addFlowListener(this);
+        int snaplen = 64 * 1024;//2048; // Truncate packet at this size
+        int promiscous = Pcap.MODE_PROMISCUOUS;
+        int timeout = 60 * 1000; // In milliseconds
+        StringBuilder errbuf = new StringBuilder();
+        Pcap pcap = Pcap.openLive(device, snaplen, promiscous, timeout, errbuf);
 
+        if (pcap == null) {
+            logger.info("open {} fail -> {}", device, errbuf);
+            return String.format("open %s fail ->", device) + errbuf;
+        }
+		if (classifier == null){
+            classifierPresent = false;
+        }
+
+		// packet handler for packet capture
+		Protocol protocol = new Protocol();
+
+		pcap.loop(Integer.parseInt(args[1]), pcappackethandler, "pressure");
+		pcap.loop(-1, new PcapPacketHandler<F>() {
+		};
+
+		if(packet.hasHeader(protocol.ipv4())){
+			ipv4 = true;
+			ipv6 = false;
+		} else if(packet.hasHeader(protocol.ipv6())){
+			ipv4 = false;
+			ipv6 = true;
+		}
+
+		try {
+			flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, ipv4, ipv6, protocol));
+			//flowGen.addFlowListener(new TrafficFlowWorker().FlowListener(csv_writer, classifierFile.toPath()));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		if (isCancelled()) {
+			pcap.breakloop();
+			logger.debug("break Packet loop");
+		}
+		pcap.close();
+
+        PcapPacketHandler<String> jpacketHandler = (packet, user) -> {
+
+
+            PcapPacket permanent = new PcapPacket(Type.POINTER);
+            packet.transferStateAndDataTo(permanent);
+
+        };
+
+        //FlowMgr.getInstance().setListenFlag(true);
+        logger.info(device + " is listening...");
+        firePropertyChange("progress", "open successfully", "listening: " + device);
+        int ret = pcap.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, device);
+
+        return switch (ret) {
+            case 0 -> "listening: " + device + " finished";
+            case -1 -> "listening: " + device + " error";
+            case -2 -> "stop listening: " + device;
+            default -> String.valueOf(ret);
+        };
+    }
 	@Override
 	protected void process(List<String> chunks) {
 		super.process(chunks);
@@ -156,14 +224,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 		super.done();
 	}
 
-	/*@Override
-	public void onFlowGenerated(FlowFeatures flow) throws IOException {
-		FlowPrediction prediction = classifier.predict(flow);
-		//insertFlow(prediction);
-		csv_writer.write(prediction);
-	}*/
-
-	class FlowListener implements FlowGenListener {
+	static class FlowListener implements FlowGenListener {
 
 		private final CSVWriter<FlowPrediction> writer;
 		private final Classifier classifier;
@@ -181,7 +242,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 		@Override
 		public void onFlowGenerated(FlowFeatures flow) throws IOException {
 			FlowPrediction prediction = classifier.predict(flow);
-			//insertFlow(prediction);
+			insertFlowFeatures(prediction);
 			writer.write(prediction);
 		}
 	}

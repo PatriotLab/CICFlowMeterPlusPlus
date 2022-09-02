@@ -4,6 +4,7 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
+import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
 import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
 import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import org.apache.commons.io.FilenameUtils;
@@ -128,7 +129,7 @@ public class Cmd {
            }
         }
 
-        FlowGenerator flowGen = new FlowGenerator(true, flowTimeout, activityTimeout);
+        FlowGenerator flowGen = new FlowGenerator(flowTimeout, activityTimeout);
         flowGen.addFlowListener(new FlowListener(fileName,outPath));
         boolean readIP6 = false;
         boolean readIP4 = true;
@@ -209,5 +210,28 @@ public class Cmd {
             System.out.print(console);
         }
     }
+    /*static class FlowPrediction implements FlowGenListener {
+        private String fileName;
+        private String outPath;
+        private long cnt;
+        @Override
+        public FlowPrediction(String fileName, String outPath) {
+            this.fileName = fileName + FLOW_SUFFIX;
+            this.outPath = outPath;
+        }
 
+        @Override
+        public void onFlowGenerated(FlowFeatures flow) throws IOException {
+            String flowDump = String.join(",", flow.getData());
+            List<String> flowStringList = new ArrayList<>();
+            flowStringList.add(flowDump);
+            InsertCsvRow.insert(String.join(",", flow.getHeader()),flowStringList,outPath,fileName);
+
+            cnt++;
+
+            String console = String.format("%s -> %d flows \r", fileName,cnt);
+
+            System.out.print(console);
+        }
+    }*/
 }

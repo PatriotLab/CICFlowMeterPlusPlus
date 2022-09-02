@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jnetpcap.PcapIf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import swing.common.JTable2CSVWorker;
 import swing.common.PmmlFileFilter;
 import swing.common.TextFileFilter;
 
@@ -22,12 +23,12 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Flow;
 
 public class FlowMonitorPane extends JPanel {
     protected final Logger logger = LoggerFactory.getLogger(FlowMonitorPane.class);
@@ -36,7 +37,7 @@ public class FlowMonitorPane extends JPanel {
     private Vector<File> classifierEle;
     private JComboBox<File> classifierBox;
     private final PmmlFileFilter pmmlChooserFilter = new PmmlFileFilter();
-    public File chosenClassifier;
+    public static File chosenClassifier;
     private DefaultTableModel defaultTableModel;
     private JList<PcapIfWrapper> list;
     private DefaultListModel<PcapIfWrapper> listModel;
@@ -51,6 +52,7 @@ public class FlowMonitorPane extends JPanel {
     //private JButton btnSave = new JButton();
     //private JButton btnGraph = new JButton();
     private JFileChooser pmmlChooser;
+    public static String[] completeHeaders;
 
     //private ExecutorService csvWriterThread;
     //private final String path = FlowMgr.getInstance().getSavePath();
@@ -119,8 +121,12 @@ public class FlowMonitorPane extends JPanel {
         //test.add(0, "Label");
         //String[] test = {"Label", "Accuracy"};
         //test = test + headerList;
-        String[] test = {"Label", "Accuracy", Arrays.toString(headerList)};
-        defaultTableModel = new DefaultTableModel(StringUtils.split(Arrays.toString(test), ","),0);
+        if(chosenClassifier == null){
+            completeHeaders = new String[]{Arrays.toString(headerList)};
+        } else {
+            completeHeaders = new String[]{"Label", "Accuracy", Arrays.toString(headerList)};
+        }
+        defaultTableModel = new DefaultTableModel(StringUtils.split(Arrays.toString(completeHeaders), ","),0);
         flowTable = new JTable(defaultTableModel);
         flowTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         scrollPane = new JScrollPane(flowTable);
@@ -131,6 +137,9 @@ public class FlowMonitorPane extends JPanel {
         return pane;
     }
 
+    public static String[] getHeaders(){
+        return completeHeaders;
+    }
     private JPanel initClassifierPane(){
         JPanel btnPane = new JPanel();
         btnPane.setLayout(new BoxLayout(btnPane, BoxLayout.X_AXIS));
@@ -204,6 +213,8 @@ public class FlowMonitorPane extends JPanel {
         btnPane.add(Box.createHorizontalGlue());
         btnPane.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 */
+       // JTable2CSVWorker worker = new JTable2CSVWorker(flowTable, selectedFile);
+        //worker.execute();
         return btnPane;
     }
 
@@ -330,6 +341,13 @@ public class FlowMonitorPane extends JPanel {
         }
         //Makes filename
 //Want to output the Real Time csv to the /data/ directory where it will fall under .gitignore. Although .csv files are already ignored
+        /*
+        int count = 1;
+        while(filename.Exists(){
+            addition++;
+            filename = LocalDate.now() + "(" + count + ")" + Utils.FLOW_SUFFIX;
+        }
+        * */
         //String filename = String.valueOf(new File("/data/" + LocalDate.now() + "_" + System.currentTimeMillis() + Utils.FLOW_SUFFIX));
         String filename = LocalDate.now() + "_" + System.currentTimeMillis() + Utils.FLOW_SUFFIX;
         try {
@@ -345,7 +363,7 @@ public class FlowMonitorPane extends JPanel {
                 lblStatus.setText((String) event.getNewValue());
                 lblStatus.validate();
             }else if (TrafficFlowWorker.PROPERTY_FLOW.equalsIgnoreCase(event.getPropertyName())) {
-                TrafficFlowWorker.insertFlow((FlowFeatures) event.getNewValue());
+                    TrafficFlowWorker.insertFlowFeatures((FlowPrediction) event.getNewValue());
             }else if ("state".equals(event.getPropertyName())) {
                 switch (task.getState()) {
                     case STARTED:
@@ -361,11 +379,9 @@ public class FlowMonitorPane extends JPanel {
                             lblStatus.validate();
                             logger.info("Pcap stop listening");
 
-                        }catch (InterruptedException | ExecutionException e) {
+                        } catch (InterruptedException | ExecutionException e) {
                             logger.debug(e.getMessage());
                         }
-                    //case LISTENING: There is no possible listening case
-
                         break;
                 }
             }
@@ -394,5 +410,9 @@ public class FlowMonitorPane extends JPanel {
             UIManager.put("OptionPane.minimumSize",new Dimension(0, 0));
             JOptionPane.showMessageDialog(this.getParent(), msg);
         }
+    }
+
+    public static Boolean checkClassifier() {
+        return chosenClassifier == null;
     }
 }

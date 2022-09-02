@@ -1,6 +1,8 @@
 package cic.cs.unb.ca.jnetpcap;
 
+import cic.cs.unb.ca.flow.ui.FlowMonitorPane;
 import cic.cs.unb.ca.jnetpcap.features.FeatureCollection;
+import cic.cs.unb.ca.jnetpcap.worker.TrafficFlowWorker;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -17,12 +19,17 @@ public final class CSVWriter<T extends FeatureCollection> implements java.io.Clo
 
     public void write(T flow) throws IOException {
         if(!has_header){
-            printer.printRecord((Object[])flow.getHeader());
+            writeHeaders();
             has_header = true;
         }
         printer.printRecord((Object[])flow.getData());
     }
 
+    public void writeHeaders() throws IOException {
+        String[] headers = FlowMonitorPane.getHeaders();
+        printer.printRecord((Object[]) headers);
+        has_header = true;
+    }
     public Runnable writeFuture(T flow){
         return new InsertRow<T>(this, flow);
     }
@@ -40,7 +47,6 @@ public final class CSVWriter<T extends FeatureCollection> implements java.io.Clo
             this.writer = writer;
             this.flow = flow;
         }
-
         @Override
         public void run() {
             try {

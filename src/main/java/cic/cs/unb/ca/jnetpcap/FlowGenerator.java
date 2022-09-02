@@ -1,5 +1,6 @@
 package cic.cs.unb.ca.jnetpcap;
 
+import cic.cs.unb.ca.flow.ui.FlowMonitorPane;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.features.TcpTracker;
 import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
@@ -23,7 +24,7 @@ public class FlowGenerator {
     private long flowActivityTimeOut;
     private int finishedFlowCount;
 
-    public FlowGenerator(boolean bidirectional, long flowTimeout, long activityTimeout) {
+    public FlowGenerator(long flowTimeout, long activityTimeout) {
         super();
 //		this.bidirectional = bidirectional;
         this.flowTimeOut = flowTimeout;
@@ -45,12 +46,11 @@ public class FlowGenerator {
         if (packet == null) {
             return;
         }
-
+//overwrite this whole class with the master branch version
         long currentTimestamp = packet.getTimeStamp();
 
         ArrayList<String> removedFlows = new ArrayList<>();
         for (Map.Entry<String, FlowFeatures> entry : this.currentFlows.entrySet()){
-
             FlowFeatures flow = entry.getValue();
             if((currentTimestamp - flow.times.getStartTime()) > flowTimeOut) {
                 if(flow.packet_count.total.count > 1){

@@ -11,9 +11,9 @@ public class FlowPrediction extends FeatureCollection{
         this.flow = flow;
 
         new FeatureCollection.FieldBuilder()
-                .addField(() -> label, "Label")
-                .addField(() -> accuracy, "Accuracy")
-                .addField(flow)
-                .build(this);
+            .addField(() -> label, "Label")
+            .addField(() -> accuracy, "Accuracy")
+            .addField(flow)
+            .build(this);
     }
 }

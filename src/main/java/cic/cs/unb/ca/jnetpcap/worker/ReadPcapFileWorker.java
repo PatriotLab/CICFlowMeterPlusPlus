@@ -146,7 +146,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
 //            }
 //        }
 
-        FlowGenerator flowGen = new FlowGenerator(true, flowTimeout, activityTimeout);
+        FlowGenerator flowGen = new FlowGenerator(flowTimeout, activityTimeout);
         flowGen.addFlowListener(new FlowListener(outputWriter, classifier.toPath()));
         boolean readIP6 = false;
         boolean readIP4 = true;
@@ -207,6 +207,8 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
             FlowPrediction prediction = classifier.predict(flow);
             writer.write(prediction);
         }
+
+
     }
 
 }
