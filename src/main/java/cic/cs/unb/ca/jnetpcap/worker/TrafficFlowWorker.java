@@ -53,167 +53,57 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 	}
 
 	public static void insertFlowFeatures(FlowPrediction flow) {
-        /*List<String> flowStringList = new ArrayList<>();
-        List<String[]> flowDataList = new ArrayList<>();
-        String flowDump = String.join(",", flow.getData());
-        flowStringList.add(flowDump);
-        flowDataList.add(flow.getData(), ","));
-//What's the difference between FlowPrediction and FlowFeatures?*/
-		//List<String> flowStringList = new ArrayList<>();
+
 		List<String[]> flowDataList = new ArrayList<>();
 		String flowDump = Arrays.toString(flow.getData());
 		//flowStringList.add(flowDump);
 		flowDataList.add(StringUtils.split(flowDump, ","));
 
-		SwingUtilities.invokeLater(new InsertTableRow(defaultTableModel,flowDataList));
-		//write flows to csv file
-		//String header  = FlowFeature.getHeader();
-		//String path = FlowMgr.getInstance().getSavePath();
-		//String filename = LocalDate.now().toString() + FlowMgr.FLOW_SUFFIX;
-		//csvWriterThread.execute(new InsertCsvRow(header, flowStringList, path, filename));
-
-		//FlowMonitorPane.updateFlowTable(flow);
-
-		//write flows to csv file
-        /*String header  = String.join(",", flowDump);
-        String path = FlowMgr.getInstance().getSavePath();
-        String filename = LocalDate.now().toString();
-        CSVWriter<FlowPrediction> csv_writer = new CSVWriter<>(path+filename);
-        /csvWriterThread.execute(new InsertCsvRow(header, flowStringList, path, filename));
-		try {
-			csv_writer.write(flow);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}*/
-
-		//btnSave.setEnabled(true);
-//		SwingUtilities.invokeLater(new InsertTableRow(defaultTableModel,flowDataList,lblFlowCnt));
+		SwingUtilities.invokeLater(new InsertTableRow(defaultTableModel, flowDataList));
 	}
-
-	/*@Override
-	protected String doInBackground() {
-		//To Do: Figure out how Swing workers work
-		FlowGenerator flowGen = new FlowGenerator(120000000L, 5000000L);
-		flowGen.addFlowListener(new FlowListener(csv_writer, classifierFile.toPath()));
-//			flowGen.addFlowListener(this);
-		int snaplen = 64 * 1024;//2048; // Truncate packet at this size
-		int promiscous = Pcap.MODE_PROMISCUOUS;
-		int timeout = 60 * 1000; // In milliseconds
-		StringBuilder errbuf = new StringBuilder();
-		Pcap pcap = Pcap.openLive(device, snaplen, promiscous, timeout, errbuf);
-
-		if (pcap == null) {
-			logger.info("open {} fail -> {}", device, errbuf);
-			return String.format("open %s fail ->", device) + errbuf;
-		} else if (classifier == null){
-			classifierPresent = false;
-		}
-
-		PcapPacketHandler<String> jpacketHandler = (packet, user) -> {
-
-			Protocol protocol = new Protocol();
-
-			PcapPacket permanent = new PcapPacket(Type.POINTER);
-			packet.transferStateAndDataTo(permanent);
-			if(packet.hasHeader(protocol.ipv4())){
-				ipv4 = true;
-				ipv6 = false;
-			} else {
-				ipv4 = false;
-				ipv6 = true;
-			}
-
-			try {
-				flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, ipv4, ipv6, protocol));
-				//flowGen.addFlowListener(new TrafficFlowWorker().FlowListener(csv_writer, classifierFile.toPath()));
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-			if (isCancelled()) {
-				pcap.breakloop();
-				logger.debug("break Packet loop");
-			}
-		};
-
-		//FlowMgr.getInstance().setListenFlag(true);
-		logger.info("Pcap is listening...");
-		firePropertyChange("progress", "open successfully", "listening: " + device);
-		int ret = pcap.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, device);
-
-		return switch (ret) {
-			case 0 -> "listening: " + device + " finished";
-			case -1 -> "listening: " + device + " error";
-			case -2 -> "stop listening: " + device;
-			default -> String.valueOf(ret);
-		};
-	}*/
     @Override
     protected String doInBackground() {
-        //To Do: Figure out how Swing workers work
         FlowGenerator flowGen = new FlowGenerator(120000000L, 5000000L);
         flowGen.addFlowListener(new FlowListener(csv_writer, classifierFile.toPath()));
-//			flowGen.addFlowListener(this);
-        int snaplen = 64 * 1024;//2048; // Truncate packet at this size
-        int promiscous = Pcap.MODE_PROMISCUOUS;
-        int timeout = 60 * 1000; // In milliseconds
+        int snaplen = 65536; // 64 * 1024 Truncate packet at this size
+        int promiscuous = Pcap.MODE_PROMISCUOUS;
+        int timeout = 60000; //60 * 1000 milliseconds
         StringBuilder errbuf = new StringBuilder();
-        Pcap pcap = Pcap.openLive(device, snaplen, promiscous, timeout, errbuf);
+        Pcap selectedInterface = Pcap.openLive(device, snaplen, promiscuous, timeout, errbuf);
 
-        if (pcap == null) {
+        if (selectedInterface == null) {
             logger.info("open {} fail -> {}", device, errbuf);
             return String.format("open %s fail ->", device) + errbuf;
-        }
-		if (classifier == null){
-            classifierPresent = false;
         }
 
 		// packet handler for packet capture
 		Protocol protocol = new Protocol();
 
-		pcap.loop(Integer.parseInt(args[1]), pcappackethandler, "pressure");
-		pcap.loop(-1, new PcapPacketHandler<F>() {
-		};
-
-		if(packet.hasHeader(protocol.ipv4())){
-			ipv4 = true;
-			ipv6 = false;
-		} else if(packet.hasHeader(protocol.ipv6())){
-			ipv4 = false;
-			ipv6 = true;
-		}
-
+		//selectedInterface.loop(-1, new PcapPacketHandler<F>() {
+		while ( selectedInterface.hasNext()){
+		PcapPacket packet = selectedInterface.nextEx();
 		try {
-			flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, ipv4, ipv6, protocol));
+			flowGen.addPacket(PacketReader.getBasicPacketInfo(packet, ipv4, ipv6, protocol));
 			//flowGen.addFlowListener(new TrafficFlowWorker().FlowListener(csv_writer, classifierFile.toPath()));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		if (isCancelled()) {
-			pcap.breakloop();
+			selectedInterface.breakloop();
 			logger.debug("break Packet loop");
+			selectedInterface.close();
 		}
-		pcap.close();
 
-        PcapPacketHandler<String> jpacketHandler = (packet, user) -> {
-
+        PcapPacketHandler<String> jpacketHandler = (jpacket, user) -> {
 
             PcapPacket permanent = new PcapPacket(Type.POINTER);
-            packet.transferStateAndDataTo(permanent);
-
+            jpacket.transferStateAndDataTo(permanent);
         };
 
         //FlowMgr.getInstance().setListenFlag(true);
-        logger.info(device + " is listening...");
-        firePropertyChange("progress", "open successfully", "listening: " + device);
-        int ret = pcap.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, device);
-
-        return switch (ret) {
-            case 0 -> "listening: " + device + " finished";
-            case -1 -> "listening: " + device + " error";
-            case -2 -> "stop listening: " + device;
-            default -> String.valueOf(ret);
-        };
-    }
+        int ret = selectedInterface.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, device);
+    };
+	}
 	@Override
 	protected void process(List<String> chunks) {
 		super.process(chunks);
