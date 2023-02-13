@@ -1,13 +1,11 @@
 package cic.cs.unb.ca.jnetpcap.worker;
 
-import cic.cs.unb.ca.jnetpcap.CSVWriter;
-import cic.cs.unb.ca.jnetpcap.FlowGenerator;
-import cic.cs.unb.ca.jnetpcap.PacketReader;
-import cic.cs.unb.ca.jnetpcap.Protocol;
+import cic.cs.unb.ca.jnetpcap.*;
 import cic.cs.unb.ca.jnetpcap.features.Classifier;
 import cic.cs.unb.ca.jnetpcap.features.FeatureCollection;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
+import cic.cs.unb.ca.jnetpcap.worker.CaptureFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.nio.JMemory.Type;
@@ -26,8 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TrafficFlowWorker extends SwingWorker<String,String> {
-
+public class TrafficFlowWorker extends CaptureFactory {
 	public static final Logger logger = LoggerFactory.getLogger(TrafficFlowWorker.class);
 	public static final String PROPERTY_FLOW = "flow";
 	public static DefaultTableModel defaultTableModel;
@@ -61,7 +58,6 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 
 		SwingUtilities.invokeLater(new InsertTableRow(defaultTableModel, flowDataList));
 	}
-    @Override
     protected String doInBackground() {
         FlowGenerator flowGen = new FlowGenerator(120000000L, 5000000L);
         flowGen.addFlowListener(new FlowListener(csv_writer, classifierFile.toPath()));
@@ -70,7 +66,7 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
         int timeout = 60000; //60 * 1000 milliseconds
         StringBuilder errbuf = new StringBuilder();
         Pcap selectedInterface = Pcap.openLive(device, snaplen, promiscuous, timeout, errbuf);
-
+		Capture capture = (Capture) CaptureFactory.openLive();
         if (selectedInterface == null) {
             logger.info("open {} fail -> {}", device, errbuf);
             return String.format("open %s fail ->", device) + errbuf;
@@ -81,28 +77,34 @@ public class TrafficFlowWorker extends SwingWorker<String,String> {
 
 		//selectedInterface.loop(-1, new PcapPacketHandler<F>() {
 		while ( selectedInterface.hasNext()){
-		PcapPacket packet = selectedInterface.nextEx();
-		try {
-			flowGen.addPacket(PacketReader.getBasicPacketInfo(packet, ipv4, ipv6, protocol));
-			//flowGen.addFlowListener(new TrafficFlowWorker().FlowListener(csv_writer, classifierFile.toPath()));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		if (isCancelled()) {
-			selectedInterface.breakloop();
-			logger.debug("break Packet loop");
-			selectedInterface.close();
-		}
+			PcapPacket packet = selectedInterface.nextEx(<pcapheader>, <buffer>);
+			try {
+				flowGen.addPacket(PacketReader.getBasicPacketInfo(packet, ipv4, ipv6, protocol));
+				flowGen.addFlowListener(new TrafficFlowWorker().FlowListener(csv_writer, classifierFile.toPath()));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			if (isCancelled()) {
+				selectedInterface.breakloop();
+				logger.debug("break Packet loop");
+				selectedInterface.close();
+			}
 
-        PcapPacketHandler<String> jpacketHandler = (jpacket, user) -> {
+			LiveCapture capture = CaptureFactory.openLive();
+			while (capture.hasNext){
+				CapturePacket = capture.next();
+				//return packet byte[] to FeatureCollection?
+			}
 
-            PcapPacket permanent = new PcapPacket(Type.POINTER);
-            jpacket.transferStateAndDataTo(permanent);
-        };
+			PcapPacketHandler<String> jpacketHandler = (jpacket, user) -> {
 
-        //FlowMgr.getInstance().setListenFlag(true);
-        int ret = selectedInterface.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, device);
-    };
+				PcapPacket permanent = new PcapPacket(Type.POINTER);
+				jpacket.transferStateAndDataTo(permanent);
+			};
+
+			//FlowMgr.getInstance().setListenFlag(true);
+			int ret = selectedInterface.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, device);
+    	};
 	}
 	@Override
 	protected void process(List<String> chunks) {
