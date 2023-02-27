@@ -8,7 +8,9 @@ import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
 import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import jakarta.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
+import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapClosedException;
+import org.jnetpcap.PcapIf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -49,68 +51,50 @@ public class Cmd {
         }else {
         }*/
 
-        FlowFeatures.enableColumnCompat = Boolean.parseBoolean(args[2]);
-        logger.info("Enabled Column Compat -> {}", FlowFeatures.enableColumnCompat);
+//        FlowFeatures.enableColumnCompat = Boolean.parseBoolean(args[2]);
+//        logger.info("Enabled Column Compat -> {}", FlowFeatures.enableColumnCompat);
+
 
         if (args.length < 1) {
-            logger.info("Please select pcap!");
-            return;
-        }
-        pcapPath = args[0];
-        File in = new File(pcapPath);
+            System.out.println("Select an interface:");
 
-        if(in==null || !in.exists()){
-            logger.info("The pcap file or folder does not exist! -> {}",pcapPath);
+            List<PcapIf> ifs = Cmd.getPcapIfs();
+            for(PcapIf pcap_if : ifs){
+                System.out.printf("- %s\n", pcap_if.getName());
+            }
             return;
         }
+
+        String interface_name = args[0];
+        System.out.printf("interface name: %s\n", interface_name);
 
         if (args.length < 2) {
-            logger.info("Please select output folder!");
+            logger.error("Please select output folder!");
             return;
         }
         outPath = args[1];
         File out = new File(outPath);
         if (out == null || out.isFile()) {
-            logger.info("The out folder does not exist! -> {}",outPath);
+            logger.error("The out folder does not exist! -> {}",outPath);
             return;
         }
 
-        logger.info("You select: {}",pcapPath);
+        logger.info("You select: {}",interface_name);
         logger.info("Out folder: {}",outPath);
 
-
-        if (in.isDirectory()) {
-            readPcapDir(in,outPath,flowTimeout,activityTimeout);
-        } else {
-
-            if (!SwingUtils.isPcapFile(in)) {
-                logger.info("Please select pcap file!");
-            } else {
-                logger.info("CICFlowMeter received 1 pcap file");
-                readPcapFile(in.getPath(), outPath,flowTimeout,activityTimeout);
-            }
-        }
+        logger.info("CICFlowMeter received 1 pcap file");
+        readPcapFile(interface_name, outPath,flowTimeout,activityTimeout);
 
     }
 
-    private static void readPcapDir(File inputPath, String outPath, long flowTimeout, long activityTimeout) {
-        if(inputPath==null||outPath==null) {
-            return;
+    private static List<PcapIf> getPcapIfs(){
+        StringBuilder errbuf = new StringBuilder();
+        List<PcapIf> ifs = new ArrayList<>();
+        if(Pcap.findAllDevs(ifs, errbuf)!=Pcap.OK) {
+            logger.error("Error occurred: " + errbuf.toString());
+            throw new RuntimeException(errbuf.toString());
         }
-        File[] pcapFiles = inputPath.listFiles(SwingUtils::isPcapFile);
-        int file_cnt = pcapFiles.length;
-        System.out.println(String.format("CICFlowMeter found :%d pcap files", file_cnt));
-        for(int i=0;i<file_cnt;i++) {
-            File file = pcapFiles[i];
-            if (file.isDirectory()) {
-                continue;
-            }
-            int cur = i + 1;
-            System.out.println(String.format("==> %d / %d", cur, file_cnt));
-            readPcapFile(file.getPath(),outPath,flowTimeout,activityTimeout);
-
-        }
-        System.out.println("Completed!");
+        return ifs;
     }
 
     private static void readPcapFile(String inputFile, String outPath, long flowTimeout, long activityTimeout) {
@@ -135,7 +119,7 @@ public class Cmd {
         flowGen.addFlowListener(new FlowListener(fileName,outPath));
         boolean readIP6 = false;
         boolean readIP4 = true;
-        PacketReader packetReader = new PacketReader(inputFile, readIP4, readIP6);
+        PacketReader packetReader = PacketReader.fromLive(inputFile, readIP4, readIP6);
 
         System.out.println(String.format("Working on... %s",fileName));
 

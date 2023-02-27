@@ -26,12 +26,20 @@ public class PacketReader {
 	private final boolean readIP4;
 	private String file;
 	private final Protocol protocol = new Protocol();
-	
+
+
+
 	public PacketReader(String filename) {
 		super();	
 		this.readIP4 = true;
 		this.readIP6 = false;
 		this.config(filename);
+	}
+
+	public PacketReader(boolean ip4, boolean ip6){
+		super();
+		this.readIP4 = ip4;
+		this.readIP6 = ip6;
 	}
 	
 	public PacketReader(String filename, boolean readip4, boolean readip6) {
@@ -39,8 +47,25 @@ public class PacketReader {
 		this.readIP4 = readip4;
 		this.readIP6 = readip6;
 		this.config(filename);
-	}	
-	
+	}
+
+	public static PacketReader fromLive(String interface_name, boolean ip4, boolean ip6){
+		PacketReader reader = new PacketReader(ip4, ip6);
+
+		StringBuilder errbuf = new StringBuilder();
+		reader.pcapReader = Pcap.openLive(interface_name, 64 * 1024, Pcap.MODE_PROMISCUOUS, 60 * 1000, errbuf);
+
+		if (reader.pcapReader == null) {
+			logger.error("Error while opening interface {} for capture: {}", interface_name, errbuf.toString());
+			return null;
+		}
+
+		reader.firstPacket = 0L;
+		reader.lastPacket = 0L;
+
+		return reader;
+	}
+
 	private void config(String filename){
         file = filename;
 		StringBuilder errbuf = new StringBuilder(); // For any error msgs
