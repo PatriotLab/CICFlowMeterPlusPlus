@@ -1,9 +1,16 @@
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'distribution'
 
 group = 'edu.dsu.patriot'
 version = '1.0'
 description = """CICFlowMeter++"""
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(19)
+    }
+}
 
 repositories {
     mavenLocal()
@@ -13,7 +20,7 @@ repositories {
 dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
     implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.36'
-    implementation group: 'jnetpcap', name: 'jnetpcap', version: '1.4.r1425-1g'
+    implementation group: 'jnetpcap', name: 'jnetpcap', version: '1.5.r1457-1i'
     implementation group: 'junit', name: 'junit', version: '4.13.2'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
@@ -73,7 +80,7 @@ sourceSets {
 //}
 
 
-task fatJar(type: Jar) {
+tasks.register('fatJar', Jar) {
     println 'type Jar'
 
     manifest {
@@ -91,22 +98,23 @@ task fatJar(type: Jar) {
     with jar*/
 }
 
-task execute(type: JavaExec) {
+tasks.register('execute', JavaExec) {
     println 'type JavaExec'
 
+    classpath = sourceSets.main.runtimeClasspath
     mainClass = 'cic.cs.unb.ca.ifm.App'
-    classpath = sourceSets.main.runtimeClasspath
+
     String osName = System.getProperty('os.name').toLowerCase()
-    if(osName.contains('windows')){
+    if (osName.contains('windows')) {
         jvmArgs '-Djava.library.path=jnetpcap/win/jnetpcap-1.4.r1425'
-    }else{
+    } else {
         jvmArgs '-Djava.library.path=jnetpcap/linux/jnetpcap-1.4.r1425'
     }
 }
 
-task exeCMD(type: JavaExec){
+tasks.register('exeCMD', JavaExec){
+    classpath = sourceSets.main.runtimeClasspath
     mainClass = 'cic.cs.unb.ca.ifm.Cmd'
-    classpath = sourceSets.main.runtimeClasspath
     String osName = System.getProperty('os.name').toLowerCase()
     if(osName.contains('windows')){
         jvmArgs '-Djava.library.path=jnetpcap/win/jnetpcap-1.4.r1425'
@@ -115,7 +123,7 @@ task exeCMD(type: JavaExec){
     }
 }
 
-task cmdScript(type: CreateStartScripts) {
+tasks.register('cmdScript', CreateStartScripts) {
     mainClass = "cic.cs.unb.ca.ifm.Cmd"
     applicationName = "cfm"
     outputDir = new File(project.buildDir, 'scripts')
@@ -144,4 +152,26 @@ applicationDistribution.from("jnetpcap/win/jnetpcap-1.4.r1425") {
 }
 applicationDistribution.from('LICENSE.txt'){
     into('')
+}
+
+distributions {
+    main {
+        contents {
+            from('jnetpcap/win/jnetpcap-1.4.r1425') {
+                include '*.so'
+                into 'lib/native'
+            }
+        }
+    }
+}
+
+application {
+    mainClass = "cic.cs.unb.ca.ifm.Cmd"
+    applicationDefaultJvmArgs += '-Djava.library.path=jnetpcap/linux/jnetpcap-1.4.r1425'
+//    String osName = System.getProperty('os.name').toLowerCase()
+//    if(osName.contains('windows')){
+//        applicationDefaultJvmArgs += '-Djava.library.path=jnetpcap/win/jnetpcap-1.4.r1425'
+//    }else{
+//        applicationDefaultJvmArgs += '-Djava.library.path=jnetpcap/linux/jnetpcap-1.4.r1425'
+//    }
 }
