@@ -40,37 +40,37 @@ sourceSets {
     }
 }
 
-task zipSrc(type: Zip){
-    archiveBaseName = "${applicationName}-Source"
-    destinationDirectory = file('build/')
-    from('.'){
-        include '**/'
-        exclude '.gradle/','build/','bin/','logs/','*.iml','*.ipr','*.iws','.idea/','out/','data/'
-        into "${applicationName}V${archiveVersion}-Src"
-    }
-}
-
-import org.apache.tools.ant.DirectoryScanner
-task zipPro(type: Zip){
-
-    doFirst {
-        DirectoryScanner.defaultExcludes.each { DirectoryScanner.removeDefaultExclude it }
-        //DirectoryScanner.addDefaultExclude 'something has to be in here or everything gets excluded'
-    }
-
-    doLast {
-        DirectoryScanner.resetDefaultExcludes()
-    }
-
-    archiveBaseName = "${applicationName}-Full"
-    destinationDirectory = file('build/')
-
-    from('.'){
-        include '**/'
-        exclude '.gradle/','build/','bin/','logs/','*.iml','*.ipr','*.iws','.idea/','out/','data/',".git/"
-        into "${applicationName}V${archiveVersion}"
-    }
-}
+//task zipSrc(type: Zip){
+//    archiveBaseName = "${applicationName}-Source"
+//    destinationDirectory = file('build/')
+//    from('.'){
+//        include '**/'
+//        exclude '.gradle/','build/','bin/','logs/','*.iml','*.ipr','*.iws','.idea/','out/','data/'
+//        into "${applicationName}V${archiveVersion}-Src"
+//    }
+//}
+//
+//import org.apache.tools.ant.DirectoryScanner
+//task zipPro(type: Zip){
+//
+//    doFirst {
+//        DirectoryScanner.defaultExcludes.each { DirectoryScanner.removeDefaultExclude it }
+//        //DirectoryScanner.addDefaultExclude 'something has to be in here or everything gets excluded'
+//    }
+//
+//    doLast {
+//        DirectoryScanner.resetDefaultExcludes()
+//    }
+//
+//    archiveBaseName = "${applicationName}-Full"
+//    destinationDirectory = file('build/')
+//
+//    from('.'){
+//        include '**/'
+//        exclude '.gradle/','build/','bin/','logs/','*.iml','*.ipr','*.iws','.idea/','out/','data/',".git/"
+//        into "${applicationName}V${archiveVersion}"
+//    }
+//}
 
 
 task fatJar(type: Jar) {

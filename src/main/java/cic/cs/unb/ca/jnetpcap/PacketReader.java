@@ -63,6 +63,9 @@ public class PacketReader {
 		reader.firstPacket = 0L;
 		reader.lastPacket = 0L;
 
+		reader.hdr = new PcapHeader(JMemory.POINTER);
+		reader.buf = new JBuffer(JMemory.POINTER);
+
 		return reader;
 	}
 
@@ -96,10 +99,10 @@ public class PacketReader {
 				 throw new PcapClosedException();
 			 }
 		 }catch(PcapClosedException e){
-			 logger.debug("Read All packets on {}",file);
+			 logger.error("Read All packets on {}",file);
 			 throw e;
 		 }catch(Exception ex){
-			 logger.debug(ex.getMessage());
+			 logger.error(ex.getMessage());
 		 }
 		 return packetInfo;
 	}
@@ -118,7 +121,11 @@ public class PacketReader {
 
 	public void setLastPacket(long lastPacket) {
 		this.lastPacket = lastPacket;
-	}	
+	}
+
+	public void closeReader(){
+		this.pcapReader.close();
+	}
 
 	public static BasicPacketInfo getBasicPacketInfo(PcapPacket packet,boolean readIP4, boolean readIP6, Protocol protocol) {
 		try {

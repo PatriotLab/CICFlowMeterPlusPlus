@@ -1,6 +1,7 @@
 package cic.cs.unb.ca.ifm;
 
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
+import cic.cs.unb.ca.jnetpcap.CSVWriter;
 import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cic.cs.unb.ca.jnetpcap.Utils.FILE_SEP;
 import static cic.cs.unb.ca.jnetpcap.Utils.FLOW_SUFFIX;
@@ -31,7 +33,8 @@ public class Cmd {
     private static final String DividingLine = "-------------------------------------------------------------------------------";
     private static String[] animationChars = new String[]{"|", "/", "-", "\\"};
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws IOException {
 
         long flowTimeout = 120000000L;
         long activityTimeout = 5000000L;
@@ -97,7 +100,8 @@ public class Cmd {
         return ifs;
     }
 
-    private static void readPcapFile(String inputFile, String outPath, long flowTimeout, long activityTimeout) {
+
+    private static void readPcapFile(String inputFile, String outPath, long flowTimeout, long activityTimeout) throws IOException {
         if(inputFile==null ||outPath==null ) {
             return;
         }
@@ -128,7 +132,20 @@ public class Cmd {
         int nDiscarded = 0;
         long start = System.currentTimeMillis();
         int i=0;
-        while(true) {
+        AtomicBoolean capturing = new AtomicBoolean(true);
+        Thread mainThread = Thread.currentThread();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                System.out.println("Stopping...");
+                capturing.set(false);
+//                packetReader.closeReader();
+                mainThread.join();
+            } catch (InterruptedException ex) {
+                System.out.println(ex);
+            }
+        }));
+
+        while(capturing.get()) {
             /*i = (i)%animationChars.length;
             System.out.print("Working on "+ inputFile+" "+ animationChars[i] +"\r");*/
             try{
@@ -171,29 +188,29 @@ public class Cmd {
     static class FlowListener implements FlowGenListener {
 
         private String fileName;
-
-        private String outPath;
+        private CSVWriter<FlowFeatures> writer;
 
         private long cnt;
 
-        public FlowListener(String fileName, String outPath) {
+        public FlowListener(String fileName, String outPath) throws IOException {
             this.fileName = fileName + FLOW_SUFFIX;
-            this.outPath = outPath;
+            this.writer = new CSVWriter<>(outPath);
         }
 
         @Override
-        public void onFlowGenerated(FlowFeatures flow) {
+        public void onFlowGenerated(FlowFeatures flow) throws IOException {
 
-            String flowDump = String.join(",", flow.getData());
-            List<String> flowStringList = new ArrayList<>();
-            flowStringList.add(flowDump);
-            InsertCsvRow.insert(String.join(",", flow.getHeader()),flowStringList,outPath,fileName);
+            this.writer.write(flow);
+            this.writer.flush();
 
-            cnt++;
-
-            String console = String.format("%s -> %d flows \r", fileName,cnt);
-
-            System.out.print(console);
+//            String flowDump = String.join(",", flow.getData());
+//            List<String> flowStringList = new ArrayList<>();
+//            flowStringList.add(flowDump);
+//            InsertCsvRow.insert(String.join(",", flow.getHeader()),flowStringList,outPath,fileName);
+//
+//            cnt++;
+//
+            System.out.println(String.format("%s -> %d flows", fileName,cnt));
         }
     }
 

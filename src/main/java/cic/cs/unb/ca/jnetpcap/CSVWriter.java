@@ -24,6 +24,10 @@ public final class CSVWriter<T extends FeatureCollection> implements java.io.Clo
         printer.printRecord((Object[])flow.getData());
     }
 
+    public void flush() throws IOException {
+        printer.flush();
+    }
+
     public Runnable writeFuture(T flow){
         return new InsertRow<T>(this, flow);
     }
