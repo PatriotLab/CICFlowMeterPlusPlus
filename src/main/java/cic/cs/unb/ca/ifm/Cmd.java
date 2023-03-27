@@ -4,89 +4,59 @@ import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
 import cic.cs.unb.ca.jnetpcap.CSVWriter;
 import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
+import cic.cs.unb.ca.jnetpcap.features.Classifier;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
+import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
 import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
-import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
 import jakarta.xml.bind.JAXBException;
-import org.apache.commons.io.FilenameUtils;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapClosedException;
 import org.jnetpcap.PcapIf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
-import swing.common.SwingUtils;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import static cic.cs.unb.ca.jnetpcap.Utils.FILE_SEP;
-import static cic.cs.unb.ca.jnetpcap.Utils.FLOW_SUFFIX;
 
 public class Cmd {
 
     public static final Logger logger = LoggerFactory.getLogger(Cmd.class);
     private static final String DividingLine = "-------------------------------------------------------------------------------";
-    private static String[] animationChars = new String[]{"|", "/", "-", "\\"};
-
 
     public static void main(String[] args) throws IOException {
 
         long flowTimeout = 120000000L;
         long activityTimeout = 5000000L;
-        String rootPath = System.getProperty("user.dir");
-        String pcapPath;
-        String outPath;
 
-        /* Select path for reading all .pcap files */
-        /*if(args.length<1 || args[0]==null) {
-            pcapPath = rootPath+"/data/in/";
-        }else {
-        }*/
-
-        /* Select path for writing all .csv files */
-        /*if(args.length<2 || args[1]==null) {
-            outPath = rootPath+"/data/out/";
-        }else {
-        }*/
-
-//        FlowFeatures.enableColumnCompat = Boolean.parseBoolean(args[2]);
-//        logger.info("Enabled Column Compat -> {}", FlowFeatures.enableColumnCompat);
-
-
-        if (args.length < 1) {
-            System.out.println("Select an interface:");
-
-            List<PcapIf> ifs = Cmd.getPcapIfs();
-            for(PcapIf pcap_if : ifs){
-                System.out.printf("- %s\n", pcap_if.getName());
+        if(args.length < 2 || 3 < args.length){
+            System.out.println("Usage: CICFlowMeter <interface> <outfile> [classifier]");
+            System.out.println();
+            System.out.println("List of available interfaces:");
+            for(PcapIf pcap_if : Cmd.getPcapIfs()){
+                System.out.printf("- %s%n", pcap_if.getName());
             }
             return;
         }
 
         String interface_name = args[0];
-        System.out.printf("interface name: %s\n", interface_name);
 
-        if (args.length < 2) {
-            logger.error("Please select output folder!");
-            return;
-        }
-        outPath = args[1];
+        String outPath = args[1];
         File out = new File(outPath);
-        if (out == null || out.isFile()) {
-            logger.error("The out folder does not exist! -> {}",outPath);
+        if (out.exists() && !out.isFile()) {
+            logger.error("Could not create output file {}",outPath);
             return;
         }
 
-        logger.info("You select: {}",interface_name);
-        logger.info("Out folder: {}",outPath);
+        String classifierPath = null;
+        if(args.length == 3){
+            classifierPath = args[2];
+        }
 
-        logger.info("CICFlowMeter received 1 pcap file");
-        readPcapFile(interface_name, outPath,flowTimeout,activityTimeout);
+        readPcapFile(interface_name, outPath, classifierPath, flowTimeout, activityTimeout);
 
     }
 
@@ -94,64 +64,57 @@ public class Cmd {
         StringBuilder errbuf = new StringBuilder();
         List<PcapIf> ifs = new ArrayList<>();
         if(Pcap.findAllDevs(ifs, errbuf)!=Pcap.OK) {
-            logger.error("Error occurred: " + errbuf.toString());
+            logger.error("Error occurred: " + errbuf);
             throw new RuntimeException(errbuf.toString());
         }
         return ifs;
     }
 
 
-    private static void readPcapFile(String inputFile, String outPath, long flowTimeout, long activityTimeout) throws IOException {
-        if(inputFile==null ||outPath==null ) {
+    private static void readPcapFile(String interfaceName, String outPath, String classifierPath, long flowTimeout, long activityTimeout) throws IOException {
+        if(interfaceName==null ||outPath==null ) {
             return;
         }
-        String fileName = FilenameUtils.removeExtension(FilenameUtils.getName(inputFile));
 
-        if(!outPath.endsWith(FILE_SEP)){
-            outPath += FILE_SEP;
-        }
-
-        File saveFileFullPath = new File(outPath+fileName + FLOW_SUFFIX);
-
-        if (saveFileFullPath.exists()) {
-           if (!saveFileFullPath.delete()) {
-               System.out.println("Save file can not be deleted");
+        File outFile = new File(outPath);
+        if (outFile.exists()) {
+           if (!outFile.delete()) {
+               System.out.println("Output file can not be deleted");
            }
         }
 
         FlowGenerator flowGen = new FlowGenerator(true, flowTimeout, activityTimeout);
-        flowGen.addFlowListener(new FlowListener(fileName,outPath));
+        if(classifierPath != null){
+            flowGen.addFlowListener(new ClassifierFlowListener(interfaceName, outPath, classifierPath));
+        } else {
+            flowGen.addFlowListener(new FlowListener(interfaceName, outPath));
+        }
         boolean readIP6 = false;
         boolean readIP4 = true;
-        PacketReader packetReader = PacketReader.fromLive(inputFile, readIP4, readIP6);
+        PacketReader packetReader = PacketReader.fromLive(interfaceName, readIP4, readIP6);
 
-        System.out.println(String.format("Working on... %s",fileName));
+        System.out.printf("Working on... %s%n", interfaceName);
 
         int nValid=0;
         int nTotal=0;
         int nDiscarded = 0;
-        long start = System.currentTimeMillis();
-        int i=0;
-        AtomicBoolean capturing = new AtomicBoolean(true);
+
         Thread mainThread = Thread.currentThread();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                System.out.println("Stopping...");
-                capturing.set(false);
-//                packetReader.closeReader();
+                System.out.println("\nStopping...");
+                packetReader.closeReader();
                 mainThread.join();
             } catch (InterruptedException ex) {
-                System.out.println(ex);
+                logger.error("Error while finishing:", ex);
             }
         }));
 
-        while(capturing.get()) {
-            /*i = (i)%animationChars.length;
-            System.out.print("Working on "+ inputFile+" "+ animationChars[i] +"\r");*/
+        while(true) {
             try{
                 BasicPacketInfo basicPacket = packetReader.nextPacket();
                 nTotal++;
-                if(basicPacket !=null){
+                if(basicPacket != null){
                     flowGen.addPacket(basicPacket);
                     nValid++;
                 }else{
@@ -159,59 +122,64 @@ public class Cmd {
                 }
             }catch(PcapClosedException e){
                 break;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
-            i++;
         }
 
-        flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath());
+        System.out.println("Processing existing flows...");
 
-        long lines = SwingUtils.countLines(saveFileFullPath.getPath());
+        flowGen.dumpLabeledCurrentFlow();
 
-        System.out.println(String.format("%s is done. total %d flows ",fileName,lines));
-        System.out.println(String.format("Packet stats: Total=%d,Valid=%d,Discarded=%d",nTotal,nValid,nDiscarded));
+        System.out.printf("%s is done. total %d flows %n", interfaceName, 0);
+        System.out.printf("Packet stats: Total=%d Valid=%d Discarded=%d%n",nTotal,nValid,nDiscarded);
         System.out.println(DividingLine);
-
-        //long end = System.currentTimeMillis();
-        //logger.info(String.format("Done! in %d seconds",((end-start)/1000)));
-        //logger.info(String.format("\t Total packets: %d",nTotal));
-        //logger.info(String.format("\t Valid packets: %d",nValid));
-        //logger.info(String.format("\t Ignored packets:%d %d ", nDiscarded,(nTotal-nValid)));
-        //logger.info(String.format("PCAP duration %d seconds",((packetReader.getLastPacket()- packetReader.getFirstPacket())/1000)));
-        //int singleTotal = flowGen.dumpLabeledFlowBasedFeatures(outPath, fileName+ FlowMgr.FLOW_SUFFIX, FlowFeature.getHeader());
-        //logger.info(String.format("Number of Flows: %d",singleTotal));
-        //logger.info("{} is done,Total {} flows",inputFile,singleTotal);
-        //System.out.println(String.format("%s is done,Total %d flows", inputFile, singleTotal));
     }
 
     static class FlowListener implements FlowGenListener {
 
-        private String fileName;
-        private CSVWriter<FlowFeatures> writer;
+        private final String name;
+        private final CSVWriter<FlowFeatures> writer;
 
-        private long cnt;
+        public long cnt;
 
-        public FlowListener(String fileName, String outPath) throws IOException {
-            this.fileName = fileName + FLOW_SUFFIX;
+        public FlowListener(String name, String outPath) throws IOException {
+            this.name = name;
             this.writer = new CSVWriter<>(outPath);
         }
 
         @Override
         public void onFlowGenerated(FlowFeatures flow) throws IOException {
-
             this.writer.write(flow);
             this.writer.flush();
-
-//            String flowDump = String.join(",", flow.getData());
-//            List<String> flowStringList = new ArrayList<>();
-//            flowStringList.add(flowDump);
-//            InsertCsvRow.insert(String.join(",", flow.getHeader()),flowStringList,outPath,fileName);
-//
-//            cnt++;
-//
-            System.out.println(String.format("%s -> %d flows", fileName,cnt));
+            cnt++;
+            System.out.printf("%s -> %d flows%n", name,cnt);
         }
     }
+
+    static class ClassifierFlowListener implements FlowGenListener {
+        private final String name;
+        private final CSVWriter<FlowPrediction> writer;
+        private final Classifier classifier;
+        public long cnt;
+
+        public ClassifierFlowListener(String name, String outPath, String classifierPath) throws IOException {
+            this.name = name;
+            this.writer = new CSVWriter<>(outPath);
+            try {
+                this.classifier = new Classifier(classifierPath);
+            }catch (JAXBException | ParserConfigurationException | SAXException ex){
+                throw new RuntimeException(ex);
+            }
+        }
+
+        @Override
+        public void onFlowGenerated(FlowFeatures flow) throws IOException {
+            FlowPrediction prediction = classifier.predict(flow);
+            this.writer.write(prediction);
+            this.writer.flush();
+            cnt++;
+            System.out.printf("%s -> %d flows%n", name,cnt);
+        }
+    }
+
 
 }

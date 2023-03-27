@@ -1,6 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'application'
-apply plugin: 'distribution'
 
 group = 'edu.dsu.patriot'
 version = '1.0'
@@ -18,8 +17,7 @@ repositories {
     maven { url "https://clojars.org/repo" }
 }
 dependencies {
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
-    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.36'
+    implementation group: 'org.slf4j', name: 'slf4j-reload4j', version: '2.0.6'
     implementation group: 'jnetpcap', name: 'jnetpcap', version: '1.5.r1457-1i'
     implementation group: 'junit', name: 'junit', version: '4.13.2'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
@@ -123,55 +121,34 @@ tasks.register('exeCMD', JavaExec){
     }
 }
 
-tasks.register('cmdScript', CreateStartScripts) {
-    mainClass = "cic.cs.unb.ca.ifm.Cmd"
-    applicationName = "cfm"
-    outputDir = new File(project.buildDir, 'scripts')
-    classpath = jar.outputs.files + project.configurations.runtimeOnly
-    defaultJvmOpts = ["-Djava.library.path=../lib/native"]
-}
-
-applicationDistribution.into("bin") {
-    from(cmdScript)
-    fileMode = 0755
-}
-
+//tasks.register('cmdScript', CreateStartScripts) {
+//    mainClass = "cic.cs.unb.ca.ifm.Cmd"
+//    applicationName = "cfm"
+//    outputDir = new File(project.buildDir, 'scripts')
+//    classpath = jar.outputs.files + project.configurations.runtimeOnly
+//    defaultJvmOpts = ["-Djava.library.path=../lib/native"]
+//}
 
 // The Application Plugin
-mainClassName = "cic.cs.unb.ca.ifm.App"
-applicationName = "CICFlowMeter"
-applicationDefaultJvmArgs = ["-Djava.library.path=../lib/native"]
-
-applicationDistribution.from("jnetpcap/linux/jnetpcap-1.4.r1425") {
-    include "*.so"
-    into('lib/native')
-}
-applicationDistribution.from("jnetpcap/win/jnetpcap-1.4.r1425") {
-    include "*.dll"
-    into('lib/native')
-}
-applicationDistribution.from('LICENSE.txt'){
-    into('')
+application {
+    mainClass = "cic.cs.unb.ca.ifm.Cmd"
+    applicationDefaultJvmArgs += '-Djava.library.path=jnetpcap/linux/jnetpcap-1.4.r1425:../lib/native'
 }
 
 distributions {
     main {
         contents {
-            from('jnetpcap/win/jnetpcap-1.4.r1425') {
+            from('jnetpcap/linux/jnetpcap-1.4.r1425') {
                 include '*.so'
                 into 'lib/native'
             }
+            from("jnetpcap/win/jnetpcap-1.4.r1425") {
+                include "*.dll"
+                into('lib/native')
+            }
+            from('LICENSE.txt'){
+                into('')
+            }
         }
     }
-}
-
-application {
-    mainClass = "cic.cs.unb.ca.ifm.Cmd"
-    applicationDefaultJvmArgs += '-Djava.library.path=jnetpcap/linux/jnetpcap-1.4.r1425'
-//    String osName = System.getProperty('os.name').toLowerCase()
-//    if(osName.contains('windows')){
-//        applicationDefaultJvmArgs += '-Djava.library.path=jnetpcap/win/jnetpcap-1.4.r1425'
-//    }else{
-//        applicationDefaultJvmArgs += '-Djava.library.path=jnetpcap/linux/jnetpcap-1.4.r1425'
-//    }
 }

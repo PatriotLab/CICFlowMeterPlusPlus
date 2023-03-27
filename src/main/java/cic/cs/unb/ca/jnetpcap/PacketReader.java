@@ -51,13 +51,13 @@ public class PacketReader {
 
 	public static PacketReader fromLive(String interface_name, boolean ip4, boolean ip6){
 		PacketReader reader = new PacketReader(ip4, ip6);
+		reader.file = interface_name;
 
 		StringBuilder errbuf = new StringBuilder();
 		reader.pcapReader = Pcap.openLive(interface_name, 64 * 1024, Pcap.MODE_PROMISCUOUS, 60 * 1000, errbuf);
 
 		if (reader.pcapReader == null) {
-			logger.error("Error while opening interface {} for capture: {}", interface_name, errbuf.toString());
-			return null;
+			throw new RuntimeException(String.format("Error while opening interface %s for capture: %s", interface_name, errbuf));
 		}
 
 		reader.firstPacket = 0L;
@@ -99,7 +99,7 @@ public class PacketReader {
 				 throw new PcapClosedException();
 			 }
 		 }catch(PcapClosedException e){
-			 logger.error("Read All packets on {}",file);
+//			 logger.error("Read All packets on {}",file);
 			 throw e;
 		 }catch(Exception ex){
 			 logger.error(ex.getMessage());

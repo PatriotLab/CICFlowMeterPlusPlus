@@ -158,7 +158,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         int nValid=0;
         int nTotal=0;
         int nDiscarded = 0;
-        long start = System.currentTimeMillis();
+
         while(true) {
             try{
                 BasicPacketInfo basicPacket = packetReader.nextPacket();
@@ -173,13 +173,11 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
                 break;
             }
         }
-        flowGen.dumpLabeledCurrentFlow("");
+        flowGen.dumpLabeledCurrentFlow();
 
         outputWriter.close();
 
 //        long lines = countLines(saveFileFullPath.getPath());
-
-        long end = System.currentTimeMillis();
 
         chunks.clear();
 //        chunks.add(String.format("Done! Total %d flows",lines));

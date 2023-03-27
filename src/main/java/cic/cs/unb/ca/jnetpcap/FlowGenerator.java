@@ -180,34 +180,16 @@ public class FlowGenerator {
         return total;
     }
 
-    public long dumpLabeledCurrentFlow(String fileFullPath) {
-        if (fileFullPath == null) {
-            String ex = String.format("fullFilePath=%s,filename=%s", fileFullPath);
-            throw new IllegalArgumentException(ex);
-        }
-
-//        File file = new File(fileFullPath);
-//        FileOutputStream output = null;
-        int total = 0;
+    public void dumpLabeledCurrentFlow() {
         try {
-//            if (file.exists()) {
-//                output = new FileOutputStream(file, true);
-//            } else {
-//                if (file.createNewFile()) {
-//                    output = new FileOutputStream(file);
-//                    output.write((someFlow.dumpHeader() + LINE_SEP).getBytes());
-//                }
-//            }
             for (FlowFeatures flow : currentFlows.values()) {
                 if(flow.packet_count.total.count > 1){
                     mListener.onFlowGenerated(flow);
                 }
             }
-
         } catch (IOException e) {
             logger.debug(e.getMessage());
         }
-        return total;
     }
 
     private int getFlowCount() {
