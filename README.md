@@ -19,7 +19,7 @@ Install libpcap-dev
 Install JDK 19
 >sudo apt install openjdk-19-jdk
 
-Install Gradle
+Install Gradle (from project root)
 >./gradlew installDist
 
 # Run
