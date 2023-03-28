@@ -16,14 +16,21 @@ Gerard Drapper Gil, Arash Habibi Lashkari, Mohammad Mamun, Ali A. Ghorbani, "Cha
 Install libpcap-dev
 >sudo apt install libpcap-dev
 
-Install JDK 17
->sudo apt install openjdk-17-jdk
+Install JDK 19
+>sudo apt install openjdk-19-jdk
+
+Install Gradle
+(In project root)>./gradlew installDist
 
 # Run
 
-## Command Line
-Gradle's first argument is for the path to the PCAP, the second one specifies the output directory, and the third one, a boolean not in quotes, tells CICFlowMeter++ whether to include new features (True for Original features, False for full functionality).
+## Command Line for Offline Mode
+Gradle's first argument is for the path to the PCAP, the second one specifies the output directory, and the third one, a boolean not in quotes, tells CICFlowMeter++ whether to include new features (True for Original features and column mappings, False for full functionality and novel column mappings).
 >./gradlew exeCMD --args='“PathToPCAP" "PathToCSVOutputDirectory” true/false'
+
+## Command Line for Real Time Mode
+>cd IoTCICFlowMeter/build/install/CICFlowMeter/bin/
+>./CICFlowMeter <network interface> <output file> <ML classifer (optional)>
 
 ## GUI
 >./gradlew execute
