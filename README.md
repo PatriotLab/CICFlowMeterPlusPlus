@@ -20,7 +20,7 @@ Install JDK 19
 >sudo apt install openjdk-19-jdk
 
 Install Gradle
-(In project root)>./gradlew installDist
+>./gradlew installDist
 
 # Run
 
