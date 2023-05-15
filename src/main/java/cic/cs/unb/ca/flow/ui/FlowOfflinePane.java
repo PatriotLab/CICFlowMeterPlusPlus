@@ -423,15 +423,13 @@ public class FlowOfflinePane extends JPanel{
         long flowTimeout;
         long activityTimeout;
         try {
-            CSVWriter<FlowPrediction> csv_writer = new CSVWriter<>(output_file_path);
-
             flowTimeout = getComboParameter(param1, param1Ele);
             activityTimeout = getComboParameter(param2, param2Ele);
             FlowFeatures.enableColumnCompat = compatModeBox.isSelected();
 
             Map<String, Long> flowCnt = new HashMap<>();
 
-            ReadPcapFileWorker worker = new ReadPcapFileWorker(in, csv_writer, flowTimeout, activityTimeout, chosenClassifier);
+            ReadPcapFileWorker worker = new ReadPcapFileWorker(in, output_file_path, flowTimeout, activityTimeout, chosenClassifier);
             worker.addPropertyChangeListener(evt -> {
                 ReadPcapFileWorker task = (ReadPcapFileWorker) evt.getSource();
                 if ("progress".equals(evt.getPropertyName())) {
@@ -482,8 +480,6 @@ public class FlowOfflinePane extends JPanel{
         } catch(ClassCastException | NumberFormatException e){
             logger.info("startRead: {}",e.getMessage());
             JOptionPane.showMessageDialog(FlowOfflinePane.this, "The parameter is not a number,please check and try again.", "Parameter error", JOptionPane.ERROR_MESSAGE);
-        } catch(IOException e){
-            logger.error("Unable to write csv file", e);
         }
     }
 }
