@@ -1,17 +1,16 @@
 package cic.cs.unb.ca.jnetpcap.worker;
 
-import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
-import cic.cs.unb.ca.jnetpcap.FlowGenerator;
-import cic.cs.unb.ca.jnetpcap.PacketReader;
-import cic.cs.unb.ca.jnetpcap.Utils;
+import cic.cs.unb.ca.jnetpcap.*;
+import cic.cs.unb.ca.jnetpcap.features.Classifier;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
-import org.apache.commons.io.FilenameUtils;
+import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
 import org.jnetpcap.PcapClosedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -34,30 +33,21 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
     
     private File pcapPath;
     private String outPutDirectory;
+    private String outputPath;
+    private File classifier;
     private List<String> chunks;
 
-    public ReadPcapFileWorker(File inputFile, String outPutDir) {
+
+    public ReadPcapFileWorker(File inputFile, String output, long param1, long param2, File inputClassifier) {
         super();
         pcapPath = inputFile;
-        outPutDirectory = outPutDir;
+        outputPath = output;
+        classifier = inputClassifier;
         chunks = new ArrayList<>();
 
-        if(!outPutDirectory.endsWith(FILE_SEP)) {
-            outPutDirectory = outPutDirectory + FILE_SEP;
-        }
-        flowTimeout = 120000000L;
-        activityTimeout = 5000000L;
-    }
-
-    public ReadPcapFileWorker(File inputFile, String outPutDir,long param1,long param2) {
-        super();
-        pcapPath = inputFile;
-        outPutDirectory = outPutDir;
-        chunks = new ArrayList<>();
-
-        if(!outPutDirectory.endsWith(FILE_SEP)) {
-            outPutDirectory = outPutDirectory + FILE_SEP;
-        }
+//        if(!outPutDirectory.endsWith(FILE_SEP)) {
+//            outPutDirectory = outPutDirectory + FILE_SEP;
+//        }
         flowTimeout = param1;
         activityTimeout = param2;
     }
@@ -65,21 +55,25 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
     @Override
     protected List<String> doInBackground() {
         try {
-            if (pcapPath.isDirectory()) {
+            if (pcapPath.isDirectory() && (classifier == null || detectPmmlFile(classifier))) {
                 readPcapDir(pcapPath, outPutDirectory);
             } else {
 
                 if (!isPcapFile(pcapPath)) {
                     publish("Please select pcap file!");
                     publish("");
-                } else {
+                } else if (!(classifier == null || detectPmmlFile(classifier))){
+                    publish("Please select classifier file!");
+                    publish("");
+                }
+                else {
                     publish("CICFlowMeter received 1 pcap file");
                     publish("");
                     publish("");
 
                     firePropertyChange(PROPERTY_CUR_FILE, "", pcapPath.getName());
                     firePropertyChange(PROPERTY_FILE_CNT, 1, 1);//begin with 1
-                    readPcapFile(pcapPath.getPath(), outPutDirectory);
+                    readPcapFile(pcapPath.getPath());
                 }
             }
         } catch(Throwable e){
@@ -101,7 +95,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         firePropertyChange("progress","",chunks);
     }
 
-    private void readPcapDir(File inputPath, String outPath) {
+    private void readPcapDir(File inputPath, String outPath) throws IOException {
         if(inputPath==null||outPath==null) {
             return;
         }
@@ -122,35 +116,23 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
             }
             firePropertyChange(PROPERTY_CUR_FILE,"",file.getName());
             firePropertyChange(PROPERTY_FILE_CNT,file_cnt,i+1);//begin with 1
-            readPcapFile(file.getPath(),outPath);
+            readPcapFile(file.getPath());
         }
 
     }
 
-    private void readPcapFile(String inputFile, String outPath) {
-
-        if(inputFile==null ||outPath==null ) {
-            return;
-        }
-
-        Path p = Paths.get(inputFile);
-        String fileName = p.getFileName().toString();//FilenameUtils.getName(inputFile);
-
-
-        if(!outPath.endsWith(FILE_SEP)){
-            outPath += FILE_SEP;
-        }
-
-        File saveFileFullPath = new File(outPath+ FilenameUtils.removeExtension(fileName)+Utils.FLOW_SUFFIX);
-
-        if (saveFileFullPath.exists()) {
-            if (!saveFileFullPath.delete()) {
-                System.out.println("Saved file full path cannot be deleted");
-            }
-        }
-
+    private void readPcapFile(String inputFile) throws IOException {
+        CSVWriter<?> outputWriter;
         FlowGenerator flowGen = new FlowGenerator(true, flowTimeout, activityTimeout);
-        flowGen.addFlowListener(new FlowListener(fileName));
+        if(classifier == null){
+            CSVWriter<FlowFeatures> writer = new CSVWriter<>(outputPath);
+            flowGen.addFlowListener(new FlowListener(writer));
+            outputWriter = writer;
+        } else {
+            CSVWriter<FlowPrediction> writer = new CSVWriter<>(outputPath);
+            flowGen.addFlowListener(new ClassifyingFlowListener(writer, classifier.toPath()));
+            outputWriter = writer;
+        }
         boolean readIP6 = false;
         boolean readIP4 = true;
         PacketReader packetReader = new PacketReader(inputFile, readIP4, readIP6);
@@ -160,7 +142,7 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         int nValid=0;
         int nTotal=0;
         int nDiscarded = 0;
-        long start = System.currentTimeMillis();
+
         while(true) {
             try{
                 BasicPacketInfo basicPacket = packetReader.nextPacket();
@@ -175,32 +157,54 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
                 break;
             }
         }
-        flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath());
+        flowGen.dumpLabeledCurrentFlow();
 
-        long lines = countLines(saveFileFullPath.getPath());
+        outputWriter.close();
 
-        long end = System.currentTimeMillis();
+//        long lines = countLines(saveFileFullPath.getPath());
 
         chunks.clear();
-        chunks.add(String.format("Done! Total %d flows",lines));
+//        chunks.add(String.format("Done! Total %d flows",lines));
         chunks.add(String.format("Packets stats: Total=%d,Valid=%d,Discarded=%d",nTotal,nValid,nDiscarded));
         chunks.add(DividingLine);
         publish(chunks.toArray( new String[chunks.size()]));
 
     }
 
+    static class FlowListener implements FlowGenListener {
 
-    class FlowListener implements FlowGenListener {
+        private final CSVWriter<FlowFeatures> writer;
 
-        private String fileName;
-
-        FlowListener(String fileName) {
-            this.fileName = fileName;
+        FlowListener(CSVWriter<FlowFeatures> writer) {
+            this.writer = writer;
         }
 
         @Override
-        public void onFlowGenerated(FlowFeatures flow) {
-            firePropertyChange(PROPERTY_FLOW,fileName,flow);
+        public void onFlowGenerated(FlowFeatures flow) throws IOException {
+            writer.write(flow);
+        }
+    }
+
+
+    static class ClassifyingFlowListener implements FlowGenListener {
+
+        private final CSVWriter<FlowPrediction> writer;
+        private final Classifier classifier;
+
+        ClassifyingFlowListener(CSVWriter<FlowPrediction> writer, Path modelName) {
+            this.writer = writer;
+            try {
+                this.classifier = new Classifier(modelName.toString());
+            } catch(Exception e) {
+                logger.error("Couldn't load model", e);
+                throw new RuntimeException();
+            }
+        }
+
+        @Override
+        public void onFlowGenerated(FlowFeatures flow) throws IOException {
+            FlowPrediction prediction = classifier.predict(flow);
+            writer.write(prediction);
         }
     }
 

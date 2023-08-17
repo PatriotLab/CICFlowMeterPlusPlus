@@ -26,6 +26,7 @@ public abstract class FeatureCollection {
      * @param packet packet information to process
      */
     public void onPacket(BasicPacketInfo packet) {
+
     }
 
     protected final void delegatePacket(BasicPacketInfo packet){
@@ -37,7 +38,7 @@ public abstract class FeatureCollection {
     /**
      * Get an array of strings representing the field's headers
      */
-    public final String[] getHeader() {
+    public String[] getHeader() {
         return Arrays.stream(fields)
                 .map(f -> f.header)
                 .toArray(String[]::new);
@@ -46,7 +47,7 @@ public abstract class FeatureCollection {
     /**
      * Get the values of all the fields in this Feature collection
      */
-    public final String[] getData() {
+    public String[] getData() {
         return Arrays.stream(fields)
                 .map(f -> f.supplier.get())
                 .toArray(String[]::new);

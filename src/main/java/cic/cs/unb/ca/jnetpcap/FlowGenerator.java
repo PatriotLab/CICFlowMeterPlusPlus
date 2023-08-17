@@ -1,11 +1,13 @@
 package cic.cs.unb.ca.jnetpcap;
 
+import cic.cs.unb.ca.jnetpcap.features.FeatureCollection;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
 import cic.cs.unb.ca.jnetpcap.features.TcpTracker;
 import cic.cs.unb.ca.jnetpcap.worker.FlowGenListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -45,7 +47,7 @@ public class FlowGenerator {
         mListener = listener;
     }
 
-    public void addPacket(BasicPacketInfo packet) {
+    public void addPacket(BasicPacketInfo packet) throws IOException {
         if (packet == null) {
             return;
         }
@@ -138,14 +140,15 @@ public class FlowGenerator {
         try {
             total = finishedFlows.size() + currentFlows.size(); //becasue there are 0 packet BasicFlow in the currentFlows
 
-            FileOutputStream output = new FileOutputStream(new File(path + filename));
-            logger.debug("dumpLabeledFlow: ", path + filename);
-            output.write((someFlow.dumpHeader() + "\n").getBytes());
+//            FileOutputStream output = new FileOutputStream(new File(path + filename));
+//            logger.debug("dumpLabeledFlow: ", path + filename);
+//            output.write((someFlow.dumpHeader() + "\n").getBytes());
             Set<Integer> fkeys = finishedFlows.keySet();
             for (Integer key : fkeys) {
                 flow = finishedFlows.get(key);
                 if (flow.packet_count.total.count > 1) {
-                    output.write((flow.dumpFlowBasedFeaturesEx() + "\n").getBytes());
+                    mListener.onFlowGenerated(flow);
+//                    output.write((flow.dumpFlowBasedFeaturesEx() + "\n").getBytes());
                     total++;
                 } else {
                     zeroPkt++;
@@ -154,11 +157,12 @@ public class FlowGenerator {
             logger.debug("dumpLabeledFlow finishedFlows -> {},{}", zeroPkt, total);
 
             Set<String> ckeys = currentFlows.keySet();
-            output.write((someFlow.dumpHeader() + "\n").getBytes());
+//            output.write((someFlow.dumpHeader() + "\n").getBytes());
             for (String key : ckeys) {
                 flow = currentFlows.get(key);
                 if (flow.packet_count.total.count > 1) {
-                    output.write((flow.dumpFlowBasedFeaturesEx() + "\n").getBytes());
+                    mListener.onFlowGenerated(flow);
+//                    output.write((flow.dumpFlowBasedFeaturesEx() + "\n").getBytes());
                     total++;
                 } else {
                     zeroPkt++;
@@ -166,8 +170,8 @@ public class FlowGenerator {
 
             }
             logger.debug("dumpLabeledFlow total(include current) -> {},{}", zeroPkt, total);
-            output.flush();
-            output.close();
+//            output.flush();
+//            output.close();
         } catch (IOException e) {
 
             logger.debug(e.getMessage());
@@ -176,47 +180,16 @@ public class FlowGenerator {
         return total;
     }
 
-    public long dumpLabeledCurrentFlow(String fileFullPath) {
-        if (fileFullPath == null) {
-            String ex = String.format("fullFilePath=%s,filename=%s", fileFullPath);
-            throw new IllegalArgumentException(ex);
-        }
-
-        File file = new File(fileFullPath);
-        FileOutputStream output = null;
-        int total = 0;
+    public void dumpLabeledCurrentFlow() {
         try {
-            if (file.exists()) {
-                output = new FileOutputStream(file, true);
-            } else {
-                if (file.createNewFile()) {
-                    output = new FileOutputStream(file);
-                    output.write((someFlow.dumpHeader() + LINE_SEP).getBytes());
-                }
-            }
-
             for (FlowFeatures flow : currentFlows.values()) {
-                if (flow.packet_count.total.count > 1) {
-                    output.write((flow.dumpFlowBasedFeaturesEx() + LINE_SEP).getBytes());
-                    total++;
-                } else {
-
+                if(flow.packet_count.total.count > 1){
+                    mListener.onFlowGenerated(flow);
                 }
             }
-
         } catch (IOException e) {
             logger.debug(e.getMessage());
-        } finally {
-            try {
-                if (output != null) {
-                    output.flush();
-                    output.close();
-                }
-            } catch (IOException e) {
-                logger.debug(e.getMessage());
-            }
         }
-        return total;
     }
 
     private int getFlowCount() {

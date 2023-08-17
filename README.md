@@ -16,14 +16,19 @@ Gerard Drapper Gil, Arash Habibi Lashkari, Mohammad Mamun, Ali A. Ghorbani, "Cha
 Install libpcap-dev
 >sudo apt install libpcap-dev
 
-Install JDK 17
->sudo apt install openjdk-17-jdk
+Install JDK 19
+>sudo apt install openjdk-19-jdk
 
 # Run
 
-## Command Line
-Gradle's first argument is for the path to the PCAP, the second one specifies the output directory, and the third one, a boolean not in quotes, tells CICFlowMeter++ whether to include new features (True for Original features, False for full functionality).
+## Command Line for Offline Mode
+Gradle's first argument is for the path to the PCAP, the second one specifies the output directory, and the third one, a boolean not in quotes, tells CICFlowMeter++ whether to include new features (True for Original features and column mappings, False for full functionality and novel column mappings).
 >./gradlew exeCMD --args='“PathToPCAP" "PathToCSVOutputDirectory” true/false'
+
+## Command Line for Real Time Mode
+>./gradlew installDist
+>cd IoTCICFlowMeter/build/install/CICFlowMeter/bin/
+>./CICFlowMeter <network interface> <output file> <ML classifer (optional)>
 
 ## GUI
 >./gradlew execute
@@ -33,20 +38,6 @@ Gradle's first argument is for the path to the PCAP, the second one specifies th
 Linux (IDE Terminal)
 > Add 'execute' as a Gradle argument
 
-Windows (IDE Terminal)
-> gradlew execute
-
-### Eclipse
-
-Run eclipse with sudo
-```
-1. Right click App.java -> Run As -> Run Configurations -> Arguments -> VM arguments:
--Djava.library.path="pathtoproject/jnetpcap/linux/jnetpcap-1.4.r1425"  -> Run
-
-2. Right click App.java -> Run As -> Java Application
-
-```
-
 # Make package
 
 ### IntelliJ IDEA
@@ -54,17 +45,8 @@ open a Terminal in the IDE
 ```
 //linux:
 $ ./gradlew distZip
-//window
-$ gradlew distZip
 ```
 the zip file will be in the pathtoproject/CICFlowMeter/build/distributions
-
-### Eclipse
-At the project root
-```
-mvn package
-```
-the jar file will be in the pathtoproject/CICFlowMeter/target
 
 --------------------------------------------------------------
 # Extracted Features and Descriptions
@@ -218,3 +200,27 @@ the jar file will be in the pathtoproject/CICFlowMeter/target
         <dd>Average number of bulk rate in the backward direction</dd>
 </dl>
 --------------------------------------------------------------------------------------
+
+# Testing
+The following test files were constructed with predetermined flows and expected flow
+feature values to ensure that the features were working properly.
+
+- `tests/packet_counts.pcap`
+  Tests `Packet Count` flow feature group
+- `tests/packet_length.pcap`
+  Tests `Packet Length` and `Header Length` flow feature groups
+- `tests/tcp_flags.pcap`
+  Tests TCP flag count features
+- `tests/tcp_ttl.pcap`
+  Tests TTL related feature groups
+- `test/packet_time.pcap`
+  Tests `Timestamp`, `Flow Duration`, `Flow Bytes/s`, and `Inter-Packet Arrival Time` Feature Group
+- `test/subflows.pcap`
+  Tests subflow releated flow feature groups.
+
+The following features do not have tests written for them:
+- HTTP related features (HTTP Request Header Length, HTTP Request Payload Length, HTTP Response Header Length, HTTP Reponse Payload Length)
+- Bulk related features (Avg Bytes/Bulk, Avg Packets/Bulk, Bulk Rate)
+
+## Live analysis vs Offline Analysis
+Testing was conducted using live traffic and comparing it to an offline analysis of the same traffic that was captured to a PCAP file. No significant difference remains between live analysis and offline analysis.

@@ -14,8 +14,22 @@ public class FlowBytes extends FeatureCollection{
 
     public FlowBytes() {
         new FeatureCollection.FieldBuilder()
-                .addField(() -> (double)totalBytes/((double)(flowLastTS-flowStartTS)/1000000L), "Flow Bytes/s")
+                .addField(() -> nanCheck(calculateFlowRate()), "Flow Bytes/s")
                 .build(this);
+    }
+
+    public double calculateFlowRate() {
+        return (double)totalBytes/((double)(flowLastTS-flowStartTS)/1000000L);
+    }
+
+    // This is a hack to make sure that if there is no data, it will instead return zero
+    // Copied from StatsFeature.java
+    private static double nanCheck(double val) {
+        if(Double.isNaN(val)){
+            return 0.0;
+        } else {
+            return val;
+        }
     }
 
     @Override

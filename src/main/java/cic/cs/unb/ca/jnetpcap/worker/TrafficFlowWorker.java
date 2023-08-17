@@ -4,14 +4,18 @@ import cic.cs.unb.ca.jnetpcap.FlowGenerator;
 import cic.cs.unb.ca.jnetpcap.PacketReader;
 import cic.cs.unb.ca.jnetpcap.Protocol;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
+import jakarta.xml.bind.JAXBException;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.nio.JMemory.Type;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.List;
 
 public class TrafficFlowWorker extends SwingWorker<String,String> implements FlowGenListener{
@@ -61,7 +65,11 @@ public class TrafficFlowWorker extends SwingWorker<String,String> implements Flo
             PcapPacket permanent = new PcapPacket(Type.POINTER);
             packet.transferStateAndDataTo(permanent);
 
-			flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false, protocol));
+			try {
+				flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false, protocol));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 			if(isCancelled()) {
                 pcap.breakloop();
                 logger.debug("break Packet loop");

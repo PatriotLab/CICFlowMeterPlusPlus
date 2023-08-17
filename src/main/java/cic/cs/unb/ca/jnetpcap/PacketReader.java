@@ -26,12 +26,20 @@ public class PacketReader {
 	private final boolean readIP4;
 	private String file;
 	private final Protocol protocol = new Protocol();
-	
+
+
+
 	public PacketReader(String filename) {
 		super();	
 		this.readIP4 = true;
 		this.readIP6 = false;
 		this.config(filename);
+	}
+
+	public PacketReader(boolean ip4, boolean ip6){
+		super();
+		this.readIP4 = ip4;
+		this.readIP6 = ip6;
 	}
 	
 	public PacketReader(String filename, boolean readip4, boolean readip6) {
@@ -39,8 +47,28 @@ public class PacketReader {
 		this.readIP4 = readip4;
 		this.readIP6 = readip6;
 		this.config(filename);
-	}	
-	
+	}
+
+	public static PacketReader fromLive(String interface_name, boolean ip4, boolean ip6){
+		PacketReader reader = new PacketReader(ip4, ip6);
+		reader.file = interface_name;
+
+		StringBuilder errbuf = new StringBuilder();
+		reader.pcapReader = Pcap.openLive(interface_name, 64 * 1024, Pcap.MODE_PROMISCUOUS, 60 * 1000, errbuf);
+
+		if (reader.pcapReader == null) {
+			throw new RuntimeException(String.format("Error while opening interface %s for capture: %s", interface_name, errbuf));
+		}
+
+		reader.firstPacket = 0L;
+		reader.lastPacket = 0L;
+
+		reader.hdr = new PcapHeader(JMemory.POINTER);
+		reader.buf = new JBuffer(JMemory.POINTER);
+
+		return reader;
+	}
+
 	private void config(String filename){
         file = filename;
 		StringBuilder errbuf = new StringBuilder(); // For any error msgs
@@ -71,10 +99,10 @@ public class PacketReader {
 				 throw new PcapClosedException();
 			 }
 		 }catch(PcapClosedException e){
-			 logger.debug("Read All packets on {}",file);
+//			 logger.error("Read All packets on {}",file);
 			 throw e;
 		 }catch(Exception ex){
-			 logger.debug(ex.getMessage());
+			 logger.error(ex.getMessage());
 		 }
 		 return packetInfo;
 	}
@@ -93,7 +121,11 @@ public class PacketReader {
 
 	public void setLastPacket(long lastPacket) {
 		this.lastPacket = lastPacket;
-	}	
+	}
+
+	public void closeReader(){
+		this.pcapReader.close();
+	}
 
 	public static BasicPacketInfo getBasicPacketInfo(PcapPacket packet,boolean readIP4, boolean readIP6, Protocol protocol) {
 		try {

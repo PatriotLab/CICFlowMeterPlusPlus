@@ -1,6 +1,6 @@
 package cic.cs.unb.ca.jnetpcap.features;
+
 import cic.cs.unb.ca.jnetpcap.BasicPacketInfo;
-import java.util.HashMap;
 
 public class Ratio extends FeatureCollection{
     private int Fwd;

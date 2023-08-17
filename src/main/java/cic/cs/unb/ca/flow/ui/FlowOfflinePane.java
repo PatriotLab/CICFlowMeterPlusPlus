@@ -1,19 +1,22 @@
 package cic.cs.unb.ca.flow.ui;
 
 import cic.cs.unb.ca.flow.FlowMgr;
+import cic.cs.unb.ca.jnetpcap.CSVWriter;
 import cic.cs.unb.ca.jnetpcap.features.FlowFeatures;
-import cic.cs.unb.ca.jnetpcap.worker.InsertCsvRow;
+import cic.cs.unb.ca.jnetpcap.features.FlowPrediction;
 import cic.cs.unb.ca.jnetpcap.worker.ReadPcapFileWorker;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swing.common.PcapFileFilter;
+import swing.common.PmmlFileFilter;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,28 +24,38 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.apache.commons.io.FilenameUtils.getPath;
+
 public class FlowOfflinePane extends JPanel{
     protected static final Logger logger = LoggerFactory.getLogger(FlowOfflinePane.class);
     private static final Border PADDING = BorderFactory.createEmptyBorder(10,5,10,5);
     private JFileChooser fileChooser;
+    private JFileChooser pmmlChooser;
     private PcapFileFilter pcapChooserFilter;
+
+    private PmmlFileFilter pmmlChooserFilter;
     private JTextArea textArea;
     private JButton btnClr;
     private JCheckBox newNewFeatures;
     private JComboBox<File> cmbInput;
     private JComboBox<File> cmbOutput;
+    private JComboBox<File> classifierBox;
     private Vector<File> cmbInputEle;
     private Vector<File> cmbOutputEle;
+    private Vector<File> classifierEle;
 
     private JComboBox<Long> param1;
     private JComboBox<Long> param2;
+    private JComboBox<Long> param3;
     private JCheckBox compatModeBox;
     private Vector<Long> param1Ele;
     private Vector<Long> param2Ele;
+    private Vector<Long> param3Ele;
 
     private Box progressBox;
     private JProgressBar fileProgress;
     private JProgressBar fileCntProgress;
+    public File chosenClassifier;
 
     private ExecutorService csvWriterThread;
 
@@ -61,8 +74,11 @@ public class FlowOfflinePane extends JPanel{
         fileChooser = new JFileChooser(new File("."));
         pcapChooserFilter = new PcapFileFilter();
         fileChooser.setFileFilter(pcapChooserFilter);
-        csvWriterThread = Executors.newSingleThreadExecutor();
+        pmmlChooser = new JFileChooser(new File("."));
+        pmmlChooserFilter = new PmmlFileFilter();
+        pmmlChooser.setFileFilter(pmmlChooserFilter);
 
+        csvWriterThread = Executors.newSingleThreadExecutor();
     }
 
     private JPanel initOutPane(){
@@ -74,15 +90,6 @@ public class FlowOfflinePane extends JPanel{
         textArea.setToolTipText("message");
         scrollPane.setViewportView(textArea);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(0x555555)));
-
-        /*JPanel msgSettingPane = new JPanel();
-        msgSettingPane.setLayout(new BoxLayout(msgSettingPane, BoxLayout.X_AXIS));
-
-        btnClr = new JButton("Clear");
-        msgSettingPane.add(Box.createHorizontalGlue());
-        msgSettingPane.add(btnClr);
-
-        btnClr.addActionListener(actionEvent -> textArea.setText(""));*/
 
         jPanel.add(scrollPane, BorderLayout.CENTER);
         jPanel.add(initOutStatusPane(), BorderLayout.SOUTH);
@@ -147,7 +154,6 @@ public class FlowOfflinePane extends JPanel{
         GridBagConstraints gc = new GridBagConstraints();
         gc.insets = new Insets(10, 0, 10, 0);
 
-
         JLabel lblInputDir = new JLabel("Pcap dir:");
         JButton btnInputBrowse = new JButton("Browse");
         cmbInputEle = new Vector<>();
@@ -177,6 +183,22 @@ public class FlowOfflinePane extends JPanel{
                 File outputFile = fileChooser.getSelectedFile();
                 logger.debug("offline select output {}", outputFile.getPath());
                 setComboBox(cmbOutput, cmbOutputEle, outputFile);
+            }
+        });
+
+        JLabel classifierLabel = new JLabel("Classifier:");
+        JButton browseClassifiers = new JButton("Browse");
+        classifierEle = new Vector<>();
+        classifierBox = new JComboBox<>(classifierEle);
+        classifierBox.setEditable(true);
+        browseClassifiers.addActionListener(actionEvent -> {
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            fileChooser.removeChoosableFileFilter(pmmlChooserFilter);
+            int action = fileChooser.showOpenDialog(FlowOfflinePane.this);
+            if (action == JFileChooser.APPROVE_OPTION) {
+                chosenClassifier = fileChooser.getSelectedFile();
+                logger.debug("offline select classifier {}", chosenClassifier.getPath());
+                setComboBox(classifierBox, classifierEle, chosenClassifier);
             }
         });
 
@@ -230,6 +252,30 @@ public class FlowOfflinePane extends JPanel{
         gc.fill = GridBagConstraints.NONE;
         gc.anchor = GridBagConstraints.LINE_END;
         jPanel.add(btnOutputBrowse, gc);
+
+        //Third row
+        gc.gridx = 0;
+        gc.gridy = 2;
+        gc.weightx = 0;
+        gc.weighty = 0.1;
+        gc.fill = GridBagConstraints.NONE;
+        gc.anchor = GridBagConstraints.LINE_END;
+        jPanel.add(classifierLabel, gc);
+
+        gc.gridx = 1;
+        gc.gridy = 2;
+        gc.weightx = 1;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.anchor = GridBagConstraints.LINE_START;
+        gc.insets.left = gc.insets.right = 10;
+        jPanel.add(classifierBox, gc);
+
+        gc.gridx = 2;
+        gc.gridy = 2;
+        gc.weightx = 0;
+        gc.fill = GridBagConstraints.NONE;
+        gc.anchor = GridBagConstraints.LINE_END;
+        jPanel.add(browseClassifiers, gc);
 
         return jPanel;
     }
@@ -360,9 +406,19 @@ public class FlowOfflinePane extends JPanel{
             out = cmbOutputEle.get(cmbOutIndex);
         }
 
+        final File selectedClassifier;
+        int classifierIndex = classifierBox.getSelectedIndex();
+        if (classifierIndex < 0) {
+            selectedClassifier = new File((String) classifierBox.getEditor().getItem());
+        }else{
+            selectedClassifier = classifierEle.get(classifierIndex);
+        }
         updateOut("You select: " + in.toString());
         updateOut("Out folder: " + out.toString());
+        updateOut("PMML classifier: " + selectedClassifier.toString());
         updateOut("-------------------------------");
+
+        String output_file_path = new File(out, FilenameUtils.removeExtension(in.getName())+FlowMgr.FLOW_SUFFIX).getPath();
 
         long flowTimeout;
         long activityTimeout;
@@ -373,7 +429,7 @@ public class FlowOfflinePane extends JPanel{
 
             Map<String, Long> flowCnt = new HashMap<>();
 
-            ReadPcapFileWorker worker = new ReadPcapFileWorker(in, out.getPath(), flowTimeout, activityTimeout);
+            ReadPcapFileWorker worker = new ReadPcapFileWorker(in, output_file_path, flowTimeout, activityTimeout, chosenClassifier);
             worker.addPropertyChangeListener(evt -> {
                 ReadPcapFileWorker task = (ReadPcapFileWorker) evt.getSource();
                 if ("progress".equals(evt.getPropertyName())) {
@@ -412,16 +468,12 @@ public class FlowOfflinePane extends JPanel{
                 } else if (ReadPcapFileWorker.PROPERTY_FLOW.equalsIgnoreCase(evt.getPropertyName())) {
 
                     String fileName = (String) evt.getOldValue();
-                    FlowFeatures flow = (FlowFeatures) evt.getNewValue();
+                    FlowPrediction flow_prediction = (FlowPrediction) evt.getNewValue();
 
                     flowCnt.put(fileName, flowCnt.get(fileName) + 1);
 
                     String msg = String.format("%d flows on Reading %s",flowCnt.get(fileName),fileName);
                     fileProgress.setString(msg);
-
-                    //write flows to csv file
-                    String header = FlowFeatures.dumpHeader();
-                    csvWriterThread.execute(new InsertCsvRow(header, flow.dumpFlowBasedFeaturesEx(), out.getPath(), FilenameUtils.removeExtension(fileName)+FlowMgr.FLOW_SUFFIX));
                 }
             });
             worker.execute();

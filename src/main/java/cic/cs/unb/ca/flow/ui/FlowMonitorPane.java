@@ -104,8 +104,7 @@ public class FlowMonitorPane extends JPanel {
         pane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 
 
-        String header = null;
-        header = FlowFeatures.dumpHeader();
+        String header = ""; //FlowFeatures.dumpHeader();
         String[] arrayHeader = StringUtils.split(header, ",");
         defaultTableModel = new DefaultTableModel(arrayHeader,0);
         flowTable = new JTable(defaultTableModel);
@@ -364,12 +363,12 @@ public class FlowMonitorPane extends JPanel {
     private void insertFlow(FlowFeatures flow) {
         List<String> flowStringList = new ArrayList<>();
         List<String[]> flowDataList = new ArrayList<>();
-        String flowDump = flow.dumpFlowBasedFeaturesEx();
+        String flowDump = String.join(",", flow.getData());
         flowStringList.add(flowDump);
         flowDataList.add(StringUtils.split(flowDump, ","));
 
         //write flows to csv file
-        String header  = FlowFeatures.dumpHeader();
+        String header  = String.join(",", flowDump);
         String path = FlowMgr.getInstance().getSavePath();
         String filename = LocalDate.now().toString();
         csvWriterThread.execute(new InsertCsvRow(header, flowStringList, path, filename));
